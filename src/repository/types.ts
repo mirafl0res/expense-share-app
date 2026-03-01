@@ -5,6 +5,7 @@ export type UserEntity = {
   password_hash: string;
   created_at: string;
   updated_at: string;
+  deleted_at: string;
 };
 
 export type ExpenseEntity = {
@@ -17,11 +18,15 @@ export type ExpenseEntity = {
   expense_date: string;
   created_at: string;
   updated_at: string;
+  deleted_at: string;
 };
 
 export type GroupEntity = {
   id: string;
   title: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string;
 };
 
 export type GroupMemberEntity = {
