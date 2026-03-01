@@ -1,10 +1,11 @@
 import type { ExpenseEntityInput } from "../repository/types";
 import type { CreateExpenseRequest, Expense } from "../types";
 import repository from "../repository";
+import { ExpenseMapper } from "../mappers";
 
 export async function createExpense(
   expenseData: CreateExpenseRequest,
-): Promise<Expense | null> {
+): Promise<Expense> {
   try {
     const newExpense: ExpenseEntityInput = {
       id: crypto.randomUUID(),
@@ -17,7 +18,9 @@ export async function createExpense(
     };
 
     const result = await repository.expenses.insertExpense(newExpense);
- 
-  } catch (error) {}
-  return null;
+    return ExpenseMapper.toDomain(result);
+  } catch (error) {
+    console.error("Failed to create expense:", error);
+    throw new Error("Failed to create expense");
+  }
 }
