@@ -24,7 +24,7 @@ CREATE TABLE expense_group_members (
 
 CREATE TABLE expenses (
     id UUID PRIMARY KEY,
-    group_id UUID REFERENCES groups (id) ON DELETE CASCADE,
+    group_id UUID REFERENCES expense_groups (id) ON DELETE CASCADE,
     payer_id UUID REFERENCES users (id) ON DELETE CASCADE,
     title TEXT NOT NULL,
     amount DECIMAL NOT NULL,
