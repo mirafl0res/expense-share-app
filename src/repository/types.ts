@@ -21,7 +21,7 @@ export type ExpenseEntity = {
   deleted_at: string;
 };
 
-export type NewExpenseInput = Pick<
+export type ExpenseEntityInput = Pick<
   ExpenseEntity,
   | "id"
   | "group_id"

@@ -1,8 +1,8 @@
-import type { ExpenseEntity, NewExpenseInput } from "./types";
+import type { ExpenseEntity, ExpenseEntityInput } from "./types";
 import db from "./db";
 
 export async function insertExpense(
-  expense: NewExpenseInput,
+  expense: ExpenseEntityInput,
 ): Promise<ExpenseEntity> {
   const result = await db<ExpenseEntity[]>`
   INSERT INTO expenses (
