@@ -1,7 +1,23 @@
+export type User = {
+  id: string;
+  username: string;
+  email: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+};
+
+export type CreateUserRequest = {
+  username: string;
+  email: string;
+  password: string;
+};
+
 export type Expense = {
   id: string;
+  createdBy: string | null;
   groupId: string;
-  payerId: string;
+  payerId: string | null;
   title: string;
   amount: number;
   splitType: string;
@@ -15,3 +31,20 @@ export type CreateExpenseRequest = Pick<
   Expense,
   "groupId" | "payerId" | "title" | "amount" | "splitType" | "expenseDate"
 >;
+
+export type ExpenseParticipant = {
+  expenseId: string;
+  participantUserId: string | null;
+  shareAmount: number;
+  createdAt: string;
+};
+
+export type Group = {
+  id: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+};
+
+export type CreateGroupRequest = Pick<Group, "title">;
