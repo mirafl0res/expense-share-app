@@ -21,6 +21,17 @@ export type ExpenseEntity = {
   deleted_at: string;
 };
 
+export type NewExpenseInput = Pick<
+  ExpenseEntity,
+  | "id"
+  | "group_id"
+  | "payer_id"
+  | "title"
+  | "amount"
+  | "split_type"
+  | "expense_date"
+>;
+
 export type GroupEntity = {
   id: string;
   title: string;
