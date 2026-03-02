@@ -27,10 +27,14 @@ export type Expense = {
   deletedAt: string;
 };
 
-export type CreateExpenseRequest = Pick<
-  Expense,
-  "groupId" | "payerId" | "title" | "amount" | "splitType" | "expenseDate"
->;
+export type CreateExpenseRequest = {
+  groupId: string;
+  payerId: string;
+  title: string;
+  amount: number;
+  splitType: string;
+  expenseDate: string;
+};
 
 export type ExpenseParticipant = {
   expenseId: string;

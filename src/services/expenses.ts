@@ -9,6 +9,7 @@ export async function createExpense(
   try {
     const newExpense: ExpenseEntityInput = {
       id: crypto.randomUUID(),
+      created_by: authenticatedUserId, // TODO[epic=authentication]: Implement JWT verification
       group_id: expenseData.groupId,
       payer_id: expenseData.payerId,
       title: expenseData.title,
