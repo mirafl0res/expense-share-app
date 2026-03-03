@@ -8,14 +8,14 @@ export type UserEntity = {
   deleted_at: string;
 };
 
-export type UserEntityInput = Pick<
+export type UserEntityPayload = Pick<
   UserEntity,
   "id" | "username" | "email" | "password_hash"
 >;
 
 export type ExpenseEntity = {
   id: string;
-  group_id: string | null;
+  group_id: string;
   created_by: string | null;
   payer_id: string;
   title: string;
@@ -27,7 +27,7 @@ export type ExpenseEntity = {
   deleted_at: string;
 };
 
-export type ExpenseEntityInput = Pick<
+export type ExpenseEntityPayload = Pick<
   ExpenseEntity,
   | "id"
   | "group_id"
@@ -39,7 +39,7 @@ export type ExpenseEntityInput = Pick<
   | "expense_date"
 >;
 
-export type ExpenseUpdateInput = Partial<
+export type ExpenseUpdatePayload = Partial<
   Pick<
     ExpenseEntity,
     "group_id" | "payer_id" | "title" | "amount" | "split_type" | "expense_date"
@@ -61,11 +61,11 @@ export type GroupEntity = {
   deleted_at: string;
 };
 
-export type GroupEntityInput = Pick<GroupEntity, "id" | "title">;
+export type GroupEntityPayload = Pick<GroupEntity, "id" | "title">;
 
 export type GroupMemberEntity = {
   user_id: string;
   group_id: string;
 };
 
-export type GroupMemberEntityInput = GroupMemberEntity;
+export type GroupMemberEntityPayload = GroupMemberEntity;

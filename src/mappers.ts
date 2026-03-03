@@ -5,6 +5,7 @@ export const ExpenseMapper = {
   toDomain(entity: ExpenseEntity): Expense {
     return {
       id: entity.id,
+      createdBy: entity.created_by,
       groupId: entity.group_id,
       payerId: entity.payer_id,
       title: entity.title,
@@ -17,4 +18,3 @@ export const ExpenseMapper = {
     };
   },
 };
-
