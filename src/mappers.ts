@@ -1,5 +1,5 @@
 import type { ExpenseEntity } from "./repository/types/expenses";
-import type { Expense } from "./types";
+import type { Expense } from "./types/expenses";
 
 export const ExpenseMapper = {
   toDomain(entity: ExpenseEntity): Expense {

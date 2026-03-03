@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import type { ExpenseCreateRequest } from "./types";
+import type { ExpenseCreateRequest } from "./types/expenses";
 import { services } from "./services";
 
 export async function createExpense(

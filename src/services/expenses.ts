@@ -1,4 +1,4 @@
-import type { ExpenseCreateRequest, Expense } from "../types";
+import type { ExpenseCreateRequest, Expense } from "../types/types";
 import repository from "../repository";
 import { ExpenseMapper } from "../mappers";
 import { DatabaseError } from "../errors";

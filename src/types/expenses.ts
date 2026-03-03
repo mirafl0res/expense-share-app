@@ -1,18 +1,3 @@
-export type User = {
-  id: string;
-  username: string;
-  email: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string;
-};
-
-export type UserCreateRequest = {
-  username: string;
-  email: string;
-  password: string;
-};
-
 export type Expense = {
   id: string;
   createdBy: string | null;
@@ -42,13 +27,3 @@ export type ExpenseParticipant = {
   shareAmount: number;
   createdAt: string;
 };
-
-export type Group = {
-  id: string;
-  title: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string;
-};
-
-export type GroupCreateRequest = Pick<Group, "title">;
