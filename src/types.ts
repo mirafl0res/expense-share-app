@@ -7,7 +7,7 @@ export type User = {
   deletedAt: string;
 };
 
-export type CreateUserRequest = {
+export type UserCreateRequest = {
   username: string;
   email: string;
   password: string;
@@ -51,4 +51,4 @@ export type Group = {
   deletedAt: string;
 };
 
-export type CreateGroupRequest = Pick<Group, "title">;
+export type GroupCreateRequest = Pick<Group, "title">;
