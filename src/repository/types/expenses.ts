@@ -1,18 +1,3 @@
-export type UserEntity = {
-  id: string;
-  username: string;
-  email: string;
-  password_hash: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string;
-};
-
-export type UserEntityPayload = Pick<
-  UserEntity,
-  "id" | "username" | "email" | "password_hash"
->;
-
 export type ExpenseEntity = {
   id: string;
   group_id: string;
@@ -27,7 +12,7 @@ export type ExpenseEntity = {
   deleted_at: string;
 };
 
-export type ExpenseEntityPayload = Pick<
+export type ExpenseCreatePayload = Pick<
   ExpenseEntity,
   | "id"
   | "group_id"
@@ -52,20 +37,3 @@ export type ExpenseParticipantEntity = {
   share_amount: number;
   created_at: string;
 };
-
-export type GroupEntity = {
-  id: string;
-  title: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string;
-};
-
-export type GroupEntityPayload = Pick<GroupEntity, "id" | "title">;
-
-export type GroupMemberEntity = {
-  user_id: string;
-  group_id: string;
-};
-
-export type GroupMemberEntityPayload = GroupMemberEntity;

@@ -1,14 +1,14 @@
-import type { ExpenseEntityPayload } from "../repository/types";
-import type { CreateExpenseRequest, Expense } from "../types";
+import type { ExpenseCreatePayload } from "../repository/types/expenses";
+import type { ExpenseCreateRequest, Expense } from "../types";
 import repository from "../repository";
 import { ExpenseMapper } from "../mappers";
 
 export async function createExpense(
-  expenseData: CreateExpenseRequest,
+  expenseData: ExpenseCreateRequest,
 ): Promise<Expense> {
   const testUserId = "11111111-1111-1111-1111-111111111111";
   try {
-    const newExpense: ExpenseEntityPayload = {
+    const newExpense: ExpenseCreatePayload = {
       id: crypto.randomUUID(),
       created_by: testUserId, // TODO[epic=authentication]: Implement JWT verification
       group_id: expenseData.groupId,

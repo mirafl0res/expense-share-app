@@ -27,7 +27,7 @@ export type Expense = {
   deletedAt: string;
 };
 
-export type CreateExpenseRequest = {
+export type ExpenseCreateRequest = {
   groupId: string;
   payerId: string;
   title: string;

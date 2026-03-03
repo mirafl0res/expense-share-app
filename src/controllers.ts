@@ -1,9 +1,9 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import type { CreateExpenseRequest } from "./types";
+import type { ExpenseCreateRequest } from "./types";
 import { services } from "./services";
 
 export async function createExpense(
-  request: FastifyRequest<{ Body: CreateExpenseRequest; Params: {} }>,
+  request: FastifyRequest<{ Body: ExpenseCreateRequest; Params: {} }>,
   reply: FastifyReply,
 ): Promise<void> {
   try {

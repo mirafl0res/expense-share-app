@@ -1,8 +1,8 @@
-import type { ExpenseEntity, ExpenseEntityPayload } from "./types";
+import type { ExpenseEntity, ExpenseCreatePayload } from "./types/expenses";
 import db from "./db";
 
 export async function insertExpense(
-  expense: ExpenseEntityPayload,
+  expense: ExpenseCreatePayload,
 ): Promise<ExpenseEntity> {
   const [result] = await db<ExpenseEntity[]>`
   INSERT INTO expenses ${db(expense)}
@@ -18,7 +18,7 @@ export async function insertExpense(
 
 export async function updateExpense(
   expense_id: string,
-  updates: ExpenseEntityPayload,
+  updates: ExpenseCreatePayload,
   includeDeleted: boolean = false,
 ): Promise<ExpenseEntity | null> {
   const [result] = await db`
