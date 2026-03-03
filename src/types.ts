@@ -22,9 +22,9 @@ export type Expense = {
   amount: number;
   splitType: string;
   expenseDate: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string;
+  updatedAt: string | null;
+  createdAt: string | null;
+  deletedAt: string | null;
 };
 
 export type ExpenseCreateRequest = {

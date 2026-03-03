@@ -1,15 +1,15 @@
 export type ExpenseEntity = {
   id: string;
-  group_id: string;
   created_by: string | null;
-  payer_id: string;
+  group_id: string;
+  payer_id: string | null;
   title: string;
   amount: number;
   split_type: string;
   expense_date: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string;
+  created_at: string | null;
+  updated_at: string | null;
+  deleted_at: string | null;
 };
 
 export type ExpenseCreatePayload = Pick<
