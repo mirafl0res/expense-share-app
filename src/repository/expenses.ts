@@ -33,4 +33,15 @@ export async function insertExpense(
   }
 
   return result[0];
+
+export async function updateExpense(
+  expense_id: string,
+  updates: ExpenseEntityInput,
+): Promise<ExpenseEntity | null> {
+  const [result] = await db`
+  UPDATE expenses SET ${db(updates)}
+  WHERE id = ${expense_id}
+  RETURNING *
+  `;
+  return result;
 }
