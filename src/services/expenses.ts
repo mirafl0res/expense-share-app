@@ -6,10 +6,11 @@ import { ExpenseMapper } from "../mappers";
 export async function createExpense(
   expenseData: CreateExpenseRequest,
 ): Promise<Expense> {
+  const testUserId = "11111111-1111-1111-1111-111111111111";
   try {
     const newExpense: ExpenseEntityInput = {
       id: crypto.randomUUID(),
-      created_by: authenticatedUserId, // TODO[epic=authentication]: Implement JWT verification
+      created_by: testUserId, // TODO[epic=authentication]: Implement JWT verification
       group_id: expenseData.groupId,
       payer_id: expenseData.payerId,
       title: expenseData.title,
