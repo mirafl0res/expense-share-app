@@ -39,6 +39,13 @@ export type ExpenseEntityInput = Pick<
   | "expense_date"
 >;
 
+export type ExpenseUpdateInput = Partial<
+  Pick<
+    ExpenseEntity,
+    "group_id" | "payer_id" | "title" | "amount" | "split_type" | "expense_date"
+  >
+>;
+
 export type ExpenseParticipantEntity = {
   expense_id: string;
   participant_user_id: string | null;
