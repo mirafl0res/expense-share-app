@@ -3,6 +3,10 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "start": "bun run ./src/index.ts",
+    "dev": "NODE_ENV=development bun --hot run ./src/index.ts"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
