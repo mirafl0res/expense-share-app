@@ -9,19 +9,21 @@ export async function insertExpense(
     id,
     group_id,
     payer_id,
+    created_by,
     title,
     amount,
     split_type,
-    expense_date,
+    expense_date
   )
   VALUES (
   ${expense.id},
   ${expense.group_id},
   ${expense.payer_id},
+  ${expense.created_by},
   ${expense.title},
   ${expense.amount},
   ${expense.split_type},
-  ${expense.expense_date},
+  ${expense.expense_date}
   )
   RETURNING *
   `;
