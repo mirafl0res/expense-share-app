@@ -1,4 +1,8 @@
-import type { ExpenseEntity, ExpenseCreatePayload } from "./types/expenses";
+import type {
+  ExpenseEntity,
+  ExpenseCreatePayload,
+  ExpenseUpdatePayload,
+} from "./types/expenses";
 import db from "./db";
 import { DatabaseError } from "../errors";
 
@@ -27,12 +31,12 @@ export async function insertExpense(
 }
 
 export async function getExpenseById(
-  expense_id: string,
+  id: string,
   includeDeleted: boolean = false,
 ): Promise<ExpenseEntity | null> {
   const [result] = await db<ExpenseEntity[]>`
   SELECT * FROM expenses
-  WHERE id = ${expense_id}
+  WHERE id = ${id}
   ${includeDeleted ? db`` : db`AND deleted_at IS NULL`}
   `;
 
@@ -40,13 +44,14 @@ export async function getExpenseById(
 }
 
 export async function updateExpense(
-  expense_id: string,
-  updates: ExpenseCreatePayload,
+  id: string,
+  updates: ExpenseUpdatePayload,
   includeDeleted: boolean = false,
 ): Promise<ExpenseEntity | null> {
   const [result] = await db<ExpenseEntity[]>`
-  UPDATE expenses SET ${db(updates)}
-  WHERE id = ${expense_id}
+  UPDATE expenses
+  SET ${db(updates)}
+  WHERE id = ${id}
   ${includeDeleted ? db`` : db`AND deleted_at IS NULL`}
   RETURNING *
   `;
@@ -54,11 +59,11 @@ export async function updateExpense(
   return result ?? null;
 }
 
-export async function softDeleteExpense(expense_id: string): Promise<boolean> {
+export async function softDeleteExpense(id: string): Promise<boolean> {
   const [result] = await db<{ deleted_at: string }[]>`
   UPDATE expenses
   SET deleted_at = NOW()
-  WHERE id = ${expense_id} AND deleted_at IS NULL
+  WHERE id = ${id} AND deleted_at IS NULL
   RETURNING deleted_at
   `;
 
@@ -71,10 +76,10 @@ export async function softDeleteExpense(expense_id: string): Promise<boolean> {
 |--------------------------------------------------
 */
 
-export async function hardDeleteExpense(expense_id: string): Promise<boolean> {
+export async function hardDeleteExpense(id: string): Promise<boolean> {
   const [result] = await db<{ id: string }[]>`
   DELETE FROM expenses
-  WHERE id = ${expense_id}
+  WHERE id = ${id}
   RETURNING id
   `;
 

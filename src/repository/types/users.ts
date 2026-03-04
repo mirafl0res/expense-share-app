@@ -8,7 +8,12 @@ export type UserEntity = {
   deleted_at: string;
 };
 
-export type UserEntityPayload = Pick<
+export type UserCreatePayload = Pick<
   UserEntity,
   "id" | "username" | "email" | "password_hash"
 >;
+
+export type UserUpdatePayload = Partial<
+  Pick<UserEntity, "username" | "email" | "password_hash">
+>;
+
