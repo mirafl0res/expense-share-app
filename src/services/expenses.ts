@@ -1,4 +1,4 @@
-import type { ExpenseCreateRequest, Expense } from "../types/types";
+import type { ExpenseCreateRequest, Expense } from "../types/expenses";
 import repository from "../repository";
 import { ExpenseMapper } from "../mappers";
 import { DatabaseError } from "../errors";
@@ -28,6 +28,9 @@ export async function createExpense(
 
     return ExpenseMapper.toDomain(result);
   } catch (error) {
-    throw new DatabaseError("Failed to create expense", error as Error);
+    throw new DatabaseError({
+      message: "Failed to create expense",
+      cause: error,
+    });
   }
 }

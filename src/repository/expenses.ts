@@ -11,7 +11,7 @@ export async function insertExpense(
   `;
 
   if (!result) {
-    throw new DatabaseError("Failed to insert expense");
+    throw new DatabaseError({ message: "Failed to insert expense" });
   }
 
   return result;

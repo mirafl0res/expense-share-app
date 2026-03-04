@@ -9,7 +9,10 @@ server.setErrorHandler((error: unknown, request, reply) => {
   if (!(error instanceof BaseError)) {
     request.log.error((error as any)?.cause ?? error);
 
-    const unknownError = new InternalError("Unknown error", {}, error);
+    const unknownError = new InternalError({
+      message: "Unknown error",
+      cause: error,
+    });
 
     return reply
       .status(unknownError.statusCode)
