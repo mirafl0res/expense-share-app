@@ -3,9 +3,9 @@ export type UserEntity = {
   username: string;
   email: string;
   password_hash: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string;
+  created_at: string | null;
+  updated_at: string | null;
+  deleted_at: string | null;
 };
 
 export type UserCreatePayload = Pick<
@@ -16,4 +16,3 @@ export type UserCreatePayload = Pick<
 export type UserUpdatePayload = Partial<
   Pick<UserEntity, "username" | "email" | "password_hash">
 >;
-

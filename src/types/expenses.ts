@@ -21,6 +21,8 @@ export type ExpenseCreateRequest = {
   expenseDate: string;
 };
 
+export type ExpenseUpdateRequest = Omit<ExpenseCreateRequest, "groupId">;
+
 export type ExpenseParticipant = {
   expenseId: string;
   participantUserId: string | null;
