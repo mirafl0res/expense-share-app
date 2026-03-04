@@ -1,5 +1,6 @@
 import type { ExpenseEntity, ExpenseCreatePayload } from "./types/expenses";
 import db from "./db";
+import { DatabaseError } from "../errors";
 
 export async function insertExpense(
   expense: ExpenseCreatePayload,
@@ -10,7 +11,7 @@ export async function insertExpense(
   `;
 
   if (!result) {
-    throw new Error("Failed to insert expense");
+    throw new DatabaseError("Failed to insert expense");
   }
 
   return result;

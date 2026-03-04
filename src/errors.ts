@@ -1,44 +1,108 @@
-export class NotFoundError extends Error {
-  statusCode = 404; // Not found
+export abstract class BaseError extends Error {
+  abstract statusCode: number;
+  params: Record<string, unknown> = {};
 
-  constructor(message: string, cause?: Error) {
+  constructor(message: string, cause?: unknown) {
     super(message, { cause });
-    this.name = "NotFoundError";
+    this.name = new.target.name;
+  }
+
+  toPublicError() {
+    return {
+      success: false,
+      statusCode: this.statusCode,
+      message: this.message,
+      params: this.params,
+    };
   }
 }
 
-export class ValidationError extends Error {
-  statusCode = 400; // Bad request
+export class InternalError extends BaseError {
+  statusCode = 500;
 
-  constructor(message: string, cause?: Error) {
-    super(message, { cause });
-    this.name = "ValidationError";
+  constructor(
+    message: string = "Internal server error",
+    params: Record<string, unknown> = {},
+    cause?: unknown,
+  ) {
+    super(message, cause);
+    this.params = params;
   }
 }
 
-export class AuthenticationError extends Error {
-  statusCode = 401; // Unauthorized
+export class NotFoundError extends BaseError {
+  statusCode = 404;
 
-  constructor(message: string, cause?: Error) {
-    super(message, { cause });
-    this.name = "AuthenticationError";
+  constructor(
+    message: string = "Resource not found",
+    params: Record<string, unknown> = {},
+    cause?: unknown,
+  ) {
+    super(message, cause);
+    this.params = params;
   }
 }
 
-export class ForbiddenError extends Error {
-  statusCode = 403; // Forbidden
+export class BadRequestError extends BaseError {
+  statusCode = 400;
 
-  constructor(message: string, cause?: Error) {
-    super(message, { cause });
-    this.name = "ForbiddenError";
+  constructor(
+    message: string = "Bad request",
+    params: Record<string, unknown> = {},
+    cause?: unknown,
+  ) {
+    super(message, cause);
+    this.params = params;
   }
 }
 
-export class DatabaseError extends Error {
+export class ConflictError extends BaseError {
+  statusCode = 409;
+  constructor(
+    message: string = "Conflict",
+    params: Record<string, unknown> = {},
+    cause?: unknown,
+  ) {
+    super(message, cause);
+    this.params = params;
+  }
+}
+
+export class AuthenticationError extends BaseError {
+  statusCode = 401;
+
+  constructor(
+    message: string = "Not authenticated",
+    params: Record<string, unknown> = {},
+    cause?: unknown,
+  ) {
+    super(message, cause);
+    this.params = params;
+  }
+}
+
+export class ForbiddenError extends BaseError {
+  statusCode = 403;
+
+  constructor(
+    message: string = "Access forbidden",
+    params: Record<string, unknown> = {},
+    cause?: unknown,
+  ) {
+    super(message, cause);
+    this.params = params;
+  }
+}
+
+export class DatabaseError extends BaseError {
   statusCode = 500; // Internal server error
 
-  constructor(message: string, cause?: Error) {
-    super(message, { cause });
-    this.name = "DatabaseError";
+  constructor(
+    message: string = "Database error",
+    params: Record<string, unknown> = {},
+    cause?: unknown,
+  ) {
+    super(message, cause);
+    this.params = params;
   }
 }
