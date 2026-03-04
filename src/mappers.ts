@@ -1,5 +1,10 @@
-import type { ExpenseEntity } from "./repository/types/expenses";
-import type { Expense } from "./types/expenses";
+import type {
+  ExpenseEntity,
+  ExpenseUpdatePayload,
+} from "./repository/types/expenses";
+import type { UserEntity, UserUpdatePayload } from "./repository/types/users";
+import type { Expense, ExpenseUpdateRequest } from "./types/expenses";
+import type { User, UserUpdateRequest } from "./types/users";
 
 export const ExpenseMapper = {
   toDomain(entity: ExpenseEntity): Expense {
@@ -17,19 +22,65 @@ export const ExpenseMapper = {
       deletedAt: entity.deleted_at,
     };
   },
-  toEntity(domain: Expense): ExpenseEntity {
+  toEntity(expense: Expense): ExpenseEntity {
     return {
-      id: domain.id,
-      group_id: domain.groupId,
-      created_by: domain.createdBy,
-      payer_id: domain.payerId,
-      title: domain.title,
-      amount: domain.amount,
-      split_type: domain.splitType,
-      expense_date: domain.expenseDate,
-      created_at: domain.createdAt,
-      updated_at: domain.updatedAt,
-      deleted_at: domain.deletedAt,
+      id: expense.id,
+      group_id: expense.groupId,
+      created_by: expense.createdBy,
+      payer_id: expense.payerId,
+      title: expense.title,
+      amount: expense.amount,
+      split_type: expense.splitType,
+      expense_date: expense.expenseDate,
+      created_at: expense.createdAt,
+      updated_at: expense.updatedAt,
+      deleted_at: expense.deletedAt,
     };
+  },
+  toPartialEntity(updates: ExpenseUpdateRequest): ExpenseUpdatePayload {
+    const { payerId, title, amount, splitType, expenseDate } = updates;
+    const payload: ExpenseUpdatePayload = {};
+
+    if (payerId !== undefined) payload.payer_id = payerId;
+    if (title !== undefined) payload.title = title;
+    if (amount !== undefined) payload.amount = amount;
+    if (splitType !== undefined) payload.split_type = splitType;
+    if (expenseDate !== undefined) payload.expense_date = expenseDate;
+
+    return payload;
+  },
+};
+
+export const UserMapper = {
+  toDomain(entity: UserEntity): User {
+    return {
+      id: entity.id,
+      username: entity.username,
+      email: entity.email,
+      createdAt: entity.created_at,
+      updatedAt: entity.updated_at,
+      deletedAt: entity.deleted_at,
+    };
+  },
+  toEntity(user: User): UserEntity {
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      password_hash: "", // TODO[epic=authentication]: implement password hashing
+      created_at: user.createdAt,
+      updated_at: user.updatedAt,
+      deleted_at: user.deletedAt,
+    };
+  },
+  toPartialEntity(updates: UserUpdateRequest): UserUpdatePayload {
+    const { username, email, password } = updates;
+    const payload: UserUpdatePayload = {};
+
+    if (username !== undefined) payload.username = username;
+    if (email !== undefined) payload.email = email;
+    if (password !== undefined) payload.password_hash = password; // TODO[epic=authentication]: implement password hashing
+
+    return payload;
   },
 };
