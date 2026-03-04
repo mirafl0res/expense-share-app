@@ -1,7 +1,12 @@
-import type { ExpenseCreateRequest, Expense } from "../types/expenses";
+import type {
+  ExpenseCreateRequest,
+  Expense,
+  ExpenseUpdateRequest,
+} from "../types/expenses";
 import repository from "../repository";
 import { ExpenseMapper } from "../mappers";
-import { DatabaseError, NotFoundError } from "../errors";
+import { NotFoundError } from "../errors";
+import type { ExpenseUpdatePayload } from "../repository/types/expenses";
 
 export async function createExpense(
   expenseData: ExpenseCreateRequest,
@@ -16,9 +21,6 @@ export async function createExpense(
     amount: expenseData.amount,
     splitType: expenseData.splitType,
     expenseDate: expenseData.expenseDate,
-    createdAt: null,
-    updatedAt: null,
-    deletedAt: null,
   };
 
   const result = await repository.expenses.insertExpense(
@@ -34,4 +36,23 @@ export async function getExpenseById(id: string): Promise<Expense> {
     throw new NotFoundError({ message: "Expense not found" });
   }
   return ExpenseMapper.toDomain(result);
+}
+
+export async function updateExpense(
+  id: string,
+  updates: ExpenseUpdateRequest,
+): Promise<Expense | null> {
+  const updateFields = ExpenseMapper.toPartialEntity(updates);
+
+  const result = await repository.expenses.updateExpense(id, updateFields);
+  if (!result) {
+    throw new NotFoundError({ message: "Expense not found" });
+  }
+
+  return ExpenseMapper.toDomain(result);
+}
+
+export async function softDeleteExpense(id: string): Promise<boolean> {
+  const result = await repository.expenses.softDeleteExpense(id);
+  return result;
 }
