@@ -2,10 +2,16 @@ import type {
   ExpenseEntity,
   ExpenseUpdatePayload,
 } from "./repository/types/expenses";
+import type {
+  GroupEntity,
+  GroupUpdatePayload,
+} from "./repository/types/groups";
 import type { UserEntity, UserUpdatePayload } from "./repository/types/users";
 import type { Expense, ExpenseUpdateRequest } from "./types/expenses";
+import type { Group, GroupUpdateRequest } from "./types/groups";
 import type { User, UserUpdateRequest } from "./types/users";
 
+// *REVIEW[epic=mappers] - Should domain -> entity include timestamps?
 export const ExpenseMapper = {
   toDomain(entity: ExpenseEntity): Expense {
     return {
@@ -80,6 +86,36 @@ export const UserMapper = {
     if (username !== undefined) payload.username = username;
     if (email !== undefined) payload.email = email;
     if (password !== undefined) payload.password_hash = password; // TODO[epic=authentication]: implement password hashing
+
+    return payload;
+  },
+};
+
+export const GroupMapper = {
+  toDomain(entity: GroupEntity): Group {
+    return {
+      id: entity.id,
+      title: entity.title,
+      createdBy: entity.created_by,
+      createdAt: entity.created_at,
+      updatedAt: entity.updated_at,
+      deletedAt: entity.deleted_at,
+    };
+  },
+  toEntity(group: Group): GroupEntity {
+    return {
+      id: group.id,
+      title: group.title,
+      created_by: group.createdBy,
+      created_at: group.createdAt,
+      updated_at: group.updatedAt,
+      deleted_at: group.deletedAt,
+    };
+  },
+  toPartialEntity(updates: GroupUpdateRequest): GroupUpdatePayload {
+    const payload: GroupUpdatePayload = {};
+
+    if (!updates.title !== undefined) payload.title = updates.title;
 
     return payload;
   },
