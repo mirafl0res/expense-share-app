@@ -10,8 +10,8 @@ export async function createExpense(
   request: FastifyRequest<{ Body: ExpenseCreateRequest }>,
   reply: FastifyReply,
 ): Promise<void> {
-  const expense = await services.expenses.createExpense(request.body);
-  reply.status(201).send(expense);
+  const newExpense = await services.expenses.createExpense(request.body);
+  reply.status(201).send(newExpense);
 }
 
 export async function getExpenseById(
@@ -49,5 +49,9 @@ export async function deleteExpense(
   reply: FastifyReply,
 ): Promise<void> {
   const deleted = await services.expenses.softDeleteExpense(request.params.id);
+  if (!deleted) {
+    throw new NotFoundError({ message: "Expense not found" });
+  }
+
   reply.status(204).send(deleted);
 }

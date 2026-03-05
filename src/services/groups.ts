@@ -44,7 +44,7 @@ export async function updateGroup(
   return GroupMapper.toDomain(result);
 }
 
-export async function softDeleteExpense(id: string): Promise<boolean> {
+export async function softDeleteGroup(id: string): Promise<boolean> {
   const result = await repository.groups.softDeleteGroup(id);
 
   return result;
