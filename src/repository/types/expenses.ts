@@ -7,9 +7,9 @@ export type ExpenseEntity = {
   amount: number;
   split_type: string;
   expense_date: string;
-  created_at: string | null;
-  updated_at: string | null;
-  deleted_at: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+  deleted_at?: string | null;
 };
 
 export type ExpenseCreatePayload = Pick<
