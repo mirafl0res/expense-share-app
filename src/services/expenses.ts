@@ -6,21 +6,20 @@ import type {
 import repository from "../repository";
 import { ExpenseMapper } from "../mappers";
 import { NotFoundError } from "../errors";
-import type { ExpenseUpdatePayload } from "../repository/types/expenses";
 
 export async function createExpense(
-  expenseData: ExpenseCreateRequest,
+  data: ExpenseCreateRequest,
 ): Promise<Expense> {
   const testUserId = "11111111-1111-1111-1111-111111111111";
   const newExpense: Expense = {
     id: crypto.randomUUID(),
     createdBy: testUserId, // TODO[epic=authentication]: Implement JWT verification
-    groupId: expenseData.groupId,
-    payerId: expenseData.payerId,
-    title: expenseData.title,
-    amount: expenseData.amount,
-    splitType: expenseData.splitType,
-    expenseDate: expenseData.expenseDate,
+    groupId: data.groupId,
+    payerId: data.payerId,
+    title: data.title,
+    amount: data.amount,
+    splitType: data.splitType,
+    expenseDate: data.expenseDate,
   };
 
   const result = await repository.expenses.insertExpense(
@@ -40,11 +39,11 @@ export async function getExpenseById(id: string): Promise<Expense> {
 
 export async function updateExpense(
   id: string,
-  updates: ExpenseUpdateRequest,
+  data: ExpenseUpdateRequest,
 ): Promise<Expense | null> {
-  const updateFields = ExpenseMapper.toPartialEntity(updates);
+  const updates = ExpenseMapper.toPartialEntity(data);
 
-  const result = await repository.expenses.updateExpense(id, updateFields);
+  const result = await repository.expenses.updateExpense(id, updates);
   if (!result) {
     throw new NotFoundError({ message: "Expense not found" });
   }

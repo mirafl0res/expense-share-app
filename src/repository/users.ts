@@ -6,7 +6,6 @@ import type {
   UserUpdatePayload,
 } from "./types/users";
 
-
 /**
 |--------------------------------------------------
 | *TODO[epic=repository]: more functions...
@@ -64,6 +63,16 @@ export async function softDeleteUser(id: string): Promise<boolean> {
   SET deleted_at = NOW()
   WHERE id = ${id} AND deleted_at IS NULL
   RETURNING deleted_at
+  `;
+
+  return !!result;
+}
+
+export async function hardDeleteUser(id: string): Promise<boolean> {
+  const [result] = await db<{ id: string }[]>`
+  DELETE FROM users 
+  WHERE id = ${id}
+  RETURNING id
   `;
 
   return !!result;
