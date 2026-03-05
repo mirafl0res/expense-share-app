@@ -8,7 +8,7 @@ import { DatabaseError } from "../errors";
 
 /**
 |--------------------------------------------------
-// TODO[epic=repository]: getExpensesBy...
+*TODO[epic=repository]: getExpensesBy...
   - getExpensesByGroup
   - getExpensesByUser
 
@@ -62,7 +62,7 @@ export async function updateExpense(
 export async function softDeleteExpense(id: string): Promise<boolean> {
   const [result] = await db<{ deleted_at: string }[]>`
   UPDATE expenses
-  SET deleted_at = NOW()
+  SET deleted_at = now()
   WHERE id = ${id} AND deleted_at IS NULL
   RETURNING deleted_at
   `;

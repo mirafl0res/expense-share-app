@@ -60,7 +60,7 @@ export async function updateUser(
 export async function softDeleteUser(id: string): Promise<boolean> {
   const [result] = await db<{ deleted_at: string }[]>`
   UPDATE users
-  SET deleted_at = NOW()
+  SET deleted_at = now()
   WHERE id = ${id} AND deleted_at IS NULL
   RETURNING deleted_at
   `;
