@@ -53,5 +53,6 @@ export async function updateExpense(
 
 export async function softDeleteExpense(id: string): Promise<boolean> {
   const result = await repository.expenses.softDeleteExpense(id);
+
   return result;
 }

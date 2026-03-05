@@ -1,6 +1,11 @@
+import { NotFoundError } from "../errors";
 import { GroupMapper } from "../mappers";
 import repository from "../repository";
-import type { Group, GroupCreateRequest } from "../types/groups";
+import type {
+  Group,
+  GroupCreateRequest,
+  GroupUpdateRequest,
+} from "../types/groups";
 
 export async function createGroup(data: GroupCreateRequest): Promise<Group> {
   const testUserId = "11111111-1111-1111-1111-111111111111";
@@ -15,4 +20,32 @@ export async function createGroup(data: GroupCreateRequest): Promise<Group> {
   );
 
   return GroupMapper.toDomain(result);
+}
+
+export async function getGroupById(id: string): Promise<Group> {
+  const result = await repository.groups.getGroupById(id);
+  if (!result) {
+    throw new NotFoundError({ message: "Group not found" });
+  }
+  return GroupMapper.toDomain(result);
+}
+
+export async function updateGroup(
+  id: string,
+  data: GroupUpdateRequest,
+): Promise<Group | null> {
+  const updates = GroupMapper.toPartialEntity(data);
+
+  const result = await repository.groups.updateGroup(id, updates);
+  if (!result) {
+    throw new NotFoundError({ message: "Group not found" });
+  }
+
+  return GroupMapper.toDomain(result);
+}
+
+export async function softDeleteExpense(id: string): Promise<boolean> {
+  const result = await repository.groups.softDeleteGroup(id);
+
+  return result;
 }
