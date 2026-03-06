@@ -12,10 +12,10 @@ export const createExpenseSchema: FastifySchema = {
       "expenseDate",
     ],
     properties: {
-      groupId: { type: "string" },
-      payerId: { type: "string" },
-      title: { type: "string" },
-      amount: { type: "number" },
+      groupId: { type: "string", format: "uuid" },
+      payerId: { type: "string", format: "uuid" },
+      title: { type: "string", minLength: 1, maxLength: 30 },
+      amount: { type: "number", minimum: 0 },
       splitType: { type: "string" },
       expenseDate: { type: "string", format: "date" },
     },
@@ -28,7 +28,7 @@ export const getExpenseByIdSchema: FastifySchema = {
     type: "object",
     required: ["id"],
     properties: {
-      id: { type: "string" },
+      id: { type: "string", format: "uuid" },
     },
     additionalProperties: false,
   },
@@ -39,16 +39,16 @@ export const updateExpenseSchema: FastifySchema = {
     type: "object",
     required: ["id"],
     properties: {
-      id: { type: "string" },
+      id: { type: "string", format: "uuid" },
     },
     additionalProperties: false,
   },
   body: {
     type: "object",
     properties: {
-      payerId: { type: "string" },
-      title: { type: "string" },
-      amount: { type: "number" },
+      payerId: { type: "string", format: "uuid" },
+      title: { type: "string", minLength: 1, maxLength: 30 },
+      amount: { type: "number", minimum: 0 },
       splitType: { type: "string" },
       expenseDate: { type: "string", format: "date" },
     },
@@ -61,7 +61,7 @@ export const deleteExpenseSchema: FastifySchema = {
     type: "object",
     required: ["id"],
     properties: {
-      id: { type: "string" },
+      id: { type: "string", format: "uuid" },
     },
     additionalProperties: false,
   },
@@ -72,7 +72,7 @@ export const softDeleteExpenseSchema: FastifySchema = {
     type: "object",
     required: ["id"],
     properties: {
-      id: { type: "string" },
+      id: { type: "string", format: "uuid" },
     },
     additionalProperties: false,
   },

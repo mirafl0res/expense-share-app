@@ -5,7 +5,7 @@ export const createGroupSchema: FastifySchema = {
     type: "object",
     required: ["title", "createdBy"],
     properties: {
-      title: { type: "string" },
+      title: { type: "string", minLength: 1, maxLength: 30 },
       createdBy: { type: "string" },
     },
     additionalProperties: false,
@@ -17,7 +17,7 @@ export const getGroupByIdSchema: FastifySchema = {
     type: "object",
     required: ["id"],
     properties: {
-      id: { type: "string" },
+      id: { type: "string", format: "uuid" },
     },
     additionalProperties: false,
   },
@@ -28,16 +28,16 @@ export const updateGroupSchema: FastifySchema = {
     type: "object",
     required: ["id"],
     properties: {
-      id: { type: "string" },
+      id: { type: "string", format: "uuid" },
     },
     additionalProperties: false,
   },
   body: {
     type: "object",
     properties: {
-      payerId: { type: "string" },
-      title: { type: "string" },
-      amount: { type: "number" },
+      payerId: { type: "string", format: "uuid" },
+      title: { type: "string", minLength: 1, maxLength: 30 },
+      amount: { type: "number", minimum: 0 },
       splitType: { type: "string" },
       expenseDate: { type: "string", format: "date" },
     },
@@ -50,7 +50,7 @@ export const deleteGroupSchema: FastifySchema = {
     type: "object",
     required: ["id"],
     properties: {
-      id: { type: "string" },
+      id: { type: "string", format: "uuid" },
     },
     additionalProperties: false,
   },
@@ -61,7 +61,7 @@ export const softDeleteGroupSchema: FastifySchema = {
     type: "object",
     required: ["id"],
     properties: {
-      id: { type: "string" },
+      id: { type: "string", format: "uuid" },
     },
     additionalProperties: false,
   },

@@ -8,9 +8,9 @@ export const createUserSchema: FastifySchema = {
     type: "object",
     required: ["username", "email", "password"],
     properties: {
-      username: { type: "string" },
-      email: { type: "string" },
-      password: { type: "string" },
+      username: { type: "string", minLength: 1, maxLength: 30 },
+      email: { type: "string", format: "email" },
+      password: { type: "string", minLength: 8 },
     },
     additionalProperties: false,
   },
@@ -21,7 +21,7 @@ export const getUserByIdSchema: FastifySchema = {
     type: "object",
     required: ["id"],
     properties: {
-      id: { type: "string" },
+      id: { type: "string", format: "uuid" },
     },
     additionalProperties: false,
   },
@@ -32,16 +32,16 @@ export const updateUserSchema: FastifySchema = {
     type: "object",
     required: ["id"],
     properties: {
-      id: { type: "string" },
+      id: { type: "string", format: "uuid" },
     },
     additionalProperties: false,
   },
   body: {
     type: "object",
     properties: {
-      username: { type: "string" },
-      email: { type: "string" },
-      password: { type: "string" },
+      username: { type: "string", minLength: 1, maxLength: 30 },
+      email: { type: "string", format: "email" },
+      password: { type: "string", minLength: 8 },
     },
     additionalProperties: false,
   },
@@ -52,7 +52,7 @@ export const deleteUserSchema: FastifySchema = {
     type: "object",
     required: ["id"],
     properties: {
-      id: { type: "string" },
+      id: { type: "string", format: "uuid" },
     },
     additionalProperties: false,
   },
@@ -63,7 +63,7 @@ export const softDeleteUserSchema: FastifySchema = {
     type: "object",
     required: ["id"],
     properties: {
-      id: { type: "string" },
+      id: { type: "string", format: "uuid" },
     },
     additionalProperties: false,
   },
