@@ -4,7 +4,6 @@ import type {
   ExpenseUpdateRequest,
 } from "../types/expenses";
 import services from "../services";
-import { NotFoundError } from "../errors";
 
 export async function createExpense(
   request: FastifyRequest<{ Body: ExpenseCreateRequest }>,
@@ -19,10 +18,6 @@ export async function getExpenseById(
   reply: FastifyReply,
 ): Promise<void> {
   const expense = await services.expenses.getExpenseById(request.params.id);
-  if (!expense) {
-    throw new NotFoundError({ message: "Expense not found" });
-  }
-
   reply.status(200).send(expense);
 }
 
@@ -37,10 +32,6 @@ export async function updateExpense(
     request.params.id,
     request.body,
   );
-  if (!updatedExpense) {
-    throw new NotFoundError({ message: "Expense not found" });
-  }
-
   reply.status(200).send(updatedExpense);
 }
 
@@ -49,10 +40,6 @@ export async function softDeleteExpense(
   reply: FastifyReply,
 ): Promise<void> {
   const deleted = await services.expenses.softDeleteExpense(request.params.id);
-  if (!deleted) {
-    throw new NotFoundError({ message: "Expense not found" });
-  }
-
   reply.status(204).send(deleted);
 }
 
@@ -61,9 +48,5 @@ export async function hardDeleteExpense(
   reply: FastifyReply,
 ): Promise<void> {
   const deleted = await services.expenses.hardDeleteExpense(request.params.id);
-  if (!deleted) {
-    throw new NotFoundError({ message: "Expense not found" });
-  }
-
   reply.status(204).send(deleted);
 }

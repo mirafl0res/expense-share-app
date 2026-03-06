@@ -44,9 +44,19 @@ export async function updateUser(
 }
 
 export async function softDeleteUser(id: string): Promise<boolean> {
-  return await repository.users.softDeleteUser(id);
+  const deleted = await repository.users.softDeleteUser(id);
+  if (!deleted) {
+    throw new NotFoundError({ message: "User not found" });
+  }
+
+  return deleted;
 }
 
 export async function hardDeleteUser(id: string): Promise<boolean> {
-  return await repository.users.hardDeleteUser(id);
+  const deleted = await repository.users.hardDeleteUser(id);
+  if (!deleted) {
+    throw new NotFoundError({ message: "User not found" });
+  }
+
+  return deleted;
 }

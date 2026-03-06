@@ -45,9 +45,19 @@ export async function updateGroup(
 }
 
 export async function softDeleteGroup(id: string): Promise<boolean> {
-  return await repository.groups.softDeleteGroup(id);
+  const deleted = await repository.groups.softDeleteGroup(id);
+  if (!deleted) {
+    throw new NotFoundError({ message: "Group not found" });
+  }
+
+  return deleted;
 }
 
 export async function hardDeleteGroup(id: string): Promise<boolean> {
-  return await repository.groups.hardDeleteGroup(id);
+  const deleted = await repository.groups.hardDeleteGroup(id);
+  if (!deleted) {
+    throw new NotFoundError({ message: "Group not found" });
+  }
+
+  return deleted;
 }

@@ -52,9 +52,19 @@ export async function updateExpense(
 }
 
 export async function softDeleteExpense(id: string): Promise<boolean> {
-  return await repository.expenses.softDeleteExpense(id);
+  const deleted = await repository.expenses.softDeleteExpense(id);
+  if (!deleted) {
+    throw new NotFoundError({ message: "Expense not found" });
+  }
+
+  return deleted;
 }
 
 export async function hardDeleteExpense(id: string): Promise<boolean> {
-  return await repository.expenses.hardDeleteExpense(id);
+  const deleted = await repository.expenses.hardDeleteExpense(id);
+  if (!deleted) {
+    throw new NotFoundError({ message: "Expense not found" });
+  }
+
+  return deleted;
 }
