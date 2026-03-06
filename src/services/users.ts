@@ -44,6 +44,9 @@ export async function updateUser(
 }
 
 export async function softDeleteUser(id: string): Promise<boolean> {
-  const result = await repository.users.softDeleteUser(id);
-  return result;
+  return await repository.users.softDeleteUser(id);
+}
+
+export async function hardDeleteUser(id: string): Promise<boolean> {
+  return await repository.users.hardDeleteUser(id);
 }

@@ -52,7 +52,9 @@ export async function updateExpense(
 }
 
 export async function softDeleteExpense(id: string): Promise<boolean> {
-  const result = await repository.expenses.softDeleteExpense(id);
+  return await repository.expenses.softDeleteExpense(id);
+}
 
-  return result;
+export async function hardDeleteExpense(id: string): Promise<boolean> {
+  return await repository.expenses.hardDeleteExpense(id);
 }

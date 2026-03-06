@@ -45,7 +45,9 @@ export async function updateGroup(
 }
 
 export async function softDeleteGroup(id: string): Promise<boolean> {
-  const result = await repository.groups.softDeleteGroup(id);
+  return await repository.groups.softDeleteGroup(id);
+}
 
-  return result;
+export async function hardDeleteGroup(id: string): Promise<boolean> {
+  return await repository.groups.hardDeleteGroup(id);
 }
