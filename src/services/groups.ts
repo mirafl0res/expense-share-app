@@ -1,6 +1,6 @@
 import { NotFoundError } from "../errors";
 import { GroupMapper } from "../mappers";
-import repository from "../repository";
+import * as repository from "../repository/groups";
 import type {
   Group,
   GroupCreateRequest,
@@ -15,7 +15,7 @@ export async function createGroup(data: GroupCreateRequest): Promise<Group> {
     createdBy: testUserId,
   };
 
-  const result = await repository.groups.insertGroup(
+  const result = await repository.insertGroup(
     GroupMapper.toEntity(newGroup),
   );
 
@@ -23,7 +23,7 @@ export async function createGroup(data: GroupCreateRequest): Promise<Group> {
 }
 
 export async function getGroupById(id: string): Promise<Group> {
-  const result = await repository.groups.getGroupById(id);
+  const result = await repository.getGroupById(id);
   if (!result) {
     throw new NotFoundError({ message: "Group not found" });
   }
@@ -36,7 +36,7 @@ export async function updateGroup(
 ): Promise<Group | null> {
   const updates = GroupMapper.toPartialEntity(data);
 
-  const result = await repository.groups.updateGroup(id, updates);
+  const result = await repository.updateGroup(id, updates);
   if (!result) {
     throw new NotFoundError({ message: "Group not found" });
   }
@@ -45,7 +45,7 @@ export async function updateGroup(
 }
 
 export async function softDeleteGroup(id: string): Promise<boolean> {
-  const deleted = await repository.groups.softDeleteGroup(id);
+  const deleted = await repository.softDeleteGroup(id);
   if (!deleted) {
     throw new NotFoundError({ message: "Group not found" });
   }
@@ -54,7 +54,7 @@ export async function softDeleteGroup(id: string): Promise<boolean> {
 }
 
 export async function hardDeleteGroup(id: string): Promise<boolean> {
-  const deleted = await repository.groups.hardDeleteGroup(id);
+  const deleted = await repository.hardDeleteGroup(id);
   if (!deleted) {
     throw new NotFoundError({ message: "Group not found" });
   }

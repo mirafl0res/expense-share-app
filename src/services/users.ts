@@ -1,6 +1,6 @@
 import { NotFoundError } from "../errors";
 import { UserMapper } from "../mappers";
-import repository from "../repository";
+import * as repository from "../repository/users";
 import type {
   User,
   UserCreateRequest,
@@ -14,7 +14,7 @@ export async function createUser(userData: UserCreateRequest): Promise<User> {
     email: userData.email,
   };
 
-  const result = await repository.users.insertUser(
+  const result = await repository.insertUser(
     UserMapper.toEntity(newUser),
   );
 
@@ -22,7 +22,7 @@ export async function createUser(userData: UserCreateRequest): Promise<User> {
 }
 
 export async function getUserById(id: string): Promise<User | null> {
-  const result = await repository.users.getUserById(id);
+  const result = await repository.getUserById(id);
   if (!result) {
     throw new NotFoundError({ message: "User not found" });
   }
@@ -35,7 +35,7 @@ export async function updateUser(
 ): Promise<User | null> {
   const updateFields = UserMapper.toPartialEntity(updates);
 
-  const result = await repository.users.updateUser(id, updateFields);
+  const result = await repository.updateUser(id, updateFields);
   if (!result) {
     throw new NotFoundError({ message: "User not found" });
   }
@@ -44,7 +44,7 @@ export async function updateUser(
 }
 
 export async function softDeleteUser(id: string): Promise<boolean> {
-  const deleted = await repository.users.softDeleteUser(id);
+  const deleted = await repository.softDeleteUser(id);
   if (!deleted) {
     throw new NotFoundError({ message: "User not found" });
   }
@@ -53,7 +53,7 @@ export async function softDeleteUser(id: string): Promise<boolean> {
 }
 
 export async function hardDeleteUser(id: string): Promise<boolean> {
-  const deleted = await repository.users.hardDeleteUser(id);
+  const deleted = await repository.hardDeleteUser(id);
   if (!deleted) {
     throw new NotFoundError({ message: "User not found" });
   }

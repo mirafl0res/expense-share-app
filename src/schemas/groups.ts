@@ -45,7 +45,7 @@ export const updateGroupSchema: FastifySchema = {
   },
 };
 
-export const softDeleteGroupSchema: FastifySchema = {
+export const deleteGroupSchema: FastifySchema = {
   params: {
     type: "object",
     required: ["id"],
@@ -56,7 +56,7 @@ export const softDeleteGroupSchema: FastifySchema = {
   },
 };
 
-export const hardDeleteGroupSchema: FastifySchema = {
+export const softDeleteGroupSchema: FastifySchema = {
   params: {
     type: "object",
     required: ["id"],

@@ -56,7 +56,7 @@ export const updateExpenseSchema: FastifySchema = {
   },
 };
 
-export const softDeleteExpenseSchema: FastifySchema = {
+export const deleteExpenseSchema: FastifySchema = {
   params: {
     type: "object",
     required: ["id"],
@@ -67,7 +67,7 @@ export const softDeleteExpenseSchema: FastifySchema = {
   },
 };
 
-export const hardDeleteExpenseSchema: FastifySchema = {
+export const softDeleteExpenseSchema: FastifySchema = {
   params: {
     type: "object",
     required: ["id"],

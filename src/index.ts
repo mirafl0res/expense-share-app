@@ -1,5 +1,5 @@
 import { fastify, type FastifyInstance } from "fastify";
-import routes from "./routes";
+import { expensesRoutes, usersRoutes, groupsRoutes } from "./routes";
 import db from "./repository/db";
 import { BaseError, InternalError } from "./errors";
 
@@ -24,7 +24,7 @@ fastifyServer.setErrorHandler((error: unknown, request, reply) => {
   return reply.status(error.statusCode).send(error.toPublicError());
 });
 
-fastifyServer.setNotFoundHandler((request, reply) => {
+fastifyServer.setNotFoundHandler((_request, reply) => {
   return reply.status(404).send({
     success: false,
     statusCode: 404,
@@ -43,9 +43,9 @@ async function start(): Promise<void> {
     process.exit(1);
   }
 
-  for (const route of routes) {
-    await fastifyServer.register(route);
-  }
+  await fastifyServer.register(usersRoutes);
+  await fastifyServer.register(groupsRoutes);
+  await fastifyServer.register(expensesRoutes);
 
   try {
     await fastifyServer.listen({

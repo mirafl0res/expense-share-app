@@ -47,7 +47,7 @@ export const updateUserSchema: FastifySchema = {
   },
 };
 
-export const softDeleteUserSchema: FastifySchema = {
+export const deleteUserSchema: FastifySchema = {
   params: {
     type: "object",
     required: ["id"],
@@ -58,7 +58,7 @@ export const softDeleteUserSchema: FastifySchema = {
   },
 };
 
-export const hardDeleteUserSchema: FastifySchema = {
+export const softDeleteUserSchema: FastifySchema = {
   params: {
     type: "object",
     required: ["id"],
