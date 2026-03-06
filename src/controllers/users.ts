@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import type { UserCreateRequest, UserUpdateRequest } from "../types/users";
-import { services } from "../services";
+import services from "../services";
 import { NotFoundError } from "../errors";
 
 export async function createUser(

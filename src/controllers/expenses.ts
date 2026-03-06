@@ -3,7 +3,7 @@ import type {
   ExpenseCreateRequest,
   ExpenseUpdateRequest,
 } from "../types/expenses";
-import { services } from "../services";
+import services from "../services";
 import { NotFoundError } from "../errors";
 
 export async function createExpense(

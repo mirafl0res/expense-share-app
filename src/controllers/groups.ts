@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { services } from "../services";
 import type { GroupCreateRequest, GroupUpdateRequest } from "../types/groups";
 import { NotFoundError } from "../errors";
+import services from "../services";
 
 export async function createGroup(
   request: FastifyRequest<{ Body: GroupCreateRequest }>,
