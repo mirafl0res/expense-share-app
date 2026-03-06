@@ -13,4 +13,4 @@ export type UserCreateRequest = {
   password: string;
 };
 
-export type UserUpdateRequest = UserCreateRequest;
+export type UserUpdateRequest = Partial<UserCreateRequest>;
