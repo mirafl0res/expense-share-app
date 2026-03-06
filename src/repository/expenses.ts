@@ -18,29 +18,43 @@ import { DatabaseError } from "../errors";
 export async function insertExpense(
   expense: ExpenseCreatePayload,
 ): Promise<ExpenseEntity> {
-  const [result] = await db<ExpenseEntity[]>`
-  INSERT INTO expenses ${db(expense)}
-  RETURNING *
-  `;
+  try {
+    const [result] = await db<ExpenseEntity[]>`
+    INSERT INTO expenses ${db(expense)}
+    RETURNING *
+    `;
 
-  if (!result) {
-    throw new DatabaseError({ message: "Failed to insert expense" });
+    if (!result) {
+      throw new DatabaseError({ message: "insertExpense: No row returned" });
+    }
+
+    return result;
+  } catch (error) {
+    throw new DatabaseError({
+      message: "Insert expense: database error",
+      cause: error,
+    });
   }
-
-  return result;
 }
 
 export async function getExpenseById(
   id: string,
   includeDeleted: boolean = false,
 ): Promise<ExpenseEntity | null> {
-  const [result] = await db<ExpenseEntity[]>`
-  SELECT * FROM expenses
-  WHERE id = ${id}
+  try {
+    const [result] = await db<ExpenseEntity[]>`
+    SELECT * FROM expenses
+    WHERE id = ${id}
   ${includeDeleted ? db`` : db`AND deleted_at IS NULL`}
   `;
 
-  return result ?? null;
+    return result ?? null;
+  } catch (error) {
+    throw new DatabaseError({
+      message: "getExpenseById: Database error",
+      cause: error,
+    });
+  }
 }
 
 export async function updateExpense(
@@ -48,34 +62,55 @@ export async function updateExpense(
   updates: ExpenseUpdatePayload,
   includeDeleted: boolean = false,
 ): Promise<ExpenseEntity | null> {
-  const [result] = await db<ExpenseEntity[]>`
-  UPDATE expenses
-  SET ${db(updates)}
-  WHERE id = ${id}
-  ${includeDeleted ? db`` : db`AND deleted_at IS NULL`}
-  RETURNING *
+  try {
+    const [result] = await db<ExpenseEntity[]>`
+    UPDATE expenses
+    SET ${db(updates)}
+    WHERE id = ${id}
+    ${includeDeleted ? db`` : db`AND deleted_at IS NULL`}
+    RETURNING *
   `;
 
-  return result ?? null;
+    return result ?? null;
+  } catch (error) {
+    throw new DatabaseError({
+      message: "insertExpense: Database error",
+      cause: error,
+    });
+  }
 }
 
 export async function softDeleteExpense(id: string): Promise<boolean> {
-  const [result] = await db<{ deleted_at: string }[]>`
-  UPDATE expenses
-  SET deleted_at = now()
-  WHERE id = ${id} AND deleted_at IS NULL
-  RETURNING deleted_at
+  try {
+    const [result] = await db<{ deleted_at: string }[]>`
+    UPDATE expenses
+    SET deleted_at = now()
+    WHERE id = ${id} AND deleted_at IS NULL
+    RETURNING deleted_at
   `;
 
-  return !!result;
+    return !!result;
+  } catch (error) {
+    throw new DatabaseError({
+      message: "softDeleteExpense: Database error",
+      cause: error,
+    });
+  }
 }
 
 export async function hardDeleteExpense(id: string): Promise<boolean> {
-  const [result] = await db<{ id: string }[]>`
-  DELETE FROM expenses
-  WHERE id = ${id}
-  RETURNING id
-  `;
+  try {
+    const [result] = await db<{ id: string }[]>`
+    DELETE FROM expenses
+    WHERE id = ${id}
+    RETURNING id
+    `;
 
-  return !!result;
+    return !!result;
+  } catch (error) {
+    throw new DatabaseError({
+      message: "hardDeleteExpense: Database error",
+      cause: error,
+    });
+  }
 }

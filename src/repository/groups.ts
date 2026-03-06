@@ -9,29 +9,43 @@ import type {
 export async function insertGroup(
   group: GroupCreatePayload,
 ): Promise<GroupEntity> {
-  const [result] = await db<GroupEntity[]>`
-  INSERT INTO expense_groups ${db(group)}
-  RETURNING *
+  try {
+    const [result] = await db<GroupEntity[]>`
+    INSERT INTO expense_groups ${db(group)}
+    RETURNING *
   `;
 
-  if (!result) {
-    throw new DatabaseError({ message: "Failed to insert group" });
-  }
+    if (!result) {
+      throw new DatabaseError({ message: "insertGroup: No row returned" });
+    }
 
-  return result;
+    return result;
+  } catch (error) {
+    throw new DatabaseError({
+      message: "insertGroup: Database error",
+      cause: error,
+    });
+  }
 }
 
 export async function getGroupById(
   id: string,
   includeDeleted: boolean = false,
 ): Promise<GroupEntity | null> {
-  const [result] = await db`
-  SELECT * FROM expense_groups
-  WHERE id = ${id}
-  ${includeDeleted ? db`` : db`AND deleted_at IS NULL`}
-  `;
+  try {
+    const [result] = await db`
+    SELECT * FROM expense_groups
+    WHERE id = ${id}
+    ${includeDeleted ? db`` : db`AND deleted_at IS NULL`}
+    `;
 
-  return result ?? null;
+    return result ?? null;
+  } catch (error) {
+    throw new DatabaseError({
+      message: "getGroupById: Database error",
+      cause: error,
+    });
+  }
 }
 
 export async function updateGroup(
@@ -39,35 +53,55 @@ export async function updateGroup(
   updates: GroupUpdatePayload,
   includeDeleted: boolean = false,
 ): Promise<GroupEntity | null> {
-  const [result] = await db<GroupEntity[]>`
-  UPDATE expense_groups
-  SET ${db(updates)}
-  WHERE id = ${id}
-  ${includeDeleted ? db`` : db`AND deleted_at IS NULL`}
-  RETURNING *
-  `;
+  try {
+    const [result] = await db<GroupEntity[]>`
+    UPDATE expense_groups
+    SET ${db(updates)}
+    WHERE id = ${id}
+    ${includeDeleted ? db`` : db`AND deleted_at IS NULL`}
+    RETURNING *
+    `;
 
-  return result ?? null;
+    return result ?? null;
+  } catch (error) {
+    throw new DatabaseError({
+      message: "updateGroup: Database error",
+      cause: error,
+    });
+  }
 }
 
 export async function softDeleteGroup(id: string): Promise<boolean> {
-  const [result] = await db<{ deleted_at: string }[]>`
-  UPDATE expense_groups
-  SET deleted_at = now()
-  WHERE id = ${id} AND deleted_at IS NULL
-  RETURNING deleted_at
-  `;
+  try {
+    const [result] = await db<{ deleted_at: string }[]>`
+    UPDATE expense_groups
+    SET deleted_at = now()
+    WHERE id = ${id} AND deleted_at IS NULL
+    RETURNING deleted_at
+    `;
 
-  return !!result;
+    return !!result;
+  } catch (error) {
+    throw new DatabaseError({
+      message: "softDeleteGroup: Database error",
+      cause: error,
+    });
+  }
 }
 
-
 export async function hardDeleteGroup(id: string): Promise<boolean> {
-  const [result] = await db<{ id: string }[]>`
-  DELETE FROM expense_groups 
-  WHERE id = ${id}
-  RETURNING id
-  `;
+  try {
+    const [result] = await db<{ id: string }[]>`
+    DELETE FROM expense_groups 
+    WHERE id = ${id}
+    RETURNING id
+    `;
 
-  return !!result;
+    return !!result;
+  } catch (error) {
+    throw new DatabaseError({
+      message: "hardDeleteGroup: Database error",
+      cause: error,
+    });
+  }
 }
