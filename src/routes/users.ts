@@ -1,35 +1,39 @@
 import { type FastifyInstance, type FastifyPluginOptions } from "fastify";
-import controllers from "../controllers";
+import * as controllers from "../controllers/users";
+import * as schemas from "../schemas/users";
 
-async function routes(
+export async function usersRoutes(
   fastifyServer: FastifyInstance,
   _options: FastifyPluginOptions,
 ): Promise<void> {
   fastifyServer.route({
     method: "POST",
     url: "/users",
-    handler: controllers.users.createUser,
+    schema: schemas.createUserSchema,
+    handler: controllers.createUser,
   });
   fastifyServer.route({
     method: "GET",
     url: "/users/:id",
-    handler: controllers.users.getUserById,
+    schema: schemas.getUserByIdSchema,
+    handler: controllers.getUserById,
   });
   fastifyServer.route({
     method: "PATCH",
     url: "/users/:id/",
-    handler: controllers.users.updateUser,
+    schema: schemas.updateUserSchema,
+    handler: controllers.updateUser,
   });
-//   fastifyServer.route({
-//     method: "PATCH",
-//     url: "/users/:id",
-//     handler: controllers.users.softDeleteUser,
-//   });
   fastifyServer.route({
     method: "DELETE",
     url: "/users/:id",
-    handler: controllers.users.hardDeleteUser,
+    schema: schemas.deleteUserSchema,
+    handler: controllers.deleteUser,
   });
+  // fastifyServer.route({
+  //   method: "PATCH",
+  //   url: "/users/:id",
+  //   schema: schemas.softDeleteUserSchema,
+  //   handler: controllers.softDeleteUser,
+  // });
 }
-
-export default routes;

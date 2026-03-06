@@ -1,35 +1,39 @@
 import { type FastifyInstance, type FastifyPluginOptions } from "fastify";
-import controllers from "../controllers";
+import * as controllers from "../controllers/groups";
+import * as schemas from "../schemas/groups";
 
-async function routes(
+export async function groupsRoutes(
   fastifyServer: FastifyInstance,
   _options: FastifyPluginOptions,
 ): Promise<void> {
   fastifyServer.route({
     method: "POST",
     url: "/groups",
-    handler: controllers.groups.createGroup,
+    schema: schemas.createGroupSchema,
+    handler: controllers.createGroup,
   });
   fastifyServer.route({
     method: "GET",
     url: "/groups/:id",
-    handler: controllers.groups.getGroupById,
+    schema: schemas.getGroupByIdSchema,
+    handler: controllers.getGroupById,
   });
   fastifyServer.route({
     method: "PATCH",
     url: "/groups/:id",
-    handler: controllers.groups.updateGroup,
+    schema: schemas.updateGroupSchema,
+    handler: controllers.updateGroup,
   });
-//   fastifyServer.route({
-//     method: "PATCH",
-//     url: "/groups/:id",
-//     handler: controllers.groups.softDeleteGroup,
-//   });
   fastifyServer.route({
     method: "DELETE",
     url: "/groups/:id",
-    handler: controllers.groups.hardDeleteGroup,
+    schema: schemas.deleteGroupSchema,
+    handler: controllers.deleteGroup,
   });
+  // fastifyServer.route({
+  //   method: "PATCH",
+  //   url: "/groups/:id",
+  //   schema: schemas.softDeleteGroupSchema,
+  //   handler: controllers.softDeleteGroup,
+  // });
 }
-
-export default routes;

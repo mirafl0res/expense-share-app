@@ -1,5 +1,3 @@
-import expensesRoutes from "./expenses";
-import usersRoutes from "./users";
-import groupsRoutes from "./groups";
-
-export default [expensesRoutes, usersRoutes, groupsRoutes];
+export { usersRoutes } from "./users";
+export { expensesRoutes } from "./expenses";
+export { groupsRoutes } from "./groups";
