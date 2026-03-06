@@ -43,7 +43,9 @@ async function start(): Promise<void> {
     process.exit(1);
   }
 
-  await fastifyServer.register(routes);
+  for (const route of routes) {
+    await fastifyServer.register(route);
+  }
 
   try {
     await fastifyServer.listen({
