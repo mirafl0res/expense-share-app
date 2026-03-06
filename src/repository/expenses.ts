@@ -70,12 +70,6 @@ export async function softDeleteExpense(id: string): Promise<boolean> {
   return !!result;
 }
 
-/**
-|--------------------------------------------------
-| Admin functionality
-|--------------------------------------------------
-*/
-
 export async function hardDeleteExpense(id: string): Promise<boolean> {
   const [result] = await db<{ id: string }[]>`
   DELETE FROM expenses

@@ -44,11 +44,23 @@ export async function updateExpense(
   reply.status(200).send(updatedExpense);
 }
 
-export async function deleteExpense(
+export async function softDeleteExpense(
   request: FastifyRequest<{ Params: { id: string } }>,
   reply: FastifyReply,
 ): Promise<void> {
   const deleted = await services.expenses.softDeleteExpense(request.params.id);
+  if (!deleted) {
+    throw new NotFoundError({ message: "Expense not found" });
+  }
+
+  reply.status(204).send(deleted);
+}
+
+export async function hardDeleteExpense(
+  request: FastifyRequest<{ Params: { id: string } }>,
+  reply: FastifyReply,
+): Promise<void> {
+  const deleted = await services.expenses.hardDeleteExpense(request.params.id);
   if (!deleted) {
     throw new NotFoundError({ message: "Expense not found" });
   }

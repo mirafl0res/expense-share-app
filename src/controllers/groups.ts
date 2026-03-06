@@ -38,11 +38,23 @@ export async function updateGroup(
   reply.status(200).send(updatedGroup);
 }
 
-export async function deleteGroup(
+export async function softDeleteGroup(
   request: FastifyRequest<{ Params: { id: string } }>,
   reply: FastifyReply,
 ): Promise<void> {
   const deleted = await services.groups.softDeleteGroup(request.params.id);
+  if (!deleted) {
+    throw new NotFoundError({ message: "Group not found" });
+  }
+
+  reply.status(204).send(deleted);
+}
+
+export async function hardDeleteGroup(
+  request: FastifyRequest<{ Params: { id: string } }>,
+  reply: FastifyReply,
+): Promise<void> {
+  const deleted = await services.groups.hardDeleteGroup(request.params.id);
   if (!deleted) {
     throw new NotFoundError({ message: "Group not found" });
   }

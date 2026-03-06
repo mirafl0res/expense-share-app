@@ -38,11 +38,23 @@ export async function updateUser(
   reply.status(200).send(updatedUser);
 }
 
-export async function deleteUser(
+export async function softDeleteUser(
   request: FastifyRequest<{ Params: { id: string } }>,
   reply: FastifyReply,
 ): Promise<void> {
   const deleted = await services.users.softDeleteUser(request.params.id);
+  if (!deleted) {
+    throw new NotFoundError({ message: "User not found" });
+  }
+
+  reply.status(204).send(deleted);
+}
+
+export async function hardDeleteUser(
+  request: FastifyRequest<{ Params: { id: string } }>,
+  reply: FastifyReply,
+): Promise<void> {
+  const deleted = await services.users.hardDeleteUser(request.params.id);
   if (!deleted) {
     throw new NotFoundError({ message: "User not found" });
   }
