@@ -12,6 +12,8 @@ import type { Group, GroupUpdateRequest } from "./types/groups";
 import type { User, UserUpdateRequest } from "./types/users";
 
 // *REVIEW[epic=mappers] - Should domain -> entity include timestamps?
+// TODO[epic=authentication]: implement password hashing
+
 export const ExpenseMapper = {
   toDomain(entity: ExpenseEntity): Expense {
     return {
@@ -38,9 +40,9 @@ export const ExpenseMapper = {
       amount: expense.amount,
       split_type: expense.splitType,
       expense_date: expense.expenseDate,
-      created_at: expense.createdAt,
-      updated_at: expense.updatedAt,
-      deleted_at: expense.deletedAt,
+      // created_at: expense.createdAt,
+      // updated_at: expense.updatedAt,
+      // deleted_at: expense.deletedAt,
     };
   },
   toPartialEntity(updates: ExpenseUpdateRequest): ExpenseUpdatePayload {
@@ -73,10 +75,10 @@ export const UserMapper = {
       id: user.id,
       username: user.username,
       email: user.email,
-      password_hash: "", // TODO[epic=authentication]: implement password hashing
-      created_at: user.createdAt,
-      updated_at: user.updatedAt,
-      deleted_at: user.deletedAt,
+      password_hash: "",
+      // created_at: user.createdAt,
+      // updated_at: user.updatedAt,
+      // deleted_at: user.deletedAt,
     };
   },
   toPartialEntity(updates: UserUpdateRequest): UserUpdatePayload {
@@ -85,7 +87,7 @@ export const UserMapper = {
 
     if (username !== undefined) payload.username = username;
     if (email !== undefined) payload.email = email;
-    if (password !== undefined) payload.password_hash = password; // TODO[epic=authentication]: implement password hashing
+    if (password !== undefined) payload.password_hash = password;
 
     return payload;
   },
@@ -107,9 +109,9 @@ export const GroupMapper = {
       id: group.id,
       title: group.title,
       created_by: group.createdBy,
-      created_at: group.createdAt,
-      updated_at: group.updatedAt,
-      deleted_at: group.deletedAt,
+      // created_at: group.createdAt,
+      // updated_at: group.updatedAt,
+      // deleted_at: group.deletedAt,
     };
   },
   toPartialEntity(updates: GroupUpdateRequest): GroupUpdatePayload {

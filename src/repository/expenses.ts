@@ -6,15 +6,6 @@ import type {
 import db from "./db";
 import { DatabaseError } from "../errors/errors";
 
-/**
-|--------------------------------------------------
-*TODO[epic=repository]: getExpensesBy...
-  - getExpensesByGroup
-  - getExpensesByUser
-
-|--------------------------------------------------
-*/
-
 export async function insertExpense(
   expense: ExpenseCreatePayload,
 ): Promise<ExpenseEntity> {

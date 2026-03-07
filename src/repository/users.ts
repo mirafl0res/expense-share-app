@@ -6,8 +6,6 @@ import type {
   UserUpdatePayload,
 } from "./types/users";
 
-// *TODO[epic=repository]: more functions (getUsersByGroup, etc)
-
 export async function insertUser(user: UserCreatePayload): Promise<UserEntity> {
   try {
     const [result] = await db<UserEntity[]>`
