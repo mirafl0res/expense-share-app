@@ -1,15 +1,15 @@
 import { SQL } from "bun";
 
-// const db = new SQL({});
-// export default db;
+let db;
 
-
-const globalKey = Symbol.for("myapp.db");
-
-if (!(globalThis as any)[globalKey]) {
-  (globalThis as any)[globalKey] = new SQL({});
+if (Bun.env.NODE_ENV === "development") {
+  const globalKey = Symbol.for("myapp.db");
+  if (!(globalThis as any)[globalKey]) {
+    (globalThis as any)[globalKey] = new SQL({});
+  }
+  db = (globalThis as any)[globalKey];
+} else {
+  db = new SQL({});
 }
-
-const db = (globalThis as any)[globalKey];
 
 export default db;
