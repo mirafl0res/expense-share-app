@@ -1,4 +1,4 @@
-import { NotFoundError } from "../errors";
+import { NotFoundError } from "../errors/errors";
 import { GroupMapper } from "../mappers";
 import * as repository from "../repository/groups";
 import type {

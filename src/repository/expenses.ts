@@ -4,7 +4,7 @@ import type {
   ExpenseUpdatePayload,
 } from "./types/expenses";
 import db from "./db";
-import { DatabaseError } from "../errors";
+import { DatabaseError } from "../errors/errors";
 
 /**
 |--------------------------------------------------

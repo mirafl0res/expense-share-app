@@ -1,4 +1,4 @@
-import { DatabaseError } from "../errors";
+import { DatabaseError } from "../errors/errors";
 import db from "./db";
 import type {
   UserCreatePayload,

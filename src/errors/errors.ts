@@ -61,6 +61,16 @@ export class BadRequestError extends BaseError {
   }
 }
 
+export class ValidationError extends BadRequestError {
+  constructor(options: ErrorOptions = {}) {
+    super({
+      message: options.message ?? "Validation failed",
+      params: options.params,
+      cause: options.cause,
+    });
+  }
+}
+
 export class ConflictError extends BaseError {
   statusCode = 409;
 

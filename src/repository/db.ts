@@ -1,6 +1,6 @@
 import { SQL } from "bun";
 
-let db;
+let db: SQL;
 
 if (Bun.env.NODE_ENV === "development") {
   const globalKey = Symbol.for("myapp.db");

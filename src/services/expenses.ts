@@ -5,7 +5,7 @@ import type {
 } from "../types/expenses";
 import * as repository from "../repository/expenses";
 import { ExpenseMapper } from "../mappers";
-import { NotFoundError } from "../errors";
+import { NotFoundError } from "../errors/errors";
 
 export async function createExpense(
   data: ExpenseCreateRequest,
