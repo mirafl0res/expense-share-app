@@ -2,15 +2,16 @@ export type User = {
   id: string;
   username: string;
   email: string;
-  createdAt?: string | null;
-  updatedAt?: string | null;
-  deletedAt?: string | null;
+  password?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
 };
 
 export type UserCreateRequest = {
   username: string;
   email: string;
-  password: string;
+  password?: string;
 };
 
 export type UserUpdateRequest = Partial<UserCreateRequest>;

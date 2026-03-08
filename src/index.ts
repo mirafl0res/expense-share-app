@@ -2,11 +2,7 @@ import { fastify, type FastifyInstance } from "fastify";
 import { expensesRoutes, usersRoutes, groupsRoutes } from "./routes";
 import db from "./repository/db";
 import { BaseError, InternalError, ValidationError } from "./errors/errors";
-import {
-  formatValidationErrors,
-  isFastifyValidationError,
-  logError,
-} from "./errors/helpers";
+import { formatValidationErrors, isFastifyValidationError, logError } from "./errors/helpers";
 import fastifyCors from "@fastify/cors";
 import fastifyHelmet from "@fastify/helmet";
 
@@ -22,9 +18,7 @@ fastifyServer.setErrorHandler((error: unknown, request, reply) => {
       cause: error,
     });
 
-    return reply
-      .status(validationError.statusCode)
-      .send(validationError.toPublicError());
+    return reply.status(validationError.statusCode).send(validationError.toPublicError());
   }
 
   if (!(error instanceof BaseError)) {
@@ -36,9 +30,7 @@ fastifyServer.setErrorHandler((error: unknown, request, reply) => {
       cause: error,
     });
 
-    return reply
-      .status(unknownError.statusCode)
-      .send(unknownError.toPublicError());
+    return reply.status(unknownError.statusCode).send(unknownError.toPublicError());
   }
 
   logError(request, error);

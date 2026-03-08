@@ -1,15 +1,16 @@
 export type Expense = {
   id: string;
-  createdBy: string | null;
+  createdBy: string;
   groupId: string;
-  payerId: string | null;
+  payerId: string;
   title: string;
   amount: number;
   splitType: string;
   expenseDate: string;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-  deletedAt?: string | null;
+  updatedAt?: string;
+  createdAt?: string;
+  deletedAt?: string;
+  description?: string;
 };
 
 export type ExpenseCreateRequest = {
@@ -19,9 +20,10 @@ export type ExpenseCreateRequest = {
   amount: number;
   splitType: string;
   expenseDate: string;
+  description?: string;
 };
 
-export type ExpenseUpdateRequest = Omit<ExpenseCreateRequest, "groupId">;
+export type ExpenseUpdateRequest = Partial<ExpenseCreateRequest>;
 
 export type ExpenseParticipant = {
   expenseId: string;

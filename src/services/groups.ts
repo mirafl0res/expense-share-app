@@ -1,11 +1,7 @@
 import { NotFoundError } from "../errors/errors";
-import { GroupMapper } from "../mappers";
+import { GroupMapper } from "../mappers/groups";
 import * as repository from "../repository/groups";
-import type {
-  Group,
-  GroupCreateRequest,
-  GroupUpdateRequest,
-} from "../types/groups";
+import type { Group, GroupCreateRequest, GroupUpdateRequest } from "../types/groups";
 
 export async function createGroup(data: GroupCreateRequest): Promise<Group> {
   const testUserId = "11111111-1111-1111-1111-111111111111";
@@ -15,9 +11,7 @@ export async function createGroup(data: GroupCreateRequest): Promise<Group> {
     createdBy: testUserId,
   };
 
-  const result = await repository.insertGroup(
-    GroupMapper.toEntity(newGroup),
-  );
+  const result = await repository.insertGroup(GroupMapper.toEntity(newGroup));
 
   return GroupMapper.toDomain(result);
 }
@@ -30,10 +24,7 @@ export async function getGroupById(id: string): Promise<Group> {
   return GroupMapper.toDomain(result);
 }
 
-export async function updateGroup(
-  id: string,
-  data: GroupUpdateRequest,
-): Promise<Group | null> {
+export async function updateGroup(id: string, data: GroupUpdateRequest): Promise<Group | null> {
   const updates = GroupMapper.toPartialEntity(data);
 
   const result = await repository.updateGroup(id, updates);
