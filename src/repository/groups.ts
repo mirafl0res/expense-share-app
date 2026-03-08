@@ -1,14 +1,8 @@
 import { DatabaseError } from "../errors/errors";
 import db from "./db";
-import type {
-  GroupCreatePayload,
-  GroupEntity,
-  GroupUpdatePayload,
-} from "./types/groups";
+import type { GroupEntity, GroupEntityPayload } from "./types/groups";
 
-export async function insertGroup(
-  group: GroupCreatePayload,
-): Promise<GroupEntity> {
+export async function insertGroup(group: GroupEntityPayload): Promise<GroupEntity> {
   try {
     const [result] = await db<GroupEntity[]>`
     INSERT INTO expense_groups ${db(group)}
@@ -50,7 +44,7 @@ export async function getGroupById(
 
 export async function updateGroup(
   id: string,
-  updates: GroupUpdatePayload,
+  updates: Partial<GroupEntityPayload>,
   includeDeleted: boolean = false,
 ): Promise<GroupEntity | null> {
   try {

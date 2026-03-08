@@ -1,12 +1,8 @@
 import { DatabaseError } from "../errors/errors";
 import db from "./db";
-import type {
-  UserCreatePayload,
-  UserEntity,
-  UserUpdatePayload,
-} from "./types/users";
+import type { UserEntity, UserEntityPayload } from "./types/users";
 
-export async function insertUser(user: UserCreatePayload): Promise<UserEntity> {
+export async function insertUser(user: UserEntityPayload): Promise<UserEntity> {
   try {
     const [result] = await db<UserEntity[]>`
     INSERT INTO users ${db(user)}
@@ -48,7 +44,7 @@ export async function getUserById(
 
 export async function updateUser(
   id: string,
-  updates: UserUpdatePayload,
+  updates: Partial<UserEntityPayload>,
   includeDeleted: boolean = false,
 ): Promise<UserEntity | null> {
   try {
