@@ -1,6 +1,7 @@
 import { type FastifyInstance, type FastifyPluginOptions } from "fastify";
 import * as controllers from "../controllers/users";
 import * as schemas from "../schemas/users";
+import { sanitizeUserRequest } from "../hooks/sanitizers";
 
 export async function usersRoutes(
   fastifyServer: FastifyInstance,
@@ -10,6 +11,7 @@ export async function usersRoutes(
     method: "POST",
     url: "/users",
     schema: schemas.createUserSchema,
+    preValidation: sanitizeUserRequest,
     handler: controllers.createUser,
   });
   fastifyServer.route({
@@ -22,6 +24,7 @@ export async function usersRoutes(
     method: "PATCH",
     url: "/users/:id/",
     schema: schemas.updateUserSchema,
+    preValidation: sanitizeUserRequest,
     handler: controllers.updateUser,
   });
   fastifyServer.route({

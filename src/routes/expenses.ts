@@ -1,6 +1,7 @@
 import { type FastifyInstance, type FastifyPluginOptions } from "fastify";
 import * as schemas from "../schemas/expenses";
 import * as controllers from "../controllers/expenses";
+import { sanitizeExpenseRequest } from "../hooks/sanitizers";
 
 export async function expensesRoutes(
   fastifyServer: FastifyInstance,
@@ -10,6 +11,7 @@ export async function expensesRoutes(
     method: "POST",
     url: "/expenses",
     schema: schemas.createExpenseSchema,
+    preValidation: sanitizeExpenseRequest,
     handler: controllers.createExpense,
   });
   fastifyServer.route({
@@ -22,6 +24,7 @@ export async function expensesRoutes(
     method: "PATCH",
     url: "/expenses/:id",
     schema: schemas.updateExpenseSchema,
+    preValidation: sanitizeExpenseRequest,
     handler: controllers.updateExpense,
   });
   fastifyServer.route({

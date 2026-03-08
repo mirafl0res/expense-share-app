@@ -1,6 +1,7 @@
 import { type FastifyInstance, type FastifyPluginOptions } from "fastify";
 import * as controllers from "../controllers/groups";
 import * as schemas from "../schemas/groups";
+import { sanitizeGroupRequest } from "../hooks/sanitizers";
 
 export async function groupsRoutes(
   fastifyServer: FastifyInstance,
@@ -10,6 +11,7 @@ export async function groupsRoutes(
     method: "POST",
     url: "/groups",
     schema: schemas.createGroupSchema,
+    preValidation: sanitizeGroupRequest,
     handler: controllers.createGroup,
   });
   fastifyServer.route({
@@ -22,6 +24,7 @@ export async function groupsRoutes(
     method: "PATCH",
     url: "/groups/:id",
     schema: schemas.updateGroupSchema,
+    preValidation: sanitizeGroupRequest,
     handler: controllers.updateGroup,
   });
   fastifyServer.route({

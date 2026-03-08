@@ -16,22 +16,6 @@ function normalizeEmailOrThrow(email: string): string {
   return normalized;
 }
 
-// export function sanitizeUserCreateRequest(
-//   request: FastifyRequest<{ Body: UserCreateRequest }>,
-//   _reply: FastifyReply,
-// ) {
-//   if (!request.body) return;
-
-//   const sanitizedUsername = validator.escape(request.body.username.trim());
-//   request.body.username = sanitizedUsername;
-
-//   const normalizedEmail = normalizeEmailOrThrow(request.body.email);
-//   request.body.email = normalizedEmail;
-
-//   const trimmedPassword = request.body.password.trim();
-//   request.body.password = trimmedPassword;
-// }
-
 export function sanitizeUserRequest(
   request: FastifyRequest<{ Body: UserUpdateRequest | UserCreateRequest }>,
   _reply: FastifyReply,
@@ -39,18 +23,15 @@ export function sanitizeUserRequest(
   if (!request.body) return;
 
   if (request.body.username !== undefined) {
-    const sanitizedUsername = validator.escape(request.body.username.trim());
-    request.body.username = sanitizedUsername;
+    request.body.username = validator.escape(request.body.username.trim());
   }
 
   if (request.body.email !== undefined) {
-    const normalizedEmail = normalizeEmailOrThrow(request.body.email);
-    request.body.email = normalizedEmail;
+    request.body.email = normalizeEmailOrThrow(request.body.email);
   }
 
   if (request.body.password !== undefined) {
-    const trimmedPassword = request.body.password.trim();
-    request.body.password = trimmedPassword;
+    request.body.password = request.body.password.trim();
   }
 }
 
@@ -63,15 +44,13 @@ export function sanitizeExpenseRequest(
   if (!request.body) return;
 
   if (request.body.title !== undefined) {
-    const sanitizedTitle = validator.escape(request.body.title.trim());
-    request.body.title = sanitizedTitle;
+    request.body.title = validator.escape(request.body.title.trim());
   }
 
   if (request.body.description != undefined) {
-    const sanitizedDescription = validator.escape(
+    request.body.description = validator.escape(
       request.body.description.trim(),
     );
-    request.body.description = sanitizedDescription;
   }
 }
 
@@ -82,7 +61,6 @@ export function sanitizeGroupRequest(
   if (!request.body) return;
 
   if (request.body.title !== undefined) {
-    const sanitizedTitle = validator.escape(request.body.title.trim());
-    request.body.title = sanitizedTitle;
+    request.body.title = validator.escape(request.body.title.trim());
   }
 }
