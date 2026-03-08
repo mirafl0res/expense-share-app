@@ -11,6 +11,7 @@ export async function createUser(userData: UserCreateRequest): Promise<User> {
     password: userData.password,
   };
 
+  // TODO[epic=errors]: handle DB errors, e.g. unique violation (Postgres: 23505)
   const result = await repository.insertUser(UserMapper.toEntity(newUser));
 
   return UserMapper.toDomain(result);
