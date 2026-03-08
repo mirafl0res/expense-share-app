@@ -7,6 +7,8 @@ import {
   isFastifyValidationError,
   logError,
 } from "./errors/helpers";
+import fastifyCors from "@fastify/cors";
+import fastifyHelmet from "@fastify/helmet";
 
 const fastifyServer: FastifyInstance = fastify({ logger: true });
 
@@ -62,6 +64,13 @@ async function start(): Promise<void> {
     fastifyServer.log.error(error);
     process.exit(1);
   }
+
+  await fastifyServer.register(fastifyCors, {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  });
+
+  await fastifyServer.register(fastifyHelmet);
 
   await fastifyServer.register(usersRoutes);
   await fastifyServer.register(groupsRoutes);
