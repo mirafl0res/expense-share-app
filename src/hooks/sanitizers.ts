@@ -13,7 +13,7 @@ function normalizeEmailOrThrow(email: string): string {
   return normalized;
 }
 
-export function sanitizeUserRequest(
+export async function sanitizeUserRequest(
   request: FastifyRequest<{ Body: UserUpdateRequest | UserCreateRequest }>,
   _reply: FastifyReply,
 ) {
@@ -32,7 +32,7 @@ export function sanitizeUserRequest(
   }
 }
 
-export function sanitizeExpenseRequest(
+export async function sanitizeExpenseRequest(
   request: FastifyRequest<{
     Body: ExpenseUpdateRequest | ExpenseCreateRequest;
   }>,
@@ -49,7 +49,7 @@ export function sanitizeExpenseRequest(
   }
 }
 
-export function sanitizeGroupRequest(
+export async function sanitizeGroupRequest(
   request: FastifyRequest<{ Body: GroupUpdateRequest | GroupCreateRequest }>,
   reply: FastifyReply,
 ) {
