@@ -5,6 +5,7 @@ import { BaseError, InternalError, ValidationError } from "./errors/errors";
 import { formatValidationErrors, isFastifyValidationError, logError } from "./errors/helpers";
 import fastifyCors from "@fastify/cors";
 import fastifyHelmet from "@fastify/helmet";
+import { authRoutes } from "./routes/auth";
 
 const fastifyServer: FastifyInstance = fastify({ logger: true });
 
@@ -64,6 +65,7 @@ async function start(): Promise<void> {
 
   await fastifyServer.register(fastifyHelmet);
 
+  await fastifyServer.register(authRoutes);
   await fastifyServer.register(usersRoutes);
   await fastifyServer.register(groupsRoutes);
   await fastifyServer.register(expensesRoutes);
