@@ -135,3 +135,19 @@ export async function authRoutes(
     },
   });
 }
+
+
+// REFACTORED
+// export async function authRoutes(
+//   fastify: FastifyInstance,
+//   _options: FastifyPluginOptions,
+// ): Promise<void> {
+//   fastify.route({
+//     method: "POST",
+//     url: "/auth/register",
+//     schema: schemas.registerUserSchema,
+//     preValidation: verifyAuth0Secret,
+//     handler: controllers.registerUser,
+//   });
+//   // ...other routes...
+// }
