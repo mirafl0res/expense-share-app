@@ -62,6 +62,19 @@ export async function getUserByAuth0Sub(
   }
 }
 
+export async function getUserByEmail(
+  email: string,
+  includeDeleted: boolean = false,
+): Promise<UserEntity | null> {
+  const [result] = await db<UserEntity[]>`
+  SELECT * FROM users
+  WHERE email = ${email}
+  ${includeDeleted ? db`` : db`AND deleted_at IS NULL`}
+  `;
+
+  return result ?? null;
+}
+
 export async function updateUser(
   id: string,
   updates: Partial<UserEntityPayload>,
