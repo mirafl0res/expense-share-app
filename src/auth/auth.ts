@@ -24,10 +24,10 @@ declare module "fastify" {
 async function authPlugin(
   fastifyServer: FastifyInstance,
   options: FastifyPluginOptions,
-) {
+): Promise<void> {
   fastifyServer.decorate(
     "requireAuth",
-    async (request: FastifyRequest, reply: FastifyReply) => {
+    async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
       try {
         const payload = await extractAndValidatePayload(request);
         request.jwtTokenPayload = payload;
@@ -35,17 +35,20 @@ async function authPlugin(
         console.log("Decoded JWT payload:", request.jwtTokenPayload); //FIXME - Remove before production
       } catch (error) {
         request.log.error(error, "JWT verification failed");
-        throw new AuthenticationError({ message: "Authentication failed" });
+        throw new AuthenticationError({
+          message: "Authentication failed",
+          cause: error,
+        });
       }
     },
   );
 
   fastifyServer.decorate(
     "requireAdmin",
-    async (request: FastifyRequest<{}>, reply: FastifyReply) => {
+    async (request: FastifyRequest<{}>, reply: FastifyReply): Promise<void> => {
       try {
-        const auth0RoleClaim = Bun.env.AUTH0_ROLES_CLAIM;
-        if (!auth0RoleClaim) {
+        const auth0RolesClaim = Bun.env.AUTH0_ROLES_CLAIM;
+        if (!auth0RolesClaim) {
           throw new InternalError({ message: "No AUTH0_ROLES_CLAIM provided" });
         }
         const payload = await extractAndValidatePayload(request);
@@ -53,8 +56,8 @@ async function authPlugin(
 
         console.log("Decoded JWT payload:", request.jwtTokenPayload); //FIXME - Remove before production
 
-        const roles = Array.isArray(payload[auth0RoleClaim])
-          ? payload[auth0RoleClaim]
+        const roles = Array.isArray(payload[auth0RolesClaim])
+          ? payload[auth0RolesClaim]
           : [];
 
         const isAdmin = roles.includes("admin");

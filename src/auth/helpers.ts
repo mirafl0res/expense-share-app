@@ -1,6 +1,6 @@
 import type { FastifyRequest } from "fastify";
 import { AuthenticationError } from "../errors/errors";
-import { verifyJwt } from "./jwks";
+import { verifyAndDecodeJwt } from "./jwks";
 
 function hasValidSub(payload: Record<string, unknown>): boolean {
   return typeof payload.sub === "string" && payload.sub.trim() !== "";
@@ -20,7 +20,7 @@ export async function extractAndValidatePayload(
   request: FastifyRequest,
 ): Promise<Record<string, unknown>> {
   const token = extractToken(request);
-  const { payload } = await verifyJwt(token);
+  const { payload } = await verifyAndDecodeJwt(token);
   if (!hasValidSub(payload)) {
     throw new AuthenticationError({ message: "Missing user auth0Sub" });
   }

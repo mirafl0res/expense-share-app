@@ -8,13 +8,13 @@ if (!AUTH0_JWKS_URI) {
 
 const JWKS = createRemoteJWKSet(new URL(AUTH0_JWKS_URI));
 
-export async function verifyJwt(token: string) {
+export async function verifyAndDecodeJwt(token: string) {
   try {
-    const { payload, protectedHeader } = await jwtVerify(token, JWKS, {
+    const { payload } = await jwtVerify(token, JWKS, {
       algorithms: ["RS256"],
     });
 
-    return { payload, protectedHeader };
+    return { payload };
   } catch (error) {
     throw new InternalError({
       message: "JWT verification failed",
