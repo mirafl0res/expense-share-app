@@ -1,12 +1,24 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import type { UserCreateRequest, UserUpdateRequest } from "../types/users";
 import * as services from "../services/users";
+import { extractUserInfoFromIdToken } from "../services/auth0";
 
-export async function createUser(
+export async function createOrLoginUser(
   request: FastifyRequest<{ Body: UserCreateRequest }>,
   reply: FastifyReply,
 ): Promise<void> {
-  const newUser = await services.createUser(request.body);
+  const newUser = await services.createOrLoginUser(request.body);
+  reply.status(201).send(newUser);
+}
+type RegisterAuth0UserRequest = { idToken: string };
+export async function registerAuth0User(
+  request: FastifyRequest<{ Body: RegisterAuth0UserRequest }>,
+  reply: FastifyReply,
+): Promise<void> {
+  const userData = await extractUserInfoFromIdToken(
+    request.body.idToken as string,
+  );
+  const newUser = await services.createOrLoginUser(userData);
   reply.status(201).send(newUser);
 }
 
