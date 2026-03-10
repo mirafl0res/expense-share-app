@@ -1,4 +1,3 @@
-import fastifyJwt from "@fastify/jwt";
 import type {
   FastifyInstance,
   FastifyPluginOptions,
@@ -9,40 +8,31 @@ import {
   AuthenticationError,
   ForbiddenError,
   InternalError,
-} from "./errors/errors";
+} from "../errors/errors";
+import { extractAndValidatePayload } from "./helpers";
 
 declare module "fastify" {
+  interface FastifyRequest {
+    jwtTokenPayload?: Record<string, unknown>;
+  }
   interface FastifyInstance {
     requireAuth(request: FastifyRequest, reply: FastifyReply): Promise<void>;
     requireAdmin(request: FastifyRequest, reply: FastifyReply): Promise<void>;
   }
 }
 
-function isNonEmptyString(input: unknown): input is string {
-  return typeof input === "string" && input.trim() !== "";
-}
-
 async function authPlugin(
   fastifyServer: FastifyInstance,
   options: FastifyPluginOptions,
 ) {
-  await fastifyServer.register(fastifyJwt, {
-    secret: "", // getPublicKey, *TODO[epic=auth]: implement jwks.ts file
-    decode: { complete: true },
-  });
-
   fastifyServer.decorate(
     "requireAuth",
     async (request: FastifyRequest, reply: FastifyReply) => {
       try {
-        await request.jwtVerify();
-        console.log("Decoded JWT payload:", request.user); //FIXME - Remove before production
+        const payload = await extractAndValidatePayload(request);
+        request.jwtTokenPayload = payload;
 
-        const user = request.user as Record<string, unknown>;
-        const auth0Sub = user["sub"];
-        if (!isNonEmptyString(auth0Sub)) {
-          throw new AuthenticationError({ message: "Missing user ID" });
-        }
+        console.log("Decoded JWT payload:", request.jwtTokenPayload); //FIXME - Remove before production
       } catch (error) {
         request.log.error(error, "JWT verification failed");
         throw new AuthenticationError({ message: "Authentication failed" });
@@ -52,22 +42,19 @@ async function authPlugin(
 
   fastifyServer.decorate(
     "requireAdmin",
-    async (request: FastifyRequest, reply: FastifyReply) => {
+    async (request: FastifyRequest<{}>, reply: FastifyReply) => {
       try {
         const auth0RoleClaim = Bun.env.AUTH0_ROLES_CLAIM;
         if (!auth0RoleClaim) {
-          throw new InternalError({ message: "AUTH0_ROLES_CLAIM is not set" });
+          throw new InternalError({ message: "No AUTH0_ROLES_CLAIM provided" });
         }
-        await request.jwtVerify();
+        const payload = await extractAndValidatePayload(request);
+        request.jwtTokenPayload = payload;
 
-        const user = request.user as Record<string, unknown>;
-        const auth0Sub = user["sub"];
-        if (!isNonEmptyString(auth0Sub)) {
-          throw new AuthenticationError({ message: "Missing user ID" });
-        }
+        console.log("Decoded JWT payload:", request.jwtTokenPayload); //FIXME - Remove before production
 
-        const roles = Array.isArray(user[auth0RoleClaim])
-          ? user[auth0RoleClaim]
+        const roles = Array.isArray(payload[auth0RoleClaim])
+          ? payload[auth0RoleClaim]
           : [];
 
         const isAdmin = roles.includes("admin");
@@ -88,3 +75,5 @@ async function authPlugin(
     },
   );
 }
+
+export default authPlugin;
