@@ -6,6 +6,7 @@ export const UserMapper = {
   toDomain(entity: UserEntity): User {
     return {
       id: entity.id,
+      auth0Sub: entity.auth0_sub ?? undefined,
       username: entity.username,
       email: entity.email,
       createdAt: entity.created_at,
@@ -16,6 +17,7 @@ export const UserMapper = {
   toEntity(user: User): UserEntityPayload {
     return {
       id: user.id,
+      auth0_sub: user.auth0Sub ?? null,
       username: user.username,
       email: user.email,
       password_hash: "", // TODO[epic=authentication]: implement password hashing

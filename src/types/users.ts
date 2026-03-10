@@ -1,5 +1,6 @@
 export type User = {
   id: string;
+  auth0Sub?: string;
   username: string;
   email: string;
   password?: string;
