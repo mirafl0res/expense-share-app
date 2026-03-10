@@ -1,14 +1,11 @@
 import type { FastifySchema } from "fastify";
 
-export const registerUserSchema: FastifySchema = {
+export const registerAuth0UserSchema: FastifySchema = {
   body: {
     type: "object",
-    required: ["email", "user_id"],
+    required: ["idToken"],
     properties: {
-      email: { type: "string", format: "email" },
-      user_id: { type: "string", minLength: 1 },
-      name: { type: "string" },
-      nickname: { type: "string" },
+      idToken: { type: "string", minLength: 1 },
     },
     additionalProperties: false,
   },
