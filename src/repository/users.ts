@@ -42,6 +42,26 @@ export async function getUserById(
   }
 }
 
+export async function getUserByAuth0Sub(
+  auth0Sub: string,
+  includeDeleted: boolean = false,
+): Promise<UserEntity | null> {
+  try {
+    const [result] = await db<UserEntity[]>`
+    SELECT * FROM users
+    WHERE auth0_sub = ${auth0Sub}
+    ${includeDeleted ? db`` : db`AND deleted_at IS NULL`}
+    `;
+
+    return result ?? null;
+  } catch (error) {
+    throw new DatabaseError({
+      message: "getUserByAuth0Sub: Database error",
+      cause: error,
+    });
+  }
+}
+
 export async function updateUser(
   id: string,
   updates: Partial<UserEntityPayload>,

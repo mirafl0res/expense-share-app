@@ -6,6 +6,7 @@ import type { User, UserCreateRequest, UserUpdateRequest } from "../types/users"
 export async function createUser(userData: UserCreateRequest): Promise<User> {
   const newUser: User = {
     id: crypto.randomUUID(),
+    auth0Sub: "", // TODO[epic=authentication]: Get auth0_sub
     username: userData.username,
     email: userData.email,
     password: userData.password,
@@ -22,6 +23,15 @@ export async function getUserById(id: string): Promise<User | null> {
   if (!result) {
     throw new NotFoundError({ message: "User not found" });
   }
+  return UserMapper.toDomain(result);
+}
+
+export async function getUserByAuth0Sub(auth0Sub: string): Promise<User | null> {
+  const result = await repository.getUserByAuth0Sub(auth0Sub);
+  if (!result) {
+    throw new NotFoundError({ message: "User not found" });
+  }
+
   return UserMapper.toDomain(result);
 }
 
