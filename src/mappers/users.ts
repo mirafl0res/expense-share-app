@@ -20,7 +20,7 @@ export const UserMapper = {
       auth0_sub: user.auth0Sub ?? null,
       username: user.username,
       email: user.email,
-      password_hash: "", // TODO[epic=authentication]: implement password hashing
+      password_hash: "", // TODO[epic=auth]: implement password hashing
     };
   },
   toPartialEntity(updates: UserUpdateRequest): Partial<UserEntityPayload> {

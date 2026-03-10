@@ -7,7 +7,7 @@ export async function createExpense(data: ExpenseCreateRequest): Promise<Expense
   const testUserId = "11111111-1111-1111-1111-111111111111";
   const newExpense: Expense = {
     id: crypto.randomUUID(),
-    createdBy: testUserId, // TODO[epic=authentication]: Implement JWT verification
+    createdBy: testUserId, // TODO[epic=auth]: Implement JWT verification
     groupId: data.groupId,
     payerId: data.payerId,
     title: data.title,

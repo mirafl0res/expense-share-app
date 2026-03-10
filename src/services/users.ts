@@ -6,7 +6,7 @@ import type { User, UserCreateRequest, UserUpdateRequest } from "../types/users"
 export async function createUser(userData: UserCreateRequest): Promise<User> {
   const newUser: User = {
     id: crypto.randomUUID(),
-    auth0Sub: "", // TODO[epic=authentication]: Get auth0_sub
+    auth0Sub: "", // TODO[epic=auth]: Get auth0_sub
     username: userData.username,
     email: userData.email,
     password: userData.password,

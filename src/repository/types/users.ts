@@ -3,7 +3,7 @@ export type UserEntity = {
   auth0_sub: string | null;
   username: string;
   email: string;
-  password_hash: string | null; // TODO[epic=authentication]: make optional when implementing Auth0
+  password_hash: string | null; // TODO[epic=auth]: make optional when implementing Auth0
   created_at: string;
   updated_at: string | null;
   deleted_at: string | null;
