@@ -3,7 +3,9 @@ import { verifyAndDecodeJwt } from "../auth/jwks";
 import { InternalError } from "../errors/errors";
 import type { UserCreateRequest } from "../types";
 import type {
+  Auth0AccessTokenPayload,
   Auth0TokenRequestParams,
+  Auth0TokenResponse,
   AuthCodeExchangeRequest,
 } from "../types/auth0";
 
@@ -73,6 +75,19 @@ export async function exchangeAuthCodeForTokens({
   return response.data;
 }
 
+export async function getTokensFromAuth0Callback(
+  authorizationCode: string,
+): Promise<Auth0TokenResponse> {
+  const redirectUri = getRedirectUri();
+  return exchangeAuthCodeForTokens({ code: authorizationCode, redirectUri });
+}
+
+export async function getUserProfileFromIdToken(
+  idToken: string,
+): Promise<UserCreateRequest> {
+  return extractUserInfoFromIdToken(idToken);
+}
+
 export async function processAuth0Callback(
   code: string,
 ): Promise<UserCreateRequest> {
@@ -82,6 +97,8 @@ export async function processAuth0Callback(
       code,
       redirectUri,
     });
+
+    console.log("TOKEN RESPONSE:", tokenResponse);
 
     const auth0UserProfile = await extractUserInfoFromIdToken(
       tokenResponse.id_token,
