@@ -82,13 +82,15 @@ export async function processAuth0Callback(
       code,
       redirectUri,
     });
+
+    console.log("tokenResponse:", tokenResponse);
+
     const auth0UserProfile = await extractUserInfoFromIdToken(
       tokenResponse.id_token,
     );
-    console.log(
-      "auth0UserProfile (return from processAuth0Callback):",
-      auth0UserProfile,
-    ); //FIXME[epic=logs] - remove before production
+
+    console.log("auth0UserProfile (processAuth0Callback):", auth0UserProfile); //FIXME[epic=logs] - remove before production
+
     return auth0UserProfile;
   } catch (error) {
     throw new InternalError({

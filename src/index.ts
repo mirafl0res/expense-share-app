@@ -12,6 +12,7 @@ import {
 import fastifyCors from "@fastify/cors";
 import fastifyHelmet from "@fastify/helmet";
 import { authRoutes } from "./routes/auth";
+import authPlugin from "./auth/auth";
 
 const fastifyServer: FastifyInstance = fastify({ logger: true });
 
@@ -75,7 +76,7 @@ async function start(): Promise<void> {
   });
 
   await fastifyServer.register(fastifyHelmet);
-
+  await fastifyServer.register(authPlugin);
   await fastifyServer.register(authRoutes);
   await fastifyServer.register(usersRoutes);
   await fastifyServer.register(groupsRoutes);

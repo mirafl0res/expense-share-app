@@ -12,12 +12,15 @@ export async function expensesRoutes(
     url: "/expenses",
     schema: schemas.createExpenseSchema,
     preValidation: sanitizeExpenseRequest,
+    // preHandler: fastifyServer.requireAuth,
+    preHandler: fastifyServer.requireAdmin,
     handler: controllers.createExpense,
   });
   fastifyServer.route({
     method: "GET",
     url: "/expenses/:id",
     schema: schemas.getExpenseByIdSchema,
+    preHandler: fastifyServer.requireAuth,
     handler: controllers.getExpenseById,
   });
   fastifyServer.route({

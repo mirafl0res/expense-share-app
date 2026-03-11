@@ -24,5 +24,7 @@ export async function extractAndValidatePayload(
   if (!hasValidSub(payload)) {
     throw new AuthenticationError({ message: "Missing user auth0Sub" });
   }
+
+  console.log("Extracted payload (extractAndValidatePayload)", payload); //*FIXME - remove before production
   return payload;
 }
