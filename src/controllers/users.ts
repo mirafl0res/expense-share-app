@@ -10,19 +10,6 @@ export async function createOrLoginUser(
   reply.status(201).send(newUser);
 }
 
-// type RegisterAuth0UserRequest = { idToken: string };
-
-// export async function registerAuth0User(
-//   request: FastifyRequest<{ Body: RegisterAuth0UserRequest }>,
-//   reply: FastifyReply,
-// ): Promise<void> {
-//   const userData = await getUserProfileFromIdToken(
-//     request.body.idToken as string,
-//   );
-//   const newUser = await userService.createOrLoginUser(userData);
-//   reply.status(201).send(newUser);
-// }
-
 export async function getUserById(
   request: FastifyRequest<{ Params: { id: string } }>,
   reply: FastifyReply,

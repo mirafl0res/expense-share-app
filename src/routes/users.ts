@@ -8,29 +8,14 @@ export async function usersRoutes(
   fastifyServer: FastifyInstance,
   _options: FastifyPluginOptions,
 ): Promise<void> {
+  
   /**
   |--------------------------------------------------
-  | User creation/registration is handled via the /auth/callback route after Auth0 authentication.
-  | Currently, there is no manual user registration endpoint.
+  | User creation/registration is handled via 
+  | the /auth/callback route after Auth0 authentication.
+  | Currently there is no manual registration endpoint.
   |--------------------------------------------------
   */
-
-  // fastifyServer.route({  
-  //   method: "POST",
-  //   url: "/users",
-  //   schema: schemas.createUserSchema,
-  //   preValidation: sanitizeUserRequest,
-  //   handler: userController.createOrLoginUser,
-  // });
-
-  // fastifyServer.route({
-  //   method: "POST",
-  //   url: "/auth/register",
-  //   schema: schemas.registerAuth0UserSchema,
-  //   preValidation: verifyAuth0Secret,
-  //   handler: userController.registerAuth0User,
-  // });
-
 
   fastifyServer.route({
     method: "GET",
@@ -54,6 +39,12 @@ export async function usersRoutes(
     preHandler: fastifyServer.requireAdmin,
     handler: userController.deleteUser,
   });
+
+  /**
+  |--------------------------------------------------
+  | Soft-delete not yet fully implemented.
+  |--------------------------------------------------
+  */
   // fastifyServer.route({
   //   method: "PATCH",
   //   url: "/users/:id",

@@ -1,6 +1,10 @@
 import type { FastifySchema } from "fastify";
 
-// *NOTE - Schema is never used
+/**
+|--------------------------------------------------
+| *NOTE - Schema not applicable to /auth/callback route
+|--------------------------------------------------
+*/
 export const registerAuth0UserSchema: FastifySchema = {
   body: {
     type: "object",
