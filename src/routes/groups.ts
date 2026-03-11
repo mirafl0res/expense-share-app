@@ -12,12 +12,14 @@ export async function groupsRoutes(
     url: "/groups",
     schema: schemas.createGroupSchema,
     preValidation: sanitizeGroupRequest,
+    preHandler: fastifyServer.requireAuth,
     handler: controllers.createGroup,
   });
   fastifyServer.route({
     method: "GET",
     url: "/groups/:id",
     schema: schemas.getGroupByIdSchema,
+    preHandler: fastifyServer.requireAuth,
     handler: controllers.getGroupById,
   });
   fastifyServer.route({
@@ -25,12 +27,14 @@ export async function groupsRoutes(
     url: "/groups/:id",
     schema: schemas.updateGroupSchema,
     preValidation: sanitizeGroupRequest,
+    preHandler: fastifyServer.requireAuth,
     handler: controllers.updateGroup,
   });
   fastifyServer.route({
     method: "DELETE",
     url: "/groups/:id",
     schema: schemas.deleteGroupSchema,
+    preHandler: fastifyServer.requireAuth,
     handler: controllers.deleteGroup,
   });
   // fastifyServer.route({

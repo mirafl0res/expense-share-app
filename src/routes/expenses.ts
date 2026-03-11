@@ -12,8 +12,7 @@ export async function expensesRoutes(
     url: "/expenses",
     schema: schemas.createExpenseSchema,
     preValidation: sanitizeExpenseRequest,
-    // preHandler: fastifyServer.requireAuth,
-    preHandler: fastifyServer.requireAdmin,
+    preHandler: fastifyServer.requireAuth,
     handler: controllers.createExpense,
   });
   fastifyServer.route({
@@ -28,12 +27,14 @@ export async function expensesRoutes(
     url: "/expenses/:id",
     schema: schemas.updateExpenseSchema,
     preValidation: sanitizeExpenseRequest,
+    preHandler: fastifyServer.requireAuth,
     handler: controllers.updateExpense,
   });
   fastifyServer.route({
     method: "DELETE",
     url: "/expenses/:id",
     schema: schemas.deleteExpenseSchema,
+    preHandler: fastifyServer.requireAuth,
     handler: controllers.deleteExpense,
   });
   // fastifyServer.route({

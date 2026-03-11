@@ -36,6 +36,7 @@ export async function usersRoutes(
     method: "GET",
     url: "/users/:id",
     schema: schemas.getUserByIdSchema,
+    preHandler: fastifyServer.requireAuth,
     handler: controllers.getUserById,
   });
   fastifyServer.route({
@@ -43,12 +44,14 @@ export async function usersRoutes(
     url: "/users/:id/",
     schema: schemas.updateUserSchema,
     preValidation: sanitizeUserRequest,
+    preHandler: fastifyServer.requireAuth,
     handler: controllers.updateUser,
   });
   fastifyServer.route({
     method: "DELETE",
     url: "/users/:id",
     schema: schemas.deleteUserSchema,
+    preHandler: fastifyServer.requireAdmin,
     handler: controllers.deleteUser,
   });
   // fastifyServer.route({
