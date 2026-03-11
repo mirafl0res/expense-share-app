@@ -1,5 +1,5 @@
 import { type FastifyInstance, type FastifyPluginOptions } from "fastify";
-import * as controllers from "../controllers/users";
+import * as userController from "../controllers/users";
 import * as schemas from "../schemas/users";
 import { sanitizeUserRequest } from "../hooks/sanitizers";
 // import { verifyAuth0Secret } from "../hooks/auth";
@@ -15,12 +15,12 @@ export async function usersRoutes(
   |--------------------------------------------------
   */
 
-  // fastifyServer.route({
+  // fastifyServer.route({  
   //   method: "POST",
   //   url: "/users",
   //   schema: schemas.createUserSchema,
   //   preValidation: sanitizeUserRequest,
-  //   handler: controllers.createOrLoginUser,
+  //   handler: userController.createOrLoginUser,
   // });
 
   // fastifyServer.route({
@@ -28,7 +28,7 @@ export async function usersRoutes(
   //   url: "/auth/register",
   //   schema: schemas.registerAuth0UserSchema,
   //   preValidation: verifyAuth0Secret,
-  //   handler: controllers.registerAuth0User,
+  //   handler: userController.registerAuth0User,
   // });
 
 
@@ -37,7 +37,7 @@ export async function usersRoutes(
     url: "/users/:id",
     schema: schemas.getUserByIdSchema,
     preHandler: fastifyServer.requireAuth,
-    handler: controllers.getUserById,
+    handler: userController.getUserById,
   });
   fastifyServer.route({
     method: "PATCH",
@@ -45,19 +45,19 @@ export async function usersRoutes(
     schema: schemas.updateUserSchema,
     preValidation: sanitizeUserRequest,
     preHandler: fastifyServer.requireAuth,
-    handler: controllers.updateUser,
+    handler: userController.updateUser,
   });
   fastifyServer.route({
     method: "DELETE",
     url: "/users/:id",
     schema: schemas.deleteUserSchema,
     preHandler: fastifyServer.requireAdmin,
-    handler: controllers.deleteUser,
+    handler: userController.deleteUser,
   });
   // fastifyServer.route({
   //   method: "PATCH",
   //   url: "/users/:id",
   //   schema: schemas.softDeleteUserSchema,
-  //   handler: controllers.softDeleteUser,
+  //   handler: userController.softDeleteUser,
   // });
 }

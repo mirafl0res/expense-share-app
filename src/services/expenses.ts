@@ -3,7 +3,7 @@ import type {
   Expense,
   ExpenseUpdateRequest,
 } from "../types/expenses";
-import * as repository from "../repository/expenses";
+import * as expenseRepository from "../repository/expenses";
 import { ExpenseMapper } from "../mappers/expenses";
 import { NotFoundError } from "../errors/errors";
 
@@ -23,7 +23,7 @@ export async function createExpense(
     description: data.description,
   };
 
-  const result = await repository.insertExpense(
+  const result = await expenseRepository.insertExpense(
     ExpenseMapper.toEntity(newExpense),
   );
 
@@ -31,7 +31,7 @@ export async function createExpense(
 }
 
 export async function getExpenseById(id: string): Promise<Expense> {
-  const result = await repository.getExpenseById(id);
+  const result = await expenseRepository.getExpenseById(id);
   if (!result) {
     throw new NotFoundError({ message: "Expense not found" });
   }
@@ -44,7 +44,7 @@ export async function updateExpense(
 ): Promise<Expense | null> {
   const updates = ExpenseMapper.toPartialEntity(data);
 
-  const result = await repository.updateExpense(id, updates);
+  const result = await expenseRepository.updateExpense(id, updates);
   if (!result) {
     throw new NotFoundError({ message: "Expense not found" });
   }
@@ -53,7 +53,7 @@ export async function updateExpense(
 }
 
 export async function softDeleteExpense(id: string): Promise<boolean> {
-  const deleted = await repository.softDeleteExpense(id);
+  const deleted = await expenseRepository.softDeleteExpense(id);
   if (!deleted) {
     throw new NotFoundError({ message: "Expense not found" });
   }
@@ -62,7 +62,7 @@ export async function softDeleteExpense(id: string): Promise<boolean> {
 }
 
 export async function hardDeleteExpense(id: string): Promise<boolean> {
-  const deleted = await repository.hardDeleteExpense(id);
+  const deleted = await expenseRepository.hardDeleteExpense(id);
   if (!deleted) {
     throw new NotFoundError({ message: "Expense not found" });
   }

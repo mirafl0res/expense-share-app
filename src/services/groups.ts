@@ -1,6 +1,6 @@
 import { NotFoundError } from "../errors/errors";
 import { GroupMapper } from "../mappers/groups";
-import * as repository from "../repository/groups";
+import * as groupRepository from "../repository/groups";
 import type { Group, GroupCreateRequest, GroupUpdateRequest } from "../types/groups";
 
 export async function createGroup(data: GroupCreateRequest): Promise<Group> {
@@ -11,13 +11,13 @@ export async function createGroup(data: GroupCreateRequest): Promise<Group> {
     createdBy: testUserId,
   };
 
-  const result = await repository.insertGroup(GroupMapper.toEntity(newGroup));
+  const result = await groupRepository.insertGroup(GroupMapper.toEntity(newGroup));
 
   return GroupMapper.toDomain(result);
 }
 
 export async function getGroupById(id: string): Promise<Group> {
-  const result = await repository.getGroupById(id);
+  const result = await groupRepository.getGroupById(id);
   if (!result) {
     throw new NotFoundError({ message: "Group not found" });
   }
@@ -27,7 +27,7 @@ export async function getGroupById(id: string): Promise<Group> {
 export async function updateGroup(id: string, data: GroupUpdateRequest): Promise<Group | null> {
   const updates = GroupMapper.toPartialEntity(data);
 
-  const result = await repository.updateGroup(id, updates);
+  const result = await groupRepository.updateGroup(id, updates);
   if (!result) {
     throw new NotFoundError({ message: "Group not found" });
   }
@@ -36,7 +36,7 @@ export async function updateGroup(id: string, data: GroupUpdateRequest): Promise
 }
 
 export async function softDeleteGroup(id: string): Promise<boolean> {
-  const deleted = await repository.softDeleteGroup(id);
+  const deleted = await groupRepository.softDeleteGroup(id);
   if (!deleted) {
     throw new NotFoundError({ message: "Group not found" });
   }
@@ -45,7 +45,7 @@ export async function softDeleteGroup(id: string): Promise<boolean> {
 }
 
 export async function hardDeleteGroup(id: string): Promise<boolean> {
-  const deleted = await repository.hardDeleteGroup(id);
+  const deleted = await groupRepository.hardDeleteGroup(id);
   if (!deleted) {
     throw new NotFoundError({ message: "Group not found" });
   }

@@ -2,7 +2,10 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 import validator from "validator";
 import type { UserCreateRequest, UserUpdateRequest } from "../types/users";
 import { ValidationError } from "../errors/errors";
-import type { ExpenseCreateRequest, ExpenseUpdateRequest } from "../types/expenses";
+import type {
+  ExpenseCreateRequest,
+  ExpenseUpdateRequest,
+} from "../types/expenses";
 import type { GroupCreateRequest, GroupUpdateRequest } from "../types/groups";
 
 function normalizeEmailOrThrow(email: string): string {
@@ -45,7 +48,9 @@ export async function sanitizeExpenseRequest(
   }
 
   if (request.body.description != undefined) {
-    request.body.description = validator.escape(request.body.description.trim());
+    request.body.description = validator.escape(
+      request.body.description.trim(),
+    );
   }
 }
 

@@ -1,5 +1,5 @@
 import type { FastifyInstance, FastifyPluginOptions } from "fastify";
-import * as controllers from "../controllers/auth";
+import * as authController from "../controllers/auth";
 
 export async function authRoutes(
   fastify: FastifyInstance,
@@ -8,6 +8,6 @@ export async function authRoutes(
   fastify.route({
     method: "GET",
     url: "/auth/callback",
-    handler: controllers.authCallbackHandler,
+    handler: authController.authCallbackHandler,
   });
 }

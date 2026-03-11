@@ -1,6 +1,6 @@
 import { type FastifyInstance, type FastifyPluginOptions } from "fastify";
 import * as schemas from "../schemas/expenses";
-import * as controllers from "../controllers/expenses";
+import * as expenseController from "../controllers/expenses";
 import { sanitizeExpenseRequest } from "../hooks/sanitizers";
 
 export async function expensesRoutes(
@@ -13,14 +13,14 @@ export async function expensesRoutes(
     schema: schemas.createExpenseSchema,
     preValidation: sanitizeExpenseRequest,
     preHandler: fastifyServer.requireAuth,
-    handler: controllers.createExpense,
+    handler: expenseController.createExpense,
   });
   fastifyServer.route({
     method: "GET",
     url: "/expenses/:id",
     schema: schemas.getExpenseByIdSchema,
     preHandler: fastifyServer.requireAuth,
-    handler: controllers.getExpenseById,
+    handler: expenseController.getExpenseById,
   });
   fastifyServer.route({
     method: "PATCH",
@@ -28,19 +28,19 @@ export async function expensesRoutes(
     schema: schemas.updateExpenseSchema,
     preValidation: sanitizeExpenseRequest,
     preHandler: fastifyServer.requireAuth,
-    handler: controllers.updateExpense,
+    handler: expenseController.updateExpense,
   });
   fastifyServer.route({
     method: "DELETE",
     url: "/expenses/:id",
     schema: schemas.deleteExpenseSchema,
     preHandler: fastifyServer.requireAuth,
-    handler: controllers.deleteExpense,
+    handler: expenseController.deleteExpense,
   });
   // fastifyServer.route({
   //   method: "PATCH",
   //   url: "/expenses/:id/",
   //   schema: schemas.softDeleteExpenseSchema,
-  //   handler: controllers.softDeleteExpense,
+  //   handler: expenseController.softDeleteExpense,
   // });
 }

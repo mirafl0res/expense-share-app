@@ -1,5 +1,5 @@
 import { type FastifyInstance, type FastifyPluginOptions } from "fastify";
-import * as controllers from "../controllers/groups";
+import * as groupController from "../controllers/groups";
 import * as schemas from "../schemas/groups";
 import { sanitizeGroupRequest } from "../hooks/sanitizers";
 
@@ -13,14 +13,14 @@ export async function groupsRoutes(
     schema: schemas.createGroupSchema,
     preValidation: sanitizeGroupRequest,
     preHandler: fastifyServer.requireAuth,
-    handler: controllers.createGroup,
+    handler: groupController.createGroup,
   });
   fastifyServer.route({
     method: "GET",
     url: "/groups/:id",
     schema: schemas.getGroupByIdSchema,
     preHandler: fastifyServer.requireAuth,
-    handler: controllers.getGroupById,
+    handler: groupController.getGroupById,
   });
   fastifyServer.route({
     method: "PATCH",
@@ -28,19 +28,19 @@ export async function groupsRoutes(
     schema: schemas.updateGroupSchema,
     preValidation: sanitizeGroupRequest,
     preHandler: fastifyServer.requireAuth,
-    handler: controllers.updateGroup,
+    handler: groupController.updateGroup,
   });
   fastifyServer.route({
     method: "DELETE",
     url: "/groups/:id",
     schema: schemas.deleteGroupSchema,
     preHandler: fastifyServer.requireAuth,
-    handler: controllers.deleteGroup,
+    handler: groupController.deleteGroup,
   });
   // fastifyServer.route({
   //   method: "PATCH",
   //   url: "/groups/:id",
   //   schema: schemas.softDeleteGroupSchema,
-  //   handler: controllers.softDeleteGroup,
+  //   handler: groupController.softDeleteGroup,
   // });
 }
