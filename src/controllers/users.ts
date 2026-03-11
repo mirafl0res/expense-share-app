@@ -10,7 +10,9 @@ export async function createOrLoginUser(
   const newUser = await services.createOrLoginUser(request.body);
   reply.status(201).send(newUser);
 }
+
 type RegisterAuth0UserRequest = { idToken: string };
+
 export async function registerAuth0User(
   request: FastifyRequest<{ Body: RegisterAuth0UserRequest }>,
   reply: FastifyReply,
@@ -30,6 +32,13 @@ export async function getUserById(
   reply.status(200).send(user);
 }
 
+export async function getUserByAuth0Sub(
+  request: FastifyRequest<{ Params: { auth0Sub: string } }>,
+  reply: FastifyReply,
+): Promise<void> {
+  const user = await services.getUserByAuth0Sub(request.params.auth0Sub);
+  reply.status(200).send(user);
+}
 export async function updateUser(
   request: FastifyRequest<{ Params: { id: string }; Body: UserUpdateRequest }>,
   reply: FastifyReply,

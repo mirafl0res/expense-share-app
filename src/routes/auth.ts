@@ -7,7 +7,7 @@ export async function authRoutes(
 ) {
   fastify.route({
     method: "GET",
-    url: "/callback",
+    url: "/auth/callback",
     handler: controllers.authCallbackHandler,
   });
 }

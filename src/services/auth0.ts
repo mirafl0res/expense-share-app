@@ -6,7 +6,6 @@ import type {
   Auth0TokenRequestParams,
   AuthCodeExchangeRequest,
 } from "../types/auth0";
-import * as services from "./users";
 
 export async function extractUserInfoFromIdToken(
   idToken: string,
@@ -16,7 +15,7 @@ export async function extractUserInfoFromIdToken(
 
   return {
     email: email as string,
-    username: nickname as string,
+    username: (nickname as string) ?? email,
     auth0Sub: sub as string,
   };
 }
@@ -61,7 +60,9 @@ export async function exchangeAuthCodeForTokens({
   redirectUri,
 }: AuthCodeExchangeRequest) {
   const { tokenUrl, clientId, clientSecret } = getAuth0Config();
-  if (!redirectUri) throw new InternalError({ message: "Missing redirectUri" });
+  if (!redirectUri) {
+    throw new InternalError({ message: "Missing redirectUri" });
+  }
   const response = await postToAuth0TokenEndpoint({
     tokenUrl,
     clientId,
@@ -72,11 +73,27 @@ export async function exchangeAuthCodeForTokens({
   return response.data;
 }
 
-export async function processAuth0Callback(code: string) {
-  const redirectUri = getRedirectUri();
-  const tokenResponse = await exchangeAuthCodeForTokens({ code, redirectUri });
-  const userInfo = await extractUserInfoFromIdToken(tokenResponse.id_token);
-  // const { id_token } = await exchangeAuthCodeForTokens({ code, redirectUri });
-  // const userInfo = await extractUserInfoFromIdToken(id_token);
-  return services.createOrLoginUser(userInfo);
+export async function processAuth0Callback(
+  code: string,
+): Promise<UserCreateRequest> {
+  try {
+    const redirectUri = getRedirectUri();
+    const tokenResponse = await exchangeAuthCodeForTokens({
+      code,
+      redirectUri,
+    });
+    const auth0UserProfile = await extractUserInfoFromIdToken(
+      tokenResponse.id_token,
+    );
+    console.log(
+      "auth0UserProfile (return from processAuth0Callback):",
+      auth0UserProfile,
+    ); //FIXME[epic=logs] - remove before production
+    return auth0UserProfile;
+  } catch (error) {
+    throw new InternalError({
+      message: "Failed to process Auth0 callback",
+      cause: error,
+    });
+  }
 }

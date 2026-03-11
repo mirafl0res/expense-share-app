@@ -2,7 +2,9 @@ import { DatabaseError } from "../errors/errors";
 import db from "./db";
 import type { GroupEntity, GroupEntityPayload } from "./types/groups";
 
-export async function insertGroup(group: GroupEntityPayload): Promise<GroupEntity> {
+export async function insertGroup(
+  group: GroupEntityPayload,
+): Promise<GroupEntity> {
   try {
     const [result] = await db<GroupEntity[]>`
     INSERT INTO expense_groups ${db(group)}
