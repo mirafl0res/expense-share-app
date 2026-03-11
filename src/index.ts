@@ -2,7 +2,13 @@ import { fastify, type FastifyInstance } from "fastify";
 import { expensesRoutes, usersRoutes, groupsRoutes } from "./routes";
 import db from "./repository/db";
 import { BaseError, InternalError, ValidationError } from "./errors/errors";
-import { formatValidationErrors, isFastifyValidationError, logError } from "./errors/helpers";
+import {
+  formatValidationErrors,
+  isFastifyValidationError,
+  logBaseError,
+  logUnknownError,
+  logValidationError,
+} from "./errors/helpers";
 import fastifyCors from "@fastify/cors";
 import fastifyHelmet from "@fastify/helmet";
 import { authRoutes } from "./routes/auth";
@@ -12,6 +18,7 @@ const fastifyServer: FastifyInstance = fastify({ logger: true });
 fastifyServer.setErrorHandler((error: unknown, request, reply) => {
   if (isFastifyValidationError(error)) {
     const formatted = formatValidationErrors(error.validation);
+    logValidationError(request, formatted, error);
 
     const validationError = new ValidationError({
       message: "Validation failed",
@@ -19,11 +26,13 @@ fastifyServer.setErrorHandler((error: unknown, request, reply) => {
       cause: error,
     });
 
-    return reply.status(validationError.statusCode).send(validationError.toPublicError());
+    return reply
+      .status(validationError.statusCode)
+      .send(validationError.toPublicError());
   }
 
   if (!(error instanceof BaseError)) {
-    logError(request, error);
+    logUnknownError(request, error);
 
     const unknownError = new InternalError({
       message: "An unknown error occurred",
@@ -31,10 +40,12 @@ fastifyServer.setErrorHandler((error: unknown, request, reply) => {
       cause: error,
     });
 
-    return reply.status(unknownError.statusCode).send(unknownError.toPublicError());
+    return reply
+      .status(unknownError.statusCode)
+      .send(unknownError.toPublicError());
   }
 
-  logError(request, error);
+  logBaseError(request, error);
 
   return reply.status(error.statusCode).send(error.toPublicError());
 });

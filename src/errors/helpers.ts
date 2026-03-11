@@ -1,5 +1,6 @@
 import type { ErrorObject } from "ajv";
 import type { FastifyRequest } from "fastify";
+import type { BaseError } from "./errors";
 
 export interface FastifyValidationError {
   code: string;
@@ -24,10 +25,45 @@ export function isFastifyValidationError(
   );
 }
 
-export function logError(request: FastifyRequest, error: unknown) {
-  if (typeof error === "object" && error !== null && (error as any).cause) {
-    return request.log.error((error as any).cause);
-  }
+export function logValidationError(
+  request: FastifyRequest,
+  formatted: unknown,
+  error: unknown,
+) {
+  request.log.error(
+    {
+      err: {
+        type: "ValidationError",
+        errors: formatted,
+        cause: error,
+      },
+    },
+    "Validation failed",
+  );
+}
 
-  request.log.error(error);
+export function logUnknownError(request: FastifyRequest, error: unknown) {
+  if (error instanceof Error) {
+    request.log.error({ err: error }, "Unhandled error");
+  } else {
+    request.log.error(
+      { err: { message: String(error), raw: error } },
+      "Non-Error thrown",
+    );
+  }
+}
+
+export function logBaseError(request: FastifyRequest, error: BaseError) {
+  request.log.error(
+    {
+      err: {
+        name: error.name,
+        message: error.message,
+        params: error.params,
+        cause: error.cause,
+        stack: error.stack,
+      },
+    },
+    "Handled BaseError",
+  );
 }
