@@ -14,12 +14,8 @@ export async function authCallbackHandler(
       message: "Missing code parameter in callback",
     });
   }
-
-  try {
-    const auth0UserProfile = await processAuth0Callback(code);
-    createOrLoginUser(auth0UserProfile);
-    reply.status(200).send(auth0UserProfile);
-  } catch (error) {
-    throw new InternalError({ message: "Auth0 callback failed", cause: error });
-  }
+  const auth0UserProfile = await processAuth0Callback(code);
+  createOrLoginUser(auth0UserProfile);
+  // TODO: if user exists, send another reply? 
+  reply.status(200).send(auth0UserProfile);
 }

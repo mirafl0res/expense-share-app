@@ -83,8 +83,6 @@ export async function processAuth0Callback(
       redirectUri,
     });
 
-    console.log("tokenResponse:", tokenResponse);
-
     const auth0UserProfile = await extractUserInfoFromIdToken(
       tokenResponse.id_token,
     );
