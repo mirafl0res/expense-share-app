@@ -29,12 +29,10 @@ async function authPlugin(
   fastifyServer.decorate(
     "requireAuth",
     async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-      console.log("requireAdmin initialized");
       try {
         const payload = await extractAndValidatePayload(request);
         request.jwtTokenPayload = payload;
-
-        console.log("Decoded JWT payload:", request.jwtTokenPayload); //FIXME - Remove before production
+        console.log("Decoded JWT payload (requireAdmin):", request.jwtTokenPayload); //FIXME - Remove before production
       } catch (error) {
         request.log.error(error, "JWT verification failed");
         throw new AuthenticationError({
@@ -56,8 +54,6 @@ async function authPlugin(
         }
         const payload = await extractAndValidatePayload(request);
         request.jwtTokenPayload = payload;
-
-        console.log("Decoded JWT payload:", request.jwtTokenPayload); // FIXME - Remove before production
 
         const roles = Array.isArray(payload[auth0RolesClaim])
           ? payload[auth0RolesClaim]

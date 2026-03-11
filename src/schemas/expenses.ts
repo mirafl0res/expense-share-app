@@ -5,7 +5,6 @@ export const createExpenseSchema: FastifySchema = {
     type: "object",
     required: [
       "groupId",
-      "payerId",
       "title",
       "amount",
       "splitType",
