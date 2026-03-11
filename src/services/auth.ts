@@ -1,13 +1,14 @@
 import axios from "axios";
 import { verifyAndDecodeJwt } from "../auth/jwks";
 import { AuthenticationError, InternalError } from "../errors/errors";
-import type { UserCreateRequest } from "../types";
+import type { User, UserCreateRequest } from "../types";
 import type {
   Auth0TokenRequestParams,
   Auth0TokenResponse,
   AuthCodeExchangeRequest,
 } from "../types/auth0";
 import type { FastifyRequest } from "fastify";
+import { getUserByAuth0Sub } from "./users";
 
 function getRedirectUri(): string {
   const redirectUri = Bun.env.REDIRECT_URI;
@@ -90,12 +91,17 @@ export async function getAuth0SubFromRequest(request: FastifyRequest) {
     });
   }
   return auth0Sub;
+}
 
-  // const user = await usersRepository.findByAuth0Sub(auth0Sub);
-  // if (!user) {
-  //   throw new AuthenticationError({
-  //     message: "User not found",
-  //   });
-  // }
-  // return user;
+export async function getAuthenticatedUserFromRequest(
+  request: FastifyRequest,
+): Promise<User> {
+  const auth0Sub = await getAuth0SubFromRequest(request);
+  const user = await getUserByAuth0Sub(auth0Sub);
+  if (!user) {
+    throw new AuthenticationError({
+      message: "Authenticated user not found in database",
+    });
+  }
+  return user;
 }

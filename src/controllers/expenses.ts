@@ -4,20 +4,14 @@ import type {
   ExpenseUpdateRequest,
 } from "../types/expenses";
 import * as expenseService from "../services/expenses";
-import * as userService from "../services/users";
 import * as authService from "../services/auth";
 
 export async function createExpense(
   request: FastifyRequest<{ Body: ExpenseCreateRequest }>,
   reply: FastifyReply,
 ): Promise<void> {
-  const auth0Sub = await authService.getAuth0SubFromRequest(request);
-  const authenticatedUser = await userService.getUserByAuth0Sub(auth0Sub);
-
-  const newExpense = await expenseService.createExpense(
-    request.body,
-    authenticatedUser!.id,
-  );
+  const user = await authService.getAuthenticatedUserFromRequest(request);
+  const newExpense = await expenseService.createExpense(request.body, user.id);
 
   reply.status(201).send(newExpense);
 }
