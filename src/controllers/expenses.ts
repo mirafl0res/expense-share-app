@@ -4,7 +4,7 @@ import type {
   ExpenseUpdateRequest,
 } from "../types/expenses";
 import * as expenseService from "../services/expenses";
-import * as authService from "../services/auth";
+import * as authService from "../services/auth/auth0";
 
 export async function createExpense(
   request: FastifyRequest<{ Body: ExpenseCreateRequest }>,

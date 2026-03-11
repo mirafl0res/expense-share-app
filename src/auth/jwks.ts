@@ -9,16 +9,15 @@ if (!AUTH0_JWKS_URI) {
 const JWKS = createRemoteJWKSet(new URL(AUTH0_JWKS_URI));
 
 export async function verifyAndDecodeJwt(token: string) {
-  try {
-    const { payload } = await jwtVerify(token, JWKS, {
-      algorithms: ["RS256"],
-    });
+  const { payload } = await jwtVerify(token, JWKS, {
+    algorithms: ["RS256"],
+  });
 
-    return { payload };
-  } catch (error) {
+  if (!payload) {
     throw new InternalError({
-      message: "JWT verification failed",
-      cause: error,
+      message: "JWT verification failed: no payload",
     });
   }
+
+  return { payload };
 }

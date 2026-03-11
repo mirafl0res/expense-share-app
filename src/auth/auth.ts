@@ -29,51 +29,36 @@ async function authPlugin(
   fastifyServer.decorate(
     "requireAuth",
     async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-      try {
-        const payload = await extractAndValidatePayload(request);
-        request.jwtTokenPayload = payload;
-        console.log("Decoded JWT payload (requireAdmin):", request.jwtTokenPayload); //FIXME - Remove before production
-      } catch (error) {
-        request.log.error(error, "JWT verification failed");
-        throw new AuthenticationError({
-          message: "Authentication failed",
-          cause: error,
-        });
-      }
+      const payload = await extractAndValidatePayload(request);
+      request.jwtTokenPayload = payload;
+      console.log(
+        "Decoded JWT payload (requireAdmin):",
+        request.jwtTokenPayload,
+      );
     },
   );
 
   fastifyServer.decorate(
     "requireAdmin",
     async (request: FastifyRequest<{}>, reply: FastifyReply): Promise<void> => {
-      try {
-        const auth0RolesClaim = Bun.env.AUTH0_ROLES_CLAIM;
-        console.log("AUTH0_ROLES_CLAIM:", Bun.env.AUTH0_ROLES_CLAIM);
-        if (!auth0RolesClaim) {
-          throw new InternalError({ message: "No AUTH0_ROLES_CLAIM provided" });
-        }
-        const payload = await extractAndValidatePayload(request);
-        request.jwtTokenPayload = payload;
+      const auth0RolesClaim = Bun.env.AUTH0_ROLES_CLAIM;
+      console.log("AUTH0_ROLES_CLAIM:", Bun.env.AUTH0_ROLES_CLAIM);
+      if (!auth0RolesClaim) {
+        throw new InternalError({ message: "No AUTH0_ROLES_CLAIM provided" });
+      }
+      const payload = await extractAndValidatePayload(request);
+      request.jwtTokenPayload = payload;
 
-        const roles = Array.isArray(payload[auth0RolesClaim])
-          ? payload[auth0RolesClaim]
-          : [];
+      const roles = Array.isArray(payload[auth0RolesClaim])
+        ? payload[auth0RolesClaim]
+        : [];
 
-        console.log("ROLES:", roles);
-        const isAdmin = roles.includes("admin");
+      const isAdmin = roles.includes("admin");
 
-        if (!isAdmin) {
-          throw new ForbiddenError({
-            message: "Forbidden: admin access required",
-          });
-        }
-      } catch (error) {
-        request.log.error(error, "Admin JWT verification failed");
-
-        if (error instanceof ForbiddenError) {
-          throw error;
-        }
-        throw new AuthenticationError({ message: "Authentication failed" });
+      if (!isAdmin) {
+        throw new ForbiddenError({
+          message: "Forbidden: admin access required",
+        });
       }
     },
   );
