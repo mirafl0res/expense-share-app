@@ -1,7 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import type { UserCreateRequest, UserUpdateRequest } from "../types/users";
 import * as services from "../services/users";
-import { extractUserInfoFromIdToken } from "../services/auth0";
 
 export async function createOrLoginUser(
   request: FastifyRequest<{ Body: UserCreateRequest }>,
@@ -11,18 +10,18 @@ export async function createOrLoginUser(
   reply.status(201).send(newUser);
 }
 
-type RegisterAuth0UserRequest = { idToken: string };
+// type RegisterAuth0UserRequest = { idToken: string };
 
-export async function registerAuth0User(
-  request: FastifyRequest<{ Body: RegisterAuth0UserRequest }>,
-  reply: FastifyReply,
-): Promise<void> {
-  const userData = await extractUserInfoFromIdToken(
-    request.body.idToken as string,
-  );
-  const newUser = await services.createOrLoginUser(userData);
-  reply.status(201).send(newUser);
-}
+// export async function registerAuth0User(
+//   request: FastifyRequest<{ Body: RegisterAuth0UserRequest }>,
+//   reply: FastifyReply,
+// ): Promise<void> {
+//   const userData = await getUserProfileFromIdToken(
+//     request.body.idToken as string,
+//   );
+//   const newUser = await services.createOrLoginUser(userData);
+//   reply.status(201).send(newUser);
+// }
 
 export async function getUserById(
   request: FastifyRequest<{ Params: { id: string } }>,

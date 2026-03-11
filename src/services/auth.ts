@@ -1,26 +1,13 @@
 import axios from "axios";
 import { verifyAndDecodeJwt } from "../auth/jwks";
-import { InternalError } from "../errors/errors";
+import { AuthenticationError, InternalError } from "../errors/errors";
 import type { UserCreateRequest } from "../types";
 import type {
-  Auth0AccessTokenPayload,
   Auth0TokenRequestParams,
   Auth0TokenResponse,
   AuthCodeExchangeRequest,
 } from "../types/auth0";
-
-export async function extractUserInfoFromIdToken(
-  idToken: string,
-): Promise<UserCreateRequest> {
-  const { payload } = await verifyAndDecodeJwt(idToken);
-  const { email, nickname, sub } = payload;
-
-  return {
-    email: email as string,
-    username: (nickname as string) ?? email,
-    auth0Sub: sub as string,
-  };
-}
+import type { FastifyRequest } from "fastify";
 
 function getRedirectUri(): string {
   const redirectUri = Bun.env.REDIRECT_URI;
@@ -57,6 +44,19 @@ async function postToAuth0TokenEndpoint(params: Auth0TokenRequestParams) {
   );
 }
 
+export async function getUserProfileFromIdToken(
+  idToken: string,
+): Promise<UserCreateRequest> {
+  const { payload } = await verifyAndDecodeJwt(idToken);
+  const { email, nickname, sub } = payload;
+
+  return {
+    email: email as string,
+    username: (nickname as string) ?? email,
+    auth0Sub: sub as string,
+  };
+}
+
 export async function exchangeAuthCodeForTokens({
   code,
   redirectUri,
@@ -76,41 +76,26 @@ export async function exchangeAuthCodeForTokens({
 }
 
 export async function getTokensFromAuth0Callback(
-  authorizationCode: string,
+  code: string,
 ): Promise<Auth0TokenResponse> {
   const redirectUri = getRedirectUri();
-  return exchangeAuthCodeForTokens({ code: authorizationCode, redirectUri });
+  return exchangeAuthCodeForTokens({ code, redirectUri });
 }
 
-export async function getUserProfileFromIdToken(
-  idToken: string,
-): Promise<UserCreateRequest> {
-  return extractUserInfoFromIdToken(idToken);
-}
-
-export async function processAuth0Callback(
-  code: string,
-): Promise<UserCreateRequest> {
-  try {
-    const redirectUri = getRedirectUri();
-    const tokenResponse = await exchangeAuthCodeForTokens({
-      code,
-      redirectUri,
-    });
-
-    console.log("TOKEN RESPONSE:", tokenResponse);
-
-    const auth0UserProfile = await extractUserInfoFromIdToken(
-      tokenResponse.id_token,
-    );
-
-    console.log("auth0UserProfile (processAuth0Callback):", auth0UserProfile); //FIXME[epic=logs] - remove before production
-
-    return auth0UserProfile;
-  } catch (error) {
-    throw new InternalError({
-      message: "Failed to process Auth0 callback",
-      cause: error,
+export async function getAuth0SubFromRequest(request: FastifyRequest) {
+  const auth0Sub = request.jwtTokenPayload?.sub as string | undefined;
+  if (!auth0Sub) {
+    throw new AuthenticationError({
+      message: "Missing user auth0Sub in JWT payload",
     });
   }
+  return auth0Sub;
+
+  // const user = await usersRepository.findByAuth0Sub(auth0Sub);
+  // if (!user) {
+  //   throw new AuthenticationError({
+  //     message: "User not found",
+  //   });
+  // }
+  // return user;
 }

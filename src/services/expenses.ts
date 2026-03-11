@@ -1,23 +1,31 @@
-import type { ExpenseCreateRequest, Expense, ExpenseUpdateRequest } from "../types/expenses";
+import type {
+  ExpenseCreateRequest,
+  Expense,
+  ExpenseUpdateRequest,
+} from "../types/expenses";
 import * as repository from "../repository/expenses";
 import { ExpenseMapper } from "../mappers/expenses";
 import { NotFoundError } from "../errors/errors";
 
-export async function createExpense(data: ExpenseCreateRequest): Promise<Expense> {
-  const testUserId = "11111111-1111-1111-1111-111111111111";
+export async function createExpense(
+  data: ExpenseCreateRequest,
+  userId: string,
+): Promise<Expense> {
   const newExpense: Expense = {
     id: crypto.randomUUID(),
-    createdBy: testUserId, // TODO[epic=auth]: Implement JWT verification
+    createdBy: userId,
     groupId: data.groupId,
-    payerId: data.payerId,
+    payerId: data.payerId ?? userId,
     title: data.title,
     amount: data.amount,
     splitType: data.splitType,
-    expenseDate: data.expenseDate,
+    expenseDate: data.expenseDate ?? new Date().toISOString().slice(0, 10),
     description: data.description,
   };
 
-  const result = await repository.insertExpense(ExpenseMapper.toEntity(newExpense));
+  const result = await repository.insertExpense(
+    ExpenseMapper.toEntity(newExpense),
+  );
 
   return ExpenseMapper.toDomain(result);
 }
