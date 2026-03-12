@@ -4,7 +4,7 @@ import * as groupRepository from "../repository/groups";
 import type { Group, GroupCreateRequest, GroupUpdateRequest } from "../types/groups";
 
 export async function createGroup(data: GroupCreateRequest): Promise<Group> {
-  const testUserId = "11111111-1111-1111-1111-111111111111"; //TODO - get authenticated user!
+  const testUserId = "11111111-1111-1111-1111-111111111111"; //TODO[epic=auth] - get authenticated user!
   
   const newGroup: Group = {
     id: crypto.randomUUID(),
