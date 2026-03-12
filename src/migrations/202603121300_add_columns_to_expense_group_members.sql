@@ -1,0 +1,3 @@
+ALTER TABLE expense_group_members
+ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT now(),
+ADD COLUMN added_by UUID REFERENCES users (id) ON DELETE SET NULL;
