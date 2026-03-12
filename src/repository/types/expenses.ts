@@ -28,7 +28,12 @@ export type ExpenseEntityPayload = Pick<
 
 export type ExpenseParticipantEntity = {
   expense_id: string;
-  participant_user_id: string | null;
+  participant_user_id: string;
   share_amount: number;
   created_at: string;
 };
+
+export type ExpenseParticipantEntityPayload = Pick<
+  ExpenseParticipantEntity,
+  "expense_id" | "participant_user_id" | "share_amount"
+>;

@@ -7,11 +7,19 @@ export type GroupEntity = {
   created_by: string;
 };
 
-export type GroupEntityPayload = Pick<GroupEntity, "id" | "title" | "created_by">;
+export type GroupEntityPayload = Pick<
+  GroupEntity,
+  "id" | "title" | "created_by"
+>;
 
 export type GroupMemberEntity = {
   user_id: string;
   group_id: string;
+  created_at: string;
+  added_by: string | null;
 };
 
-export type GroupMemberCreatePayload = GroupMemberEntity;
+export type GroupMemberEntityPayload = Pick<
+  GroupMemberEntity,
+  "user_id" | "group_id" | "added_by"
+>;
