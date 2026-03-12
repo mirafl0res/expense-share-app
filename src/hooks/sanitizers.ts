@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import validator from "validator";
-import type { UserCreateRequest, UserUpdateRequest } from "../types/users";
 import { ValidationError } from "../errors/errors";
+import type { UserCreateRequest, UserUpdateRequest } from "../types/users";
 import type {
   ExpenseCreateRequest,
   ExpenseUpdateRequest,

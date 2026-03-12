@@ -4,7 +4,7 @@ import * as schemas from "../schemas/users";
 import { sanitizeUserRequest } from "../hooks/sanitizers";
 // import { verifyAuth0Secret } from "../hooks/auth";
 
-export async function usersRoutes(
+export async function userRoutes(
   fastifyServer: FastifyInstance,
   _options: FastifyPluginOptions,
 ): Promise<void> {
@@ -24,6 +24,7 @@ export async function usersRoutes(
     preHandler: fastifyServer.requireAuth,
     handler: userController.getUserById,
   });
+  
   fastifyServer.route({
     method: "PATCH",
     url: "/users/:id/",
@@ -32,6 +33,7 @@ export async function usersRoutes(
     preHandler: fastifyServer.requireAuth,
     handler: userController.updateUser,
   });
+  
   fastifyServer.route({
     method: "DELETE",
     url: "/users/:id",

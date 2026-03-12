@@ -12,6 +12,7 @@ export async function createExpense(
 ): Promise<void> {
   const user = await authService.getAuthenticatedUserFromRequest(request);
   const newExpense = await expenseService.createExpense(request.body, user.id);
+  
   reply.status(201).send(newExpense);
 }
 
@@ -20,6 +21,7 @@ export async function getExpenseById(
   reply: FastifyReply,
 ): Promise<void> {
   const expense = await expenseService.getExpenseById(request.params.id);
+  
   reply.status(200).send(expense);
 }
 
@@ -34,6 +36,7 @@ export async function updateExpense(
     request.params.id,
     request.body,
   );
+  
   reply.status(200).send(updatedExpense);
 }
 
@@ -42,6 +45,7 @@ export async function deleteExpense(
   reply: FastifyReply,
 ): Promise<void> {
   const deleted = await expenseService.hardDeleteExpense(request.params.id);
+  
   reply.status(204).send(deleted);
 }
 
@@ -50,5 +54,6 @@ export async function softDeleteExpense(
   reply: FastifyReply,
 ): Promise<void> {
   const deleted = await expenseService.softDeleteExpense(request.params.id);
+
   reply.status(204).send(deleted);
 }

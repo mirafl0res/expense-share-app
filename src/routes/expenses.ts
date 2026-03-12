@@ -3,7 +3,7 @@ import * as schemas from "../schemas/expenses";
 import * as expenseController from "../controllers/expenses";
 import { sanitizeExpenseRequest } from "../hooks/sanitizers";
 
-export async function expensesRoutes(
+export async function expenseRoutes(
   fastifyServer: FastifyInstance,
   _options: FastifyPluginOptions,
 ): Promise<void> {
@@ -15,6 +15,7 @@ export async function expensesRoutes(
     preHandler: fastifyServer.requireAuth,
     handler: expenseController.createExpense,
   });
+
   fastifyServer.route({
     method: "GET",
     url: "/expenses/:id",
@@ -22,6 +23,7 @@ export async function expensesRoutes(
     preHandler: fastifyServer.requireAuth,
     handler: expenseController.getExpenseById,
   });
+
   fastifyServer.route({
     method: "PATCH",
     url: "/expenses/:id",
@@ -30,6 +32,7 @@ export async function expensesRoutes(
     preHandler: fastifyServer.requireAuth,
     handler: expenseController.updateExpense,
   });
+
   fastifyServer.route({
     method: "DELETE",
     url: "/expenses/:id",
@@ -37,6 +40,7 @@ export async function expensesRoutes(
     preHandler: fastifyServer.requireAuth,
     handler: expenseController.deleteExpense,
   });
+  
   // fastifyServer.route({
   //   method: "PATCH",
   //   url: "/expenses/:id/",

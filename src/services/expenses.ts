@@ -32,9 +32,11 @@ export async function createExpense(
 
 export async function getExpenseById(id: string): Promise<Expense> {
   const result = await expenseRepository.getExpenseById(id);
+  
   if (!result) {
     throw new NotFoundError({ message: "Expense not found" });
   }
+  
   return ExpenseMapper.toDomain(result);
 }
 
@@ -45,6 +47,7 @@ export async function updateExpense(
   const updates = ExpenseMapper.toPartialEntity(data);
 
   const result = await expenseRepository.updateExpense(id, updates);
+  
   if (!result) {
     throw new NotFoundError({ message: "Expense not found" });
   }
@@ -54,6 +57,7 @@ export async function updateExpense(
 
 export async function softDeleteExpense(id: string): Promise<boolean> {
   const deleted = await expenseRepository.softDeleteExpense(id);
+  
   if (!deleted) {
     throw new NotFoundError({ message: "Expense not found" });
   }
@@ -63,6 +67,7 @@ export async function softDeleteExpense(id: string): Promise<boolean> {
 
 export async function hardDeleteExpense(id: string): Promise<boolean> {
   const deleted = await expenseRepository.hardDeleteExpense(id);
+  
   if (!deleted) {
     throw new NotFoundError({ message: "Expense not found" });
   }

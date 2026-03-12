@@ -5,7 +5,7 @@ import type {
   FastifyRequest,
 } from "fastify";
 import {
-  AuthenticationError,
+
   ForbiddenError,
   InternalError,
 } from "../errors/errors";
@@ -30,7 +30,9 @@ async function authPlugin(
     "requireAuth",
     async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
       const payload = await extractAndValidatePayload(request);
+
       request.jwtTokenPayload = payload;
+      
       console.log(
         "Decoded JWT payload (requireAdmin):",
         request.jwtTokenPayload,
@@ -42,11 +44,15 @@ async function authPlugin(
     "requireAdmin",
     async (request: FastifyRequest<{}>, reply: FastifyReply): Promise<void> => {
       const auth0RolesClaim = Bun.env.AUTH0_ROLES_CLAIM;
+
       console.log("AUTH0_ROLES_CLAIM:", Bun.env.AUTH0_ROLES_CLAIM);
+      
       if (!auth0RolesClaim) {
         throw new InternalError({ message: "No AUTH0_ROLES_CLAIM provided" });
       }
+      
       const payload = await extractAndValidatePayload(request);
+      
       request.jwtTokenPayload = payload;
 
       const roles = Array.isArray(payload[auth0RolesClaim])

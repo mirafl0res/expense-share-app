@@ -27,11 +27,13 @@ export async function handleAuthCallback(code: string) {
 
 export async function getAuth0SubFromRequest(request: FastifyRequest) {
   const auth0Sub = request.jwtTokenPayload?.sub as string | undefined;
+
   if (!auth0Sub) {
     throw new AuthenticationError({
       message: "Missing user auth0Sub in JWT payload",
     });
   }
+
   return auth0Sub;
 }
 
@@ -39,6 +41,7 @@ export async function getTokensFromAuth0Callback(
   code: string,
 ): Promise<Auth0TokenResponse> {
   const redirectUri = getRedirectUri();
+
   return exchangeAuthCodeForTokens({ code, redirectUri });
 }
 
@@ -47,9 +50,11 @@ export async function exchangeAuthCodeForTokens({
   redirectUri,
 }: AuthCodeExchangeRequest) {
   const { tokenUrl, clientId, clientSecret } = getAuth0Config();
+
   if (!redirectUri) {
     throw new InternalError({ message: "Missing redirectUri" });
   }
+
   const response = await postToAuth0TokenEndpoint({
     tokenUrl,
     clientId,
@@ -57,11 +62,13 @@ export async function exchangeAuthCodeForTokens({
     code,
     redirectUri,
   });
+
   return response.data;
 }
 
 async function postToAuth0TokenEndpoint(params: Auth0TokenRequestParams) {
   const { tokenUrl, clientId, clientSecret, code, redirectUri } = params;
+
   return axios.post(
     tokenUrl,
     {
@@ -93,10 +100,12 @@ export async function getAuthenticatedUserFromRequest(
 ): Promise<User> {
   const auth0Sub = await getAuth0SubFromRequest(request);
   const user = await userService.getUserByAuth0Sub(auth0Sub);
+
   if (!user) {
     throw new AuthenticationError({
       message: "Authenticated user not found in database",
     });
   }
+  
   return user;
 }

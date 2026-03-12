@@ -1,5 +1,8 @@
 import { fastify, type FastifyInstance } from "fastify";
-import { expensesRoutes, usersRoutes, groupsRoutes } from "./routes";
+import { expenseRoutes, userRoutes, groupRoutes, authRoutes } from "./routes";
+import fastifyCors from "@fastify/cors";
+import fastifyHelmet from "@fastify/helmet";
+import authPlugin from "./auth/auth";
 import db from "./repository/db";
 import { BaseError, InternalError, ValidationError } from "./errors/errors";
 import {
@@ -9,16 +12,13 @@ import {
   logUnknownError,
   logValidationError,
 } from "./errors/helpers";
-import fastifyCors from "@fastify/cors";
-import fastifyHelmet from "@fastify/helmet";
-import { authRoutes } from "./routes/auth";
-import authPlugin from "./auth/auth";
 
 const fastifyServer: FastifyInstance = fastify({ logger: true });
 
 fastifyServer.setErrorHandler((error: unknown, request, reply) => {
   if (isFastifyValidationError(error)) {
     const formatted = formatValidationErrors(error.validation);
+
     logValidationError(request, formatted, error);
 
     const validationError = new ValidationError({
@@ -78,9 +78,9 @@ async function start(): Promise<void> {
   await fastifyServer.register(fastifyHelmet);
   await fastifyServer.register(authPlugin);
   await fastifyServer.register(authRoutes);
-  await fastifyServer.register(usersRoutes);
-  await fastifyServer.register(groupsRoutes);
-  await fastifyServer.register(expensesRoutes);
+  await fastifyServer.register(userRoutes);
+  await fastifyServer.register(groupRoutes);
+  await fastifyServer.register(expenseRoutes);
 
   try {
     await fastifyServer.listen({

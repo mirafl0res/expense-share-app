@@ -4,7 +4,8 @@ import * as groupRepository from "../repository/groups";
 import type { Group, GroupCreateRequest, GroupUpdateRequest } from "../types/groups";
 
 export async function createGroup(data: GroupCreateRequest): Promise<Group> {
-  const testUserId = "11111111-1111-1111-1111-111111111111";
+  const testUserId = "11111111-1111-1111-1111-111111111111"; //TODO - get authenticated user!
+  
   const newGroup: Group = {
     id: crypto.randomUUID(),
     title: data.title,
@@ -18,9 +19,11 @@ export async function createGroup(data: GroupCreateRequest): Promise<Group> {
 
 export async function getGroupById(id: string): Promise<Group> {
   const result = await groupRepository.getGroupById(id);
+
   if (!result) {
     throw new NotFoundError({ message: "Group not found" });
   }
+  
   return GroupMapper.toDomain(result);
 }
 
@@ -28,6 +31,7 @@ export async function updateGroup(id: string, data: GroupUpdateRequest): Promise
   const updates = GroupMapper.toPartialEntity(data);
 
   const result = await groupRepository.updateGroup(id, updates);
+  
   if (!result) {
     throw new NotFoundError({ message: "Group not found" });
   }
@@ -37,6 +41,7 @@ export async function updateGroup(id: string, data: GroupUpdateRequest): Promise
 
 export async function softDeleteGroup(id: string): Promise<boolean> {
   const deleted = await groupRepository.softDeleteGroup(id);
+  
   if (!deleted) {
     throw new NotFoundError({ message: "Group not found" });
   }
@@ -46,6 +51,7 @@ export async function softDeleteGroup(id: string): Promise<boolean> {
 
 export async function hardDeleteGroup(id: string): Promise<boolean> {
   const deleted = await groupRepository.hardDeleteGroup(id);
+
   if (!deleted) {
     throw new NotFoundError({ message: "Group not found" });
   }

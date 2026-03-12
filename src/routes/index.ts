@@ -1,3 +1,4 @@
-export { usersRoutes } from "./users";
-export { expensesRoutes } from "./expenses";
-export { groupsRoutes } from "./groups";
+export { userRoutes } from "./users";
+export { expenseRoutes } from "./expenses";
+export { groupRoutes } from "./groups";
+export { authRoutes } from "./auth";

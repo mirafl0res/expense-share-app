@@ -8,6 +8,7 @@ export async function createGroup(
 ): Promise<void> {
   const newGroup = await groupService.createGroup(request.body);
   reply.status(201).send(newGroup);
+
 }
 
 export async function getGroupById(
@@ -15,6 +16,7 @@ export async function getGroupById(
   reply: FastifyReply,
 ): Promise<void> {
   const group = await groupService.getGroupById(request.params.id);
+
   reply.status(200).send(group);
 }
 
@@ -26,6 +28,7 @@ export async function updateGroup(
     request.params.id,
     request.body,
   );
+  
   reply.status(200).send(updatedGroup);
 }
 
@@ -34,6 +37,7 @@ export async function deleteGroup(
   reply: FastifyReply,
 ): Promise<void> {
   const deleted = await groupService.hardDeleteGroup(request.params.id);
+
   reply.status(204).send(deleted);
 }
 
@@ -42,5 +46,6 @@ export async function softDeleteGroup(
   reply: FastifyReply,
 ): Promise<void> {
   const deleted = await groupService.softDeleteGroup(request.params.id);
+  
   reply.status(204).send(deleted);
 }

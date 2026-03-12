@@ -9,9 +9,12 @@ export async function authCallbackHandler(
   reply: FastifyReply,
 ): Promise<void> {
   const { code } = request.query as { code?: string };
+
   if (!code) {
     throw new InternalError({ message: "Missing code parameter in callback" });
   }
+
   const userProfile = await handleAuthCallback(code);
+  
   reply.status(200).send(userProfile);
 }
