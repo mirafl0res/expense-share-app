@@ -18,13 +18,13 @@ CREATE TABLE expense_groups (
 
 CREATE TABLE expense_group_members (
     user_id UUID REFERENCES users (id) ON DELETE CASCADE,
-    group_id UUID REFERENCES expense_groups (id) ON DELETE CASCADE,
-    PRIMARY KEY (user_id, group_id)
+    expense_group_id UUID REFERENCES expense_groups (id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, expense_group_id)
 );
 
 CREATE TABLE expenses (
     id UUID PRIMARY KEY,
-    group_id UUID REFERENCES expense_groups (id) ON DELETE CASCADE,
+    expense_group_id UUID REFERENCES expense_groups (id) ON DELETE CASCADE,
     payer_id UUID REFERENCES users (id) ON DELETE CASCADE,
     title TEXT NOT NULL,
     amount DECIMAL NOT NULL,
