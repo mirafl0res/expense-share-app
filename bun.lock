@@ -5,6 +5,7 @@
     "": {
       "name": "project-folder",
       "dependencies": {
+        "@auth0/auth0-fastify-api": "^1.1.0",
         "@fastify/cors": "^11.2.0",
         "@fastify/helmet": "^13.0.2",
         "axios": "^1.13.6",
@@ -23,6 +24,12 @@
     },
   },
   "packages": {
+    "@auth0/auth0-api-js": ["@auth0/auth0-api-js@1.4.0", "", { "dependencies": { "@auth0/auth0-auth-js": "^1.3.0", "jose": "^6.0.8", "oauth4webapi": "^3.3.0" } }, "sha512-f3ELjfcZhvo24uXVnlZNRC4z/Jd0Ecd+4SUu/IsmyLW6FIWWBo5etkMyUPSvnOlqfRBJ8jXJrkShV4ac1O2vPg=="],
+
+    "@auth0/auth0-auth-js": ["@auth0/auth0-auth-js@1.5.0", "", { "dependencies": { "jose": "^6.0.8", "openid-client": "^6.8.0" } }, "sha512-shahG7sRw6VxduRvnNcmbgL8V42z+kNR9LDih9ofY4eM8ygt07RUh58x7S1M80ENx9wcMqYUsJWMaVudgQHyjQ=="],
+
+    "@auth0/auth0-fastify-api": ["@auth0/auth0-fastify-api@1.1.0", "", { "dependencies": { "@auth0/auth0-api-js": "^1.1.0", "fastify": "^5.3.2", "fastify-plugin": "^5.0.1" } }, "sha512-98aX+bMFVgPA/yJmwGh0Mq6TFyggtTVbu4AOM/aq/eiRDieCaPgc8aiGpIl3wLaVZXUN0O+VsU9ZsO+6/qCDeQ=="],
+
     "@fastify/ajv-compiler": ["@fastify/ajv-compiler@4.0.5", "", { "dependencies": { "ajv": "^8.12.0", "ajv-formats": "^3.0.1", "fast-uri": "^3.0.0" } }, "sha512-KoWKW+MhvfTRWL4qrhUwAAZoaChluo0m0vbiJlGMt2GXvL4LVPQEjt8kSpHI3IBq5Rez8fg+XeH3cneztq+C7A=="],
 
     "@fastify/cors": ["@fastify/cors@11.2.0", "", { "dependencies": { "fastify-plugin": "^5.0.0", "toad-cache": "^3.7.0" } }, "sha512-LbLHBuSAdGdSFZYTLVA3+Ch2t+sA6nq3Ejc6XLAKiQ6ViS2qFnvicpj0htsx03FyYeLs04HfRNBsz/a8SvbcUw=="],
@@ -137,7 +144,11 @@
 
     "mime-types": ["mime-types@2.1.35", "", { "dependencies": { "mime-db": "1.52.0" } }, "sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw=="],
 
+    "oauth4webapi": ["oauth4webapi@3.8.5", "", {}, "sha512-A8jmyUckVhRJj5lspguklcl90Ydqk61H3dcU0oLhH3Yv13KpAliKTt5hknpGGPZSSfOwGyraNEFmofDYH+1kSg=="],
+
     "on-exit-leak-free": ["on-exit-leak-free@2.1.2", "", {}, "sha512-0eJJY6hXLGf1udHwfNftBqH+g73EU4B504nZeKpz1sYRKafAghwxEJunB2O7rDZkL4PGfsMVnTXZ2EjibbqcsA=="],
+
+    "openid-client": ["openid-client@6.8.2", "", { "dependencies": { "jose": "^6.1.3", "oauth4webapi": "^3.8.4" } }, "sha512-uOvTCndr4udZsKihJ68H9bUICrriHdUVJ6Az+4Ns6cW55rwM5h0bjVIzDz2SxgOI84LKjFyjOFvERLzdTUROGA=="],
 
     "pino": ["pino@10.3.1", "", { "dependencies": { "@pinojs/redact": "^0.4.0", "atomic-sleep": "^1.0.0", "on-exit-leak-free": "^2.1.0", "pino-abstract-transport": "^3.0.0", "pino-std-serializers": "^7.0.0", "process-warning": "^5.0.0", "quick-format-unescaped": "^4.0.3", "real-require": "^0.2.0", "safe-stable-stringify": "^2.3.1", "sonic-boom": "^4.0.1", "thread-stream": "^4.0.0" }, "bin": { "pino": "bin.js" } }, "sha512-r34yH/GlQpKZbU1BvFFqOjhISRo1MNx1tWYsYvmj6KIRHSPMT2+yHOEb1SG6NMvRoHRF0a07kCOox/9yakl1vg=="],
 

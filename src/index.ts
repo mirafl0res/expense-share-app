@@ -1,8 +1,9 @@
 import { fastify, type FastifyInstance } from "fastify";
 import { expenseRoutes, userRoutes, groupRoutes, authRoutes } from "./routes";
+
 import fastifyCors from "@fastify/cors";
 import fastifyHelmet from "@fastify/helmet";
-import authPlugin from "./auth/auth";
+// import authPlugin from "./auth/auth";
 import db from "./repository/db";
 import { BaseError, InternalError, ValidationError } from "./errors/errors";
 import {
@@ -12,6 +13,7 @@ import {
   logUnknownError,
   logValidationError,
 } from "./errors/helpers";
+import fastifyAuth0Api from "@auth0/auth0-fastify-api";
 
 const fastifyServer: FastifyInstance = fastify({ logger: true });
 
@@ -60,6 +62,69 @@ fastifyServer.setNotFoundHandler((_request, reply) => {
   });
 });
 
+/**
+|--------------------------------------------------
+| AUTH0/FASTIFY API
+|--------------------------------------------------
+*/
+const domain = Bun.env.AUTH0_DOMAIN;
+const audience = Bun.env.AUTH0_AUDIENCE;
+
+if (!domain || !audience) {
+  throw new Error(
+    "Missing AUTH0_DOMAIN or AUTH0_AUDIENCE in environment variables",
+  );
+}
+await fastifyServer.register(fastifyAuth0Api, {
+  domain,
+  audience,
+});
+
+// Public route - no authentication required
+fastifyServer.get("/api/public", async (request, reply) => {
+  return {
+    message:
+      "Hello from a public endpoint! You don't need to be authenticated to see this.",
+    timestamp: new Date().toISOString(),
+  };
+});
+
+// Protected route - requires valid access token
+fastifyServer.get(
+  "/api/private",
+  {
+    preHandler: fastifyServer.requireAuth(),
+  },
+  async (request, reply) => {
+    return {
+      message:
+        "Hello from a protected endpoint! You successfully authenticated.",
+      user: request.user.sub,
+      timestamp: new Date().toISOString(),
+    };
+  },
+);
+
+// Protected route - returns user information from token
+fastifyServer.get(
+  "/api/profile",
+  {
+    preHandler: fastifyServer.requireAuth(),
+  },
+  async (request, reply) => {
+    return {
+      message: "Your user profile from the access token",
+      profile: request.user,
+    };
+  },
+);
+
+/**
+|--------------------------------------------------
+| END
+|--------------------------------------------------
+*/
+
 async function start(): Promise<void> {
   try {
     await db`SELECT 1`;
@@ -69,6 +134,8 @@ async function start(): Promise<void> {
     fastifyServer.log.error(error);
     process.exit(1);
   }
+  // curl http://localhost:3000/api/public
+  // curl http://localhost:3000/api/private
 
   const clientOrigin = Bun.env.CLIENT_ORIGIN;
 
@@ -79,10 +146,11 @@ async function start(): Promise<void> {
   });
 
   await fastifyServer.register(fastifyHelmet);
-  await fastifyServer.register(authPlugin);
-  await fastifyServer.register(authRoutes);
-  await fastifyServer.register(userRoutes);
-  await fastifyServer.register(groupRoutes);
+  // await fastifyServer.register(authPlugin);
+  // await fastifyServer.register(authRoutes);
+  // await fastifyServer.register(userRoutes);
+  // await fastifyServer.register(groupRoutes);
+  // await fastifyServer.register(expenseRoutes);
   await fastifyServer.register(expenseRoutes);
 
   try {
@@ -94,6 +162,7 @@ async function start(): Promise<void> {
     fastifyServer.log.error(error);
     process.exit(1);
   }
+  fastifyServer.log.info("API server running at http://localhost:3000");
 }
 
 start();

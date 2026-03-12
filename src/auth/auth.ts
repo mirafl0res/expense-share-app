@@ -66,4 +66,4 @@ async function authPlugin(
   );
 }
 
-export default fastifyPlugin(authPlugin);
+// export default fastifyPlugin(authPlugin);

@@ -12,35 +12,31 @@ export async function expenseRoutes(
     url: "/expenses",
     schema: schemas.createExpenseSchema,
     preValidation: sanitizeExpenseRequest,
-    preHandler: fastifyServer.requireAuth,
+    preHandler: fastifyServer.requireAuth(),
     handler: expenseController.createExpense,
   });
-
-  fastifyServer.route({
-    method: "GET",
-    url: "/expenses/:id",
-    schema: schemas.getExpenseByIdSchema,
-    preHandler: fastifyServer.requireAuth,
-    handler: expenseController.getExpenseById,
-  });
-
-  fastifyServer.route({
-    method: "PATCH",
-    url: "/expenses/:id",
-    schema: schemas.updateExpenseSchema,
-    preValidation: sanitizeExpenseRequest,
-    preHandler: fastifyServer.requireAuth,
-    handler: expenseController.updateExpense,
-  });
-
-  fastifyServer.route({
-    method: "DELETE",
-    url: "/expenses/:id",
-    schema: schemas.deleteExpenseSchema,
-    preHandler: fastifyServer.requireAuth,
-    handler: expenseController.deleteExpense,
-  });
-  
+  // fastifyServer.route({
+  //   method: "GET",
+  //   url: "/expenses/:id",
+  //   schema: schemas.getExpenseByIdSchema,
+  //   preHandler: fastifyServer.requireAuth,
+  //   handler: expenseController.getExpenseById,
+  // });
+  // fastifyServer.route({
+  //   method: "PATCH",
+  //   url: "/expenses/:id",
+  //   schema: schemas.updateExpenseSchema,
+  //   preValidation: sanitizeExpenseRequest,
+  //   preHandler: fastifyServer.requireAuth,
+  //   handler: expenseController.updateExpense,
+  // });
+  // fastifyServer.route({
+  //   method: "DELETE",
+  //   url: "/expenses/:id",
+  //   schema: schemas.deleteExpenseSchema,
+  //   preHandler: fastifyServer.requireAuth,
+  //   handler: expenseController.deleteExpense,
+  // });
   // fastifyServer.route({
   //   method: "PATCH",
   //   url: "/expenses/:id/",
