@@ -2,7 +2,6 @@ import { InternalError } from "../errors/errors";
 import * as authService from "../services/auth/auth0";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import * as userService from "../services/users";
-import { handleAuthCallback } from "../services/auth/auth0";
 
 export async function authCallbackHandler(
   request: FastifyRequest,
@@ -14,7 +13,7 @@ export async function authCallbackHandler(
     throw new InternalError({ message: "Missing code parameter in callback" });
   }
 
-  const userProfile = await handleAuthCallback(code);
-  
+  const userProfile = await authService.handleAuthCallback(code);
+
   reply.status(200).send(userProfile);
 }

@@ -12,29 +12,12 @@ import * as userService from "../users";
 import { getAuth0Config, getRedirectUri } from "./helpers";
 
 export async function handleAuthCallback(code: string) {
-  console.log("handleAuthCallback: Received code:", code);
-
   const tokens = await getTokensFromAuth0Callback(code);
-  console.log("Tokens from Auth0 callback:", tokens);
-
   const auth0UserProfile = await getUserProfileFromIdToken(tokens.id_token);
-  console.log("Auth0 user profile:", auth0UserProfile);
 
   await userService.createOrLoginUser(auth0UserProfile);
 
   return auth0UserProfile;
-}
-
-export async function getAuth0SubFromRequest(request: FastifyRequest) {
-  const auth0Sub = request.jwtTokenPayload?.sub as string | undefined;
-
-  if (!auth0Sub) {
-    throw new AuthenticationError({
-      message: "Missing user auth0Sub in JWT payload",
-    });
-  }
-
-  return auth0Sub;
 }
 
 export async function getTokensFromAuth0Callback(
@@ -95,6 +78,23 @@ export async function getUserProfileFromIdToken(
   };
 }
 
+/**
+|--------------------------------------------------
+| Get from request
+|--------------------------------------------------
+*/
+export async function getAuth0SubFromRequest(request: FastifyRequest) {
+  const auth0Sub = request.jwtTokenPayload?.sub as string | undefined;
+  console.log(request.jwtTokenPayload);
+  if (!auth0Sub) {
+    throw new AuthenticationError({
+      message: "Missing user auth0Sub in JWT payload",
+    });
+  }
+
+  return auth0Sub;
+}
+
 export async function getAuthenticatedUserFromRequest(
   request: FastifyRequest,
 ): Promise<User> {
@@ -106,6 +106,6 @@ export async function getAuthenticatedUserFromRequest(
       message: "Authenticated user not found in database",
     });
   }
-  
+
   return user;
 }
