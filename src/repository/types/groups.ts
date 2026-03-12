@@ -14,12 +14,12 @@ export type GroupEntityPayload = Pick<
 
 export type GroupMemberEntity = {
   user_id: string;
-  group_id: string;
+  expense_group_id: string;
   created_at: string;
   added_by: string | null;
 };
 
 export type GroupMemberEntityPayload = Pick<
   GroupMemberEntity,
-  "user_id" | "group_id" | "added_by"
+  "user_id" | "expense_group_id" | "added_by"
 >;

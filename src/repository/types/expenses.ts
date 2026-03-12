@@ -1,7 +1,7 @@
 export type ExpenseEntity = {
   id: string;
   created_by: string;
-  group_id: string;
+  expense_group_id: string;
   payer_id: string;
   title: string;
   description: string | null;
@@ -17,7 +17,7 @@ export type ExpenseEntityPayload = Pick<
   ExpenseEntity,
   | "id"
   | "created_by"
-  | "group_id"
+  | "expense_group_id"
   | "payer_id"
   | "title"
   | "description"

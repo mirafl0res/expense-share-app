@@ -138,13 +138,13 @@ export async function insertExpenseParticipant(
 }
 
 export async function hardDeleteExpenseParticipant(
-  user_id: string,
-  expense_id: string,
+  userId: string,
+  expenseId: string,
 ): Promise<boolean> {
   try {
-    const [result] = await db<{ user_id: string; group_id: string }[]>`
+    const [result] = await db<{ user_id: string; expense_id: string }[]>`
     DELETE FROM expense_participants
-    WHERE user_id = ${user_id} AND expense_id = ${expense_id}
+    WHERE user_id = ${userId} AND expense_id = ${expenseId}
     RETURNING user_id, expense_id
     `;
 

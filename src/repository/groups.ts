@@ -143,12 +143,12 @@ export async function insertGroupMember(
 
 export async function hardDeleteGroupMember(
   user_id: string,
-  group_id: string,
+  expense_group_id: string,
 ): Promise<boolean> {
   try {
-    const [result] = await db<{ user_id: string; group_id: string }[]>`
+    const [result] = await db<{ user_id: string; expense_group_id: string }[]>`
     DELETE FROM expense_group_members
-    WHERE user_id = ${user_id} AND expense_group_id = ${group_id}
+    WHERE user_id = ${user_id} AND expense_group_id = ${expense_group_id}
     RETURNING user_id, expense_group_id
     `;
 
