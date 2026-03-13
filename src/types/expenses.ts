@@ -1,7 +1,7 @@
 export type Expense = {
   id: string;
   createdBy: string;
-  groupId: string;
+  expenseGroupId: string;
   payerId: string;
   title: string;
   amount: number;
@@ -14,7 +14,7 @@ export type Expense = {
 };
 
 export type ExpenseCreateRequest = {
-  groupId: string;
+  expenseGroupId: string;
   payerId: string;
   title: string;
   amount: number;

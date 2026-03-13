@@ -6,7 +6,7 @@ export const ExpenseMapper = {
     return {
       id: entity.id,
       createdBy: entity.created_by,
-      groupId: entity.expense_group_id,
+      expenseGroupId: entity.expense_group_id,
       payerId: entity.payer_id,
       title: entity.title,
       description: entity.description ?? undefined,
@@ -21,7 +21,7 @@ export const ExpenseMapper = {
   toEntity(expense: Expense): ExpenseEntityPayload {
     return {
       id: expense.id,
-      expense_group_id: expense.groupId,
+      expense_group_id: expense.expenseGroupId,
       created_by: expense.createdBy,
       payer_id: expense.payerId,
       title: expense.title,

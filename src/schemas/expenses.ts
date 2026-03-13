@@ -4,14 +4,14 @@ export const createExpenseSchema: FastifySchema = {
   body: {
     type: "object",
     required: [
-      "groupId",
+      "expenseGroupId",
       "title",
       "amount",
       "splitType",
       "expenseDate",
     ],
     properties: {
-      groupId: { type: "string", format: "uuid" },
+      expenseGroupId: { type: "string", format: "uuid" },
       payerId: { type: "string", format: "uuid" },
       title: { type: "string", minLength: 1, maxLength: 30 },
       amount: { type: "number", minimum: 0 },

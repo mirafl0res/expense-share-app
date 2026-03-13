@@ -14,7 +14,7 @@ export async function createExpense(
   const newExpense: Expense = {
     id: crypto.randomUUID(),
     createdBy: userId,
-    groupId: data.groupId,
+    expenseGroupId: data.expenseGroupId,
     payerId: data.payerId ?? userId,
     title: data.title,
     amount: data.amount,
