@@ -23,8 +23,6 @@ export type ExpenseCreateRequest = {
   description?: string;
 };
 
-export type ExpenseUpdateRequest = Partial<ExpenseCreateRequest>;
-
 export type ExpenseParticipant = {
   expenseId: string;
   participantUserId: string | null;

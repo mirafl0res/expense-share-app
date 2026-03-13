@@ -1,12 +1,11 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import validator from "validator";
 import { ValidationError } from "../errors/errors";
-import type { UserCreateRequest, UserUpdateRequest } from "../types/users";
 import type {
+  UserCreateRequest,
+  GroupCreateRequest,
   ExpenseCreateRequest,
-  ExpenseUpdateRequest,
-} from "../types/expenses";
-import type { GroupCreateRequest, GroupUpdateRequest } from "../types/groups";
+} from "../types";
 
 function normalizeEmailOrThrow(email: string): string {
   const normalized = validator.normalizeEmail(email);
@@ -17,7 +16,7 @@ function normalizeEmailOrThrow(email: string): string {
 }
 
 export async function sanitizeUserRequest(
-  request: FastifyRequest<{ Body: UserUpdateRequest | UserCreateRequest }>,
+  request: FastifyRequest<{ Body: Partial<UserCreateRequest> }>,
   _reply: FastifyReply,
 ) {
   if (!request.body) return;
@@ -37,7 +36,7 @@ export async function sanitizeUserRequest(
 
 export async function sanitizeExpenseRequest(
   request: FastifyRequest<{
-    Body: ExpenseUpdateRequest | ExpenseCreateRequest;
+    Body: Partial<ExpenseCreateRequest>;
   }>,
   _reply: FastifyReply,
 ) {
@@ -55,7 +54,7 @@ export async function sanitizeExpenseRequest(
 }
 
 export async function sanitizeGroupRequest(
-  request: FastifyRequest<{ Body: GroupUpdateRequest | GroupCreateRequest }>,
+  request: FastifyRequest<{ Body: Partial<GroupCreateRequest> }>,
   reply: FastifyReply,
 ) {
   if (!request.body) return;

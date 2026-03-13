@@ -1,8 +1,5 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import type {
-  ExpenseCreateRequest,
-  ExpenseUpdateRequest,
-} from "../types/expenses";
+import type { ExpenseCreateRequest } from "../types/expenses";
 import * as expenseService from "../services/expenses";
 import * as authService from "../services/auth/auth0";
 
@@ -28,7 +25,7 @@ export async function getExpenseById(
 export async function updateExpense(
   request: FastifyRequest<{
     Params: { id: string };
-    Body: ExpenseUpdateRequest;
+    Body: Partial<ExpenseCreateRequest>;
   }>,
   reply: FastifyReply,
 ): Promise<void> {

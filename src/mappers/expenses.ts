@@ -1,5 +1,8 @@
-import type { ExpenseEntity, ExpenseEntityPayload } from "../repository/types/expenses";
-import type { Expense, ExpenseUpdateRequest } from "../types/expenses";
+import type {
+  ExpenseEntity,
+  ExpenseEntityPayload,
+} from "../repository/types/expenses";
+import type { Expense, ExpenseCreateRequest } from "../types/expenses";
 
 export const ExpenseMapper = {
   toDomain(entity: ExpenseEntity): Expense {
@@ -18,7 +21,7 @@ export const ExpenseMapper = {
       deletedAt: entity.deleted_at ?? undefined,
     };
   },
-  toEntity(expense: Expense): ExpenseEntityPayload {
+  toEntityPayload(expense: Expense): ExpenseEntityPayload {
     return {
       id: expense.id,
       expense_group_id: expense.expenseGroupId,
@@ -31,8 +34,11 @@ export const ExpenseMapper = {
       expense_date: expense.expenseDate,
     };
   },
-  toPartialEntity(updates: ExpenseUpdateRequest): Partial<ExpenseEntityPayload> {
-    const { payerId, title, amount, splitType, expenseDate, description } = updates;
+  toPartialEntityPayload(
+    updates: Partial<ExpenseCreateRequest>,
+  ): Partial<ExpenseEntityPayload> {
+    const { payerId, title, amount, splitType, expenseDate, description } =
+      updates;
     const payload: Partial<ExpenseEntityPayload> = {};
 
     if (payerId !== undefined) payload.payer_id = payerId;

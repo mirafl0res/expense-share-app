@@ -1,6 +1,6 @@
 import type { UserEntity, UserEntityPayload } from "../repository/types";
 
-import type { User, UserUpdateRequest } from "../types/users";
+import type { User, UserCreateRequest } from "../types/users";
 
 export const UserMapper = {
   toDomain(entity: UserEntity): User {
@@ -14,7 +14,7 @@ export const UserMapper = {
       deletedAt: entity.deleted_at ?? undefined,
     };
   },
-  toEntity(user: User): UserEntityPayload {
+  toEntityPayload(user: User): UserEntityPayload {
     return {
       id: user.id,
       auth0_sub: user.auth0Sub ?? null,
@@ -23,7 +23,9 @@ export const UserMapper = {
       password_hash: user.password ?? null, // TODO[epic=auth]: implement password hashing
     };
   },
-  toPartialEntity(updates: UserUpdateRequest): Partial<UserEntityPayload> {
+  toPartialEntityPayload(
+    updates: Partial<UserCreateRequest>,
+  ): Partial<UserEntityPayload> {
     const { username, email, password } = updates;
     const payload: Partial<UserEntityPayload> = {};
 

@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import type { GroupCreateRequest, GroupUpdateRequest } from "../types/groups";
+import type { GroupCreateRequest } from "../types/groups";
 import * as groupService from "../services/groups";
 import * as authService from "../services/auth/auth0";
 
@@ -22,7 +22,10 @@ export async function getGroupById(
 }
 
 export async function updateGroup(
-  request: FastifyRequest<{ Params: { id: string }; Body: GroupUpdateRequest }>,
+  request: FastifyRequest<{
+    Params: { id: string };
+    Body: Partial<GroupCreateRequest>;
+  }>,
   reply: FastifyReply,
 ): Promise<void> {
   const updatedGroup = await groupService.updateGroup(

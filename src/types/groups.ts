@@ -8,5 +8,3 @@ export type Group = {
 };
 
 export type GroupCreateRequest = Pick<Group, "title">;
-
-export type GroupUpdateRequest = Partial<GroupCreateRequest>;

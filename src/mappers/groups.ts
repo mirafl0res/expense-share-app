@@ -1,5 +1,8 @@
-import type { GroupEntity, GroupEntityPayload } from "../repository/types/groups";
-import type { Group, GroupUpdateRequest } from "../types/groups";
+import type {
+  GroupEntity,
+  GroupEntityPayload,
+} from "../repository/types/groups";
+import type { Group, GroupCreateRequest } from "../types/groups";
 
 export const GroupMapper = {
   toDomain(entity: GroupEntity): Group {
@@ -12,14 +15,16 @@ export const GroupMapper = {
       deletedAt: entity.deleted_at ?? undefined,
     };
   },
-  toEntity(group: Group): GroupEntityPayload {
+  toEntityPayload(group: Group): GroupEntityPayload {
     return {
       id: group.id,
       title: group.title,
       created_by: group.createdBy,
     };
   },
-  toPartialEntity(updates: GroupUpdateRequest): Partial<GroupEntityPayload> {
+  toPartialEntityPayload(
+    updates: Partial<GroupCreateRequest>,
+  ): Partial<GroupEntityPayload> {
     const payload: Partial<GroupEntityPayload> = {};
 
     if (!updates.title !== undefined) payload.title = updates.title;

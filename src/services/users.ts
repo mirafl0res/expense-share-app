@@ -1,11 +1,7 @@
 import { NotFoundError, ValidationError } from "../errors/errors";
 import { UserMapper } from "../mappers/users";
 import * as userRepository from "../repository/users";
-import type {
-  User,
-  UserCreateRequest,
-  UserUpdateRequest,
-} from "../types/users";
+import type { User, UserCreateRequest } from "../types/users";
 
 export async function createOrLoginUser(
   userData: UserCreateRequest,
@@ -13,13 +9,13 @@ export async function createOrLoginUser(
   const existingUser = await userRepository.getUserByAuth0Sub(
     userData.auth0Sub!,
   );
-  
+
   if (existingUser) {
     return UserMapper.toDomain(existingUser);
   }
 
   const isRegisteredEmail = await userRepository.getUserByEmail(userData.email);
-  
+
   if (isRegisteredEmail) {
     throw new ValidationError({
       message: "User with this email already exists",
@@ -35,7 +31,7 @@ export async function createOrLoginUser(
   };
 
   // TODO[epic=errors]: handle DB errors, e.g. unique violation (Postgres: 23505)
-  const result = await userRepository.insertUser(UserMapper.toEntity(newUser));
+  const result = await userRepository.insertUser(UserMapper.toEntityPayload(newUser));
 
   return UserMapper.toDomain(result);
 }
@@ -46,7 +42,7 @@ export async function getUserById(id: string): Promise<User | null> {
   if (!result) {
     throw new NotFoundError({ message: "User not found" });
   }
-  
+
   return UserMapper.toDomain(result);
 }
 
@@ -54,7 +50,7 @@ export async function getUserByAuth0Sub(
   auth0Sub: string,
 ): Promise<User | null> {
   const result = await userRepository.getUserByAuth0Sub(auth0Sub);
-  
+
   if (!result) {
     throw new NotFoundError({ message: "User not found" });
   }
@@ -64,12 +60,12 @@ export async function getUserByAuth0Sub(
 
 export async function updateUser(
   id: string,
-  updates: UserUpdateRequest,
+  updates: Partial<UserCreateRequest>,
 ): Promise<User | null> {
-  const updateFields = UserMapper.toPartialEntity(updates);
+  const updateFields = UserMapper.toPartialEntityPayload(updates);
 
   const result = await userRepository.updateUser(id, updateFields);
-  
+
   if (!result) {
     throw new NotFoundError({ message: "User not found" });
   }
@@ -79,7 +75,7 @@ export async function updateUser(
 
 export async function softDeleteUser(id: string): Promise<boolean> {
   const deleted = await userRepository.softDeleteUser(id);
-  
+
   if (!deleted) {
     throw new NotFoundError({ message: "User not found" });
   }

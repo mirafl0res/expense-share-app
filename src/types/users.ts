@@ -15,5 +15,3 @@ export type UserCreateRequest = {
   email: string;
   password?: string;
 };
-
-export type UserUpdateRequest = Partial<UserCreateRequest>;
