@@ -1,7 +1,6 @@
 import { InternalError } from "../errors/errors";
 import * as authService from "../services/auth/auth0";
 import type { FastifyReply, FastifyRequest } from "fastify";
-import * as userService from "../services/users";
 
 export async function authCallbackHandler(
   request: FastifyRequest,
