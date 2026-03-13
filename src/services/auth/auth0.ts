@@ -20,6 +20,7 @@ export async function handleAuthCallback(code: string) {
   return auth0UserProfile;
 }
 
+// TODO[auth]: refactor - simplify functions!
 export async function getTokensFromAuth0Callback(
   code: string,
 ): Promise<Auth0TokenResponse> {
@@ -95,6 +96,7 @@ export async function getAuth0SubFromRequest(request: FastifyRequest) {
   return auth0Sub;
 }
 
+// TODO[epic=auth-separation] Refactor – make auth-agnostic (not tied to Auth0)
 export async function getAuthenticatedUserFromRequest(
   request: FastifyRequest,
 ): Promise<User> {

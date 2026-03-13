@@ -1,14 +1,15 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import type { GroupCreateRequest, GroupUpdateRequest } from "../types/groups";
 import * as groupService from "../services/groups";
+import * as authService from "../services/auth/auth0";
 
 export async function createGroup(
   request: FastifyRequest<{ Body: GroupCreateRequest }>,
   reply: FastifyReply,
 ): Promise<void> {
-  const newGroup = await groupService.createGroup(request.body);
+  const user = await authService.getAuthenticatedUserFromRequest(request);
+  const newGroup = await groupService.createGroup(request.body, user.id);
   reply.status(201).send(newGroup);
-
 }
 
 export async function getGroupById(
@@ -28,7 +29,7 @@ export async function updateGroup(
     request.params.id,
     request.body,
   );
-  
+
   reply.status(200).send(updatedGroup);
 }
 
@@ -46,6 +47,6 @@ export async function softDeleteGroup(
   reply: FastifyReply,
 ): Promise<void> {
   const deleted = await groupService.softDeleteGroup(request.params.id);
-  
+
   reply.status(204).send(deleted);
 }
