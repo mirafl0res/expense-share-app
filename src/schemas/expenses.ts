@@ -3,21 +3,42 @@ import type { FastifySchema } from "fastify";
 export const createExpenseSchema: FastifySchema = {
   body: {
     type: "object",
-    required: [
-      "expenseGroupId",
-      "title",
-      "amount",
-      "splitType",
-      "expenseDate",
-    ],
+    required: ["expense", "participants"],
     properties: {
-      expenseGroupId: { type: "string", format: "uuid" },
-      payerId: { type: "string", format: "uuid" },
-      title: { type: "string", minLength: 1, maxLength: 30 },
-      amount: { type: "number", minimum: 0 },
-      splitType: { type: "string" },
-      expenseDate: { type: "string", format: "date" },
-      description: { type: "string" },
+      expense: {
+        type: "object",
+        required: [
+          "expenseGroupId",
+          "payerId",
+          "title",
+          "amount",
+          "splitType",
+          "expenseDate",
+        ],
+        properties: {
+          expenseGroupId: { type: "string", format: "uuid" },
+          payerId: { type: "string", format: "uuid" },
+          title: { type: "string", minLength: 1, maxLength: 30 },
+          amount: { type: "number", minimum: 0 },
+          splitType: { type: "string" },
+          expenseDate: { type: "string", format: "date" },
+          description: { type: "string", minLength: 1, maxLength: 500 },
+        },
+        additionalProperties: false,
+      },
+      participants: {
+        type: "array",
+        items: {
+          type: "object",
+          required: ["userId", "shareAmount"],
+          properties: {
+            userId: { type: "string", format: "uuid" },
+            shareAmount: { type: "number", minimum: 0 },
+          },
+          additionalProperties: false,
+        },
+        minItems: 1,
+      },
     },
     additionalProperties: false,
   },

@@ -25,7 +25,12 @@ export type ExpenseCreateRequest = {
 
 export type ExpenseParticipant = {
   expenseId: string;
-  participantUserId: string | null;
+  userId: string;
   shareAmount: number;
   createdAt: string;
+};
+
+export type ExpenseParticipantRequest = {
+  userId: string;
+  shareAmount: number;
 };
