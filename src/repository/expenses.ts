@@ -10,35 +10,34 @@ import { DatabaseError } from "../errors/errors";
 export async function insertExpense(
   expense: ExpenseEntityPayload,
   participants: ExpenseParticipantEntityPayload[],
-): Promise<ExpenseEntity> {
-  const [result] = await db.begin(async (tx) => {
-    await tx`
-    INSERT INTO expenses ${tx(expense)}
-    RETURNING *
-    `;
+): Promise<ExpenseEntity | null> {
+  try {
+    const result = await db.begin(async (tx): Promise<ExpenseEntity> => {
+      const [insertedExpense] = await tx`
+      INSERT INTO expenses ${tx(expense)}
+      RETURNING *
+      `;
 
-    await tx`
-    INSERT INTO expense_participants ${tx(participants)}
-    `;
-  });
+      await tx`
+      INSERT INTO expense_participants ${tx(participants)}
+      `;
 
-  // try {
-  //   const [result] = await db<ExpenseEntity[]>`
-  //   INSERT INTO expenses ${db(expense)}
-  //   RETURNING *
-  //   `;
+      return insertedExpense;
+    });
 
-  //   if (!result) {
-  //     throw new DatabaseError({ message: "insertExpense: No row returned" });
-  //   }
+    if (!result) {
+      throw new DatabaseError({
+        message: "insertExpense: no row returned",
+      });
+    }
 
-  //   return result;
-  // } catch (error) {
-  //   throw new DatabaseError({
-  //     message: "Insert expense: database error",
-  //     cause: error,
-  //   });
-  // }
+    return result;
+  } catch (error) {
+    throw new DatabaseError({
+      message: "Insert expense: database error",
+      cause: error,
+    });
+  }
 }
 
 export async function getExpenseById(
