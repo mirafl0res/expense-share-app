@@ -6,7 +6,7 @@ function hasValidSub(payload: Record<string, unknown>): boolean {
   return typeof payload.sub === "string" && payload.sub.trim() !== "";
 }
 
-function extractToken(request: FastifyRequest): string {
+function getAccessTokenFromAuthHeader(request: FastifyRequest): string {
   const authHeader = request.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -21,7 +21,7 @@ function extractToken(request: FastifyRequest): string {
 export async function extractAndValidatePayload(
   request: FastifyRequest,
 ): Promise<Record<string, unknown>> {
-  const token = extractToken(request);
+  const token = getAccessTokenFromAuthHeader(request);
 
   const { payload } = await verifyAndDecodeJwt(token);
   

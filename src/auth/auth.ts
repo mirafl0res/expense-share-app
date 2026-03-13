@@ -30,7 +30,7 @@ async function authPlugin(
       request.jwtTokenPayload = payload;
 
       console.log(
-        "Decoded JWT payload (requireAdmin):",
+        "Decoded JWT payload (requireAuth):",
         request.jwtTokenPayload,
       );
     },

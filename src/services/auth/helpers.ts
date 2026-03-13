@@ -18,7 +18,7 @@ export function getAuth0Config() {
   const clientSecret = Bun.env.AUTH0_CLIENT_SECRET;
 
   if (!tokenUrl || !clientId || !clientSecret) {
-    throw new InternalError({ message: "Missing Auth0 env variables" });
+    throw new InternalError({ message: "Missing Auth0 environment variables" });
   }
   
   return { tokenUrl, clientId, clientSecret };
