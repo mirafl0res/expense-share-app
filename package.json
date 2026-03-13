@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "start": "bun run ./src/index.ts",
-    "dev": "NODE_ENV=development bun --hot run ./src/index.ts"
+    "dev": "NODE_ENV=development bun --hot run ./src/index.ts",
+    "migrate": "bun run ./src/migrate.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",

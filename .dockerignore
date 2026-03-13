@@ -1,0 +1,10 @@
+node_modules
+.git
+.github
+.env
+bun.lock
+README.md
+Dockerfile
+docker-compose.yml
+.gitignore
+.dockerignore
