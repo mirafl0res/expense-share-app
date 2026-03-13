@@ -9,24 +9,36 @@ import { DatabaseError } from "../errors/errors";
 
 export async function insertExpense(
   expense: ExpenseEntityPayload,
+  participants: ExpenseParticipantEntityPayload[],
 ): Promise<ExpenseEntity> {
-  try {
-    const [result] = await db<ExpenseEntity[]>`
-    INSERT INTO expenses ${db(expense)}
+  const [result] = await db.begin(async (tx) => {
+    await tx`
+    INSERT INTO expenses ${tx(expense)}
     RETURNING *
     `;
 
-    if (!result) {
-      throw new DatabaseError({ message: "insertExpense: No row returned" });
-    }
+    await tx`
+    INSERT INTO expense_participants ${tx(participants)}
+    `;
+  });
 
-    return result;
-  } catch (error) {
-    throw new DatabaseError({
-      message: "Insert expense: database error",
-      cause: error,
-    });
-  }
+  // try {
+  //   const [result] = await db<ExpenseEntity[]>`
+  //   INSERT INTO expenses ${db(expense)}
+  //   RETURNING *
+  //   `;
+
+  //   if (!result) {
+  //     throw new DatabaseError({ message: "insertExpense: No row returned" });
+  //   }
+
+  //   return result;
+  // } catch (error) {
+  //   throw new DatabaseError({
+  //     message: "Insert expense: database error",
+  //     cause: error,
+  //   });
+  // }
 }
 
 export async function getExpenseById(

@@ -1,14 +1,14 @@
 import type {
   ExpenseCreateRequest,
   Expense,
-  ExpenseUpdateRequest,
+  ExpenseParticipant,
 } from "../types/expenses";
 import * as expenseRepository from "../repository/expenses";
 import { ExpenseMapper } from "../mappers/expenses";
 import { NotFoundError } from "../errors/errors";
 
 export async function createExpense(
-  data: ExpenseCreateRequest,
+  data: ExpenseCreateRequest & ExpenseParticipant[],
   userId: string,
 ): Promise<Expense> {
   const newExpense: Expense = {
@@ -23,8 +23,12 @@ export async function createExpense(
     description: data.description,
   };
 
+  const expenseEntityPayload = ExpenseMapper.toEntityPayload(newExpense);
+  const particantEntityPayload = 
+
+
   const result = await expenseRepository.insertExpense(
-    ExpenseMapper.toEntity(newExpense),
+    ExpenseMapper.toEntityPayload(newExpense),
   );
 
   return ExpenseMapper.toDomain(result);
@@ -32,22 +36,22 @@ export async function createExpense(
 
 export async function getExpenseById(id: string): Promise<Expense> {
   const result = await expenseRepository.getExpenseById(id);
-  
+
   if (!result) {
     throw new NotFoundError({ message: "Expense not found" });
   }
-  
+
   return ExpenseMapper.toDomain(result);
 }
 
 export async function updateExpense(
   id: string,
-  data: ExpenseUpdateRequest,
+  data: Partial<ExpenseCreateRequest>,
 ): Promise<Expense | null> {
-  const updates = ExpenseMapper.toPartialEntity(data);
+  const updates = ExpenseMapper.toPartialEntityPayload(data);
 
   const result = await expenseRepository.updateExpense(id, updates);
-  
+
   if (!result) {
     throw new NotFoundError({ message: "Expense not found" });
   }
@@ -57,7 +61,7 @@ export async function updateExpense(
 
 export async function softDeleteExpense(id: string): Promise<boolean> {
   const deleted = await expenseRepository.softDeleteExpense(id);
-  
+
   if (!deleted) {
     throw new NotFoundError({ message: "Expense not found" });
   }
@@ -67,7 +71,7 @@ export async function softDeleteExpense(id: string): Promise<boolean> {
 
 export async function hardDeleteExpense(id: string): Promise<boolean> {
   const deleted = await expenseRepository.hardDeleteExpense(id);
-  
+
   if (!deleted) {
     throw new NotFoundError({ message: "Expense not found" });
   }
