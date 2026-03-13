@@ -1,0 +1,4 @@
+ALTER TABLE expenses
+ALTER COLUMN expense_group_id SET NOT NULL,
+ALTER COLUMN created_by SET NOT NULL,
+ALTER COLUMN payer_id SET NOT NULL;
