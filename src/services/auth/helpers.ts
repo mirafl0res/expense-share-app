@@ -1,11 +1,11 @@
 import { InternalError } from "../../errors/errors";
 
 export function getRedirectUri(): string {
-  const redirectUri = Bun.env.REDIRECT_URI;
+  const redirectUri = Bun.env.AUTH0_REDIRECT_URI;
 
   if (!redirectUri) {
     throw new InternalError({
-      message: "Missing REDIRECT_URI environment variable",
+      message: "Missing AUTH0_REDIRECT_URI environment variable",
     });
   }
   
