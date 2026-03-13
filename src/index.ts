@@ -71,9 +71,9 @@ const domain = Bun.env.AUTH0_DOMAIN;
 const audience = Bun.env.AUTH0_AUDIENCE;
 
 if (!domain || !audience) {
-  throw new Error(
-    "Missing AUTH0_DOMAIN or AUTH0_AUDIENCE in environment variables",
-  );
+  throw new InternalError({
+    message: "Missing AUTH0_DOMAIN or AUTH0_AUDIENCE in environment variables",
+  });
 }
 await fastifyServer.register(fastifyAuth0Api, {
   domain,
