@@ -1,6 +1,7 @@
 import type {
   ExpenseEntity,
   ExpenseEntityPayload,
+  ParticipantEntity,
   ParticipantEntityPayload,
 } from "../repository/types/expenses";
 import type {
@@ -57,6 +58,13 @@ export const ExpenseMapper = {
 };
 
 export const ParticipantMapper = {
+  toDomain: (entity: ParticipantEntity): Participant => ({
+    expenseId: entity.expense_id,
+    userId: entity.participant_user_id,
+    shareAmount: entity.share_amount,
+    createdAt: entity.created_at,
+  }),
+
   toEntityPayload: (
     participant: ParticipantRequest,
     expenseId: string,

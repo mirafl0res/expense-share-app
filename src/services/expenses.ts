@@ -2,6 +2,8 @@ import type {
   Expense,
   ExpenseCreateRequest,
   ExpenseWithParticipantsRequest,
+  Participant,
+  ParticipantRequest,
 } from "../types/expenses";
 import * as expenseRepository from "../repository/expenses";
 import { ExpenseMapper, ParticipantMapper } from "../mappers/expenses";
@@ -81,4 +83,18 @@ export async function hardDeleteExpense(id: string): Promise<boolean> {
   }
 
   return deleted;
+}
+
+export async function createExpenseParticipant(
+  participant: ParticipantRequest,
+  expenseId: string,
+): Promise<Participant> {
+  const participantEntity = ParticipantMapper.toEntityPayload(
+    participant,
+    expenseId,
+  );
+
+  const result = await expenseRepository.insertParticipant(participantEntity);
+
+  return ParticipantMapper.toDomain(result);
 }
