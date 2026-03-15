@@ -1,13 +1,13 @@
 import type {
   ExpenseEntity,
   ExpenseEntityPayload,
-  ExpenseParticipantEntityPayload,
+  ParticipantEntityPayload,
 } from "../repository/types/expenses";
 import type {
   Expense,
   ExpenseCreateRequest,
-  ExpenseParticipant,
-  ExpenseParticipantRequest,
+  Participant,
+  ParticipantRequest,
 } from "../types/expenses";
 
 export const ExpenseMapper = {
@@ -56,21 +56,21 @@ export const ExpenseMapper = {
   },
 };
 
-export const ExpenseParticipantMapper = {
+export const ParticipantMapper = {
   toEntityPayload: (
-    participant: ExpenseParticipantRequest,
+    participant: ParticipantRequest,
     expenseId: string,
-  ): ExpenseParticipantEntityPayload => ({
+  ): ParticipantEntityPayload => ({
     expense_id: expenseId,
     participant_user_id: participant.userId,
     share_amount: participant.shareAmount,
   }),
 
   toEntityPayloads: (
-    participants: ExpenseParticipantRequest[],
+    participants: ParticipantRequest[],
     expenseId: string,
-  ): ExpenseParticipantEntityPayload[] =>
+  ): ParticipantEntityPayload[] =>
     participants.map((participant) =>
-      ExpenseParticipantMapper.toEntityPayload(participant, expenseId),
+      ParticipantMapper.toEntityPayload(participant, expenseId),
     ),
 };

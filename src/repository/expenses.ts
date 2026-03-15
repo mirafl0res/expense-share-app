@@ -1,15 +1,15 @@
 import type {
   ExpenseEntity,
   ExpenseEntityPayload,
-  ExpenseParticipantEntity,
-  ExpenseParticipantEntityPayload,
+  ParticipantEntity,
+  ParticipantEntityPayload,
 } from "./types/expenses";
 import db from "./db";
 import { DatabaseError } from "../errors/errors";
 
-export async function insertExpense(
+export async function insertExpenseWithParticipants(
   expense: ExpenseEntityPayload,
-  participants: ExpenseParticipantEntityPayload[],
+  participants: ParticipantEntityPayload[],
 ): Promise<ExpenseEntity> {
   try {
     const result = await db.begin(async (tx): Promise<ExpenseEntity> => {
@@ -27,14 +27,14 @@ export async function insertExpense(
 
     if (!result) {
       throw new DatabaseError({
-        message: "insertExpense: no row returned",
+        message: "insertExpenseWithParticipants: no row returned",
       });
     }
 
     return result;
   } catch (error) {
     throw new DatabaseError({
-      message: "Insert expense: database error",
+      message: "Insert expense with participant: database error",
       cause: error,
     });
   }
@@ -77,7 +77,7 @@ export async function updateExpense(
     return result ?? null;
   } catch (error) {
     throw new DatabaseError({
-      message: "insertExpense: Database error",
+      message: "updateExpense: Database error",
       cause: error,
     });
   }
@@ -124,18 +124,18 @@ export async function hardDeleteExpense(id: string): Promise<boolean> {
 |--------------------------------------------------
 */
 
-export async function insertExpenseParticipant(
-  participant: ExpenseParticipantEntityPayload,
-): Promise<ExpenseParticipantEntity> {
+export async function insertParticipant(
+  participant: ParticipantEntityPayload,
+): Promise<ParticipantEntity> {
   try {
-    const [result] = await db<ExpenseParticipantEntity[]>`
+    const [result] = await db<ParticipantEntity[]>`
     INSERT INTO expense_participants ${db(participant)}
     RETURNING *
     `;
 
     if (!result) {
       throw new DatabaseError({
-        message: "insertExpenseParticipant: No row returned",
+        message: "insertParticipant: No row returned",
       });
     }
 
@@ -148,7 +148,7 @@ export async function insertExpenseParticipant(
   }
 }
 
-export async function hardDeleteExpenseParticipant(
+export async function hardDeleteParticipant(
   userId: string,
   expenseId: string,
 ): Promise<boolean> {
@@ -162,7 +162,7 @@ export async function hardDeleteExpenseParticipant(
     return !!result;
   } catch (error) {
     throw new DatabaseError({
-      message: "hardDeleteExpenseParticipant: Database error",
+      message: "hardDeleteParticipant: Database error",
       cause: error,
     });
   }

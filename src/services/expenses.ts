@@ -4,7 +4,7 @@ import type {
   ExpenseWithParticipantsRequest,
 } from "../types/expenses";
 import * as expenseRepository from "../repository/expenses";
-import { ExpenseMapper, ExpenseParticipantMapper } from "../mappers/expenses";
+import { ExpenseMapper, ParticipantMapper } from "../mappers/expenses";
 import { NotFoundError } from "../errors/errors";
 
 export async function createExpense(
@@ -25,12 +25,12 @@ export async function createExpense(
 
   const expenseEntityPayload = ExpenseMapper.toEntityPayload(newExpense);
 
-  const participantEntityPayloads = ExpenseParticipantMapper.toEntityPayloads(
+  const participantEntityPayloads = ParticipantMapper.toEntityPayloads(
     data.participants,
     newExpense.id,
   );
 
-  const result = await expenseRepository.insertExpense(
+  const result = await expenseRepository.insertExpenseWithParticipants(
     expenseEntityPayload,
     participantEntityPayloads,
   );

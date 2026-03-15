@@ -7,13 +7,6 @@ import type {
   GroupMemberEntityPayload,
 } from "./types/groups";
 
-/**
-|--------------------------------------------------
-| *TODO[epic=db]: add columns to expense_group_members?
-|   e.g.: created_at, role, added_by
-|--------------------------------------------------
-*/
-
 export async function insertGroup(
   group: GroupEntityPayload,
 ): Promise<GroupEntity> {
@@ -130,7 +123,9 @@ export async function insertGroupMember(
     `;
 
     if (!result) {
-      throw new DatabaseError({ message: "insertGroup: No row returned" });
+      throw new DatabaseError({
+        message: "insertGroupMember: No row returned",
+      });
     }
     return result;
   } catch (error) {

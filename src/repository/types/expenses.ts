@@ -26,14 +26,14 @@ export type ExpenseEntityPayload = Pick<
   | "expense_date"
 >;
 
-export type ExpenseParticipantEntity = {
+export type ParticipantEntity = {
   expense_id: string;
   participant_user_id: string;
   share_amount: number;
   created_at: string;
 };
 
-export type ExpenseParticipantEntityPayload = Pick<
-  ExpenseParticipantEntity,
+export type ParticipantEntityPayload = Pick<
+  ParticipantEntity,
   "expense_id" | "participant_user_id" | "share_amount"
 >;
