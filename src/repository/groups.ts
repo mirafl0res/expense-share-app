@@ -1,4 +1,5 @@
 import { DatabaseError } from "../errors/errors";
+import { mapPostgresError } from "../errors/helpers";
 import db from "./db";
 import type {
   GroupEntity,
@@ -22,10 +23,7 @@ export async function insertGroup(
 
     return result;
   } catch (error) {
-    throw new DatabaseError({
-      message: "insertGroup: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -42,10 +40,7 @@ export async function getGroupById(
 
     return result ?? null;
   } catch (error) {
-    throw new DatabaseError({
-      message: "getGroupById: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -65,10 +60,7 @@ export async function updateGroup(
 
     return result ?? null;
   } catch (error) {
-    throw new DatabaseError({
-      message: "updateGroup: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -83,10 +75,7 @@ export async function softDeleteGroup(id: string): Promise<boolean> {
 
     return !!result;
   } catch (error) {
-    throw new DatabaseError({
-      message: "softDeleteGroup: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -100,10 +89,7 @@ export async function hardDeleteGroup(id: string): Promise<boolean> {
 
     return !!result;
   } catch (error) {
-    throw new DatabaseError({
-      message: "hardDeleteGroup: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -129,10 +115,7 @@ export async function insertGroupMember(
     }
     return result;
   } catch (error) {
-    throw new DatabaseError({
-      message: "insertGroupMember: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -149,9 +132,6 @@ export async function hardDeleteGroupMember(
 
     return !!result;
   } catch (error) {
-    throw new DatabaseError({
-      message: "hardDeleteGroupMember: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }

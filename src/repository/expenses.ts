@@ -6,6 +6,7 @@ import type {
 } from "./types/expenses";
 import db from "./db";
 import { DatabaseError } from "../errors/errors";
+import { mapPostgresError } from "../errors/helpers";
 
 export async function insertExpenseWithParticipants(
   expense: ExpenseEntityPayload,
@@ -33,10 +34,7 @@ export async function insertExpenseWithParticipants(
 
     return result;
   } catch (error) {
-    throw new DatabaseError({
-      message: "Insert expense with participant: database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -53,10 +51,7 @@ export async function getExpenseById(
 
     return result ?? null;
   } catch (error) {
-    throw new DatabaseError({
-      message: "getExpenseById: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -76,10 +71,7 @@ export async function updateExpense(
 
     return result ?? null;
   } catch (error) {
-    throw new DatabaseError({
-      message: "updateExpense: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -94,10 +86,7 @@ export async function softDeleteExpense(id: string): Promise<boolean> {
 
     return !!result;
   } catch (error) {
-    throw new DatabaseError({
-      message: "softDeleteExpense: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -111,10 +100,7 @@ export async function hardDeleteExpense(id: string): Promise<boolean> {
 
     return !!result;
   } catch (error) {
-    throw new DatabaseError({
-      message: "hardDeleteExpense: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -141,10 +127,7 @@ export async function insertParticipant(
 
     return result;
   } catch (error) {
-    throw new DatabaseError({
-      message: "Insert expense participant: database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -161,9 +144,6 @@ export async function hardDeleteParticipant(
 
     return !!result;
   } catch (error) {
-    throw new DatabaseError({
-      message: "hardDeleteParticipant: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
