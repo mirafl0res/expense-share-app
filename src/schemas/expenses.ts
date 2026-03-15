@@ -3,29 +3,23 @@ import type { FastifySchema } from "fastify";
 export const createExpenseSchema: FastifySchema = {
   body: {
     type: "object",
-    required: ["expense", "participants"],
+    required: [
+      "expenseGroupId",
+      "payerId",
+      "title",
+      "amount",
+      "splitType",
+      "expenseDate",
+      "participants",
+    ],
     properties: {
-      expense: {
-        type: "object",
-        required: [
-          "expenseGroupId",
-          "payerId",
-          "title",
-          "amount",
-          "splitType",
-          "expenseDate",
-        ],
-        properties: {
-          expenseGroupId: { type: "string", format: "uuid" },
-          payerId: { type: "string", format: "uuid" },
-          title: { type: "string", minLength: 1, maxLength: 30 },
-          amount: { type: "number", minimum: 0 },
-          splitType: { type: "string" },
-          expenseDate: { type: "string", format: "date" },
-          description: { type: "string", minLength: 1, maxLength: 500 },
-        },
-        additionalProperties: false,
-      },
+      expenseGroupId: { type: "string", format: "uuid" },
+      payerId: { type: "string", format: "uuid" },
+      title: { type: "string", minLength: 1, maxLength: 30 },
+      amount: { type: "number", minimum: 0 },
+      splitType: { type: "string" },
+      expenseDate: { type: "string", format: "date" },
+      description: { type: "string", minLength: 1, maxLength: 500 },
       participants: {
         type: "array",
         items: {

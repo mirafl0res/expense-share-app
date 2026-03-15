@@ -1,16 +1,16 @@
 import type {
   Expense,
   ExpenseCreateRequest,
-  ExpenseParticipantRequest,
+  ExpenseWithParticipantsRequest,
 } from "../types/expenses";
 import * as expenseRepository from "../repository/expenses";
-import { ExpenseMapper } from "../mappers/expenses";
+import { ExpenseMapper, ExpenseParticipantMapper } from "../mappers/expenses";
 import { NotFoundError } from "../errors/errors";
 
 export async function createExpense(
-  data: ExpenseCreateRequest & ExpenseParticipantRequest[],
+  data: ExpenseWithParticipantsRequest,
   userId: string,
-): Promise<Expense | null> {
+): Promise<Expense> {
   const newExpense: Expense = {
     id: crypto.randomUUID(),
     createdBy: userId,
@@ -25,7 +25,17 @@ export async function createExpense(
 
   const expenseEntityPayload = ExpenseMapper.toEntityPayload(newExpense);
 
-  return null;
+  const participantEntityPayloads = ExpenseParticipantMapper.toEntityPayloads(
+    data.participants,
+    newExpense.id,
+  );
+
+  const result = await expenseRepository.insertExpense(
+    expenseEntityPayload,
+    participantEntityPayloads,
+  );
+
+  return ExpenseMapper.toDomain(result);
 }
 
 export async function getExpenseById(id: string): Promise<Expense> {

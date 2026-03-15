@@ -1,14 +1,14 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import type {
   ExpenseCreateRequest,
-  ExpenseParticipantRequest,
+  ExpenseWithParticipantsRequest,
 } from "../types/expenses";
 import * as expenseService from "../services/expenses";
 import * as authService from "../services/auth/auth0";
 
 export async function createExpense(
   request: FastifyRequest<{
-    Body: ExpenseCreateRequest & ExpenseParticipantRequest[];
+    Body: ExpenseWithParticipantsRequest;
   }>,
   reply: FastifyReply,
 ): Promise<void> {

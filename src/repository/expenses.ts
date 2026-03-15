@@ -10,7 +10,7 @@ import { DatabaseError } from "../errors/errors";
 export async function insertExpense(
   expense: ExpenseEntityPayload,
   participants: ExpenseParticipantEntityPayload[],
-): Promise<ExpenseEntity | null> {
+): Promise<ExpenseEntity> {
   try {
     const result = await db.begin(async (tx): Promise<ExpenseEntity> => {
       const [insertedExpense] = await tx`

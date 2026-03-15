@@ -31,7 +31,8 @@ export async function createOrLoginUser(
   };
 
   // TODO[epic=errors]: handle DB errors, e.g. unique violation (Postgres: 23505)
-  const result = await userRepository.insertUser(UserMapper.toEntityPayload(newUser));
+  const userEntityPayload = UserMapper.toEntityPayload(newUser);
+  const result = await userRepository.insertUser(userEntityPayload);
 
   return UserMapper.toDomain(result);
 }

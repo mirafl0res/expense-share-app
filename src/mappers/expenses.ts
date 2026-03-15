@@ -1,42 +1,46 @@
 import type {
   ExpenseEntity,
   ExpenseEntityPayload,
+  ExpenseParticipantEntityPayload,
 } from "../repository/types/expenses";
-import type { Expense, ExpenseCreateRequest } from "../types/expenses";
+import type {
+  Expense,
+  ExpenseCreateRequest,
+  ExpenseParticipant,
+  ExpenseParticipantRequest,
+} from "../types/expenses";
 
 export const ExpenseMapper = {
-  toDomain(entity: ExpenseEntity): Expense {
-    return {
-      id: entity.id,
-      createdBy: entity.created_by,
-      expenseGroupId: entity.expense_group_id,
-      payerId: entity.payer_id,
-      title: entity.title,
-      description: entity.description ?? undefined,
-      amount: entity.amount,
-      splitType: entity.split_type,
-      expenseDate: entity.expense_date,
-      createdAt: entity.created_at,
-      updatedAt: entity.updated_at ?? undefined,
-      deletedAt: entity.deleted_at ?? undefined,
-    };
-  },
-  toEntityPayload(expense: Expense): ExpenseEntityPayload {
-    return {
-      id: expense.id,
-      expense_group_id: expense.expenseGroupId,
-      created_by: expense.createdBy,
-      payer_id: expense.payerId,
-      title: expense.title,
-      description: expense.description ?? null,
-      amount: expense.amount,
-      split_type: expense.splitType,
-      expense_date: expense.expenseDate,
-    };
-  },
-  toPartialEntityPayload(
+  toDomain: (entity: ExpenseEntity): Expense => ({
+    id: entity.id,
+    createdBy: entity.created_by,
+    expenseGroupId: entity.expense_group_id,
+    payerId: entity.payer_id,
+    title: entity.title,
+    description: entity.description ?? undefined,
+    amount: entity.amount,
+    splitType: entity.split_type,
+    expenseDate: entity.expense_date,
+    createdAt: entity.created_at,
+    updatedAt: entity.updated_at ?? undefined,
+    deletedAt: entity.deleted_at ?? undefined,
+  }),
+
+  toEntityPayload: (expense: Expense): ExpenseEntityPayload => ({
+    id: expense.id,
+    expense_group_id: expense.expenseGroupId,
+    created_by: expense.createdBy,
+    payer_id: expense.payerId,
+    title: expense.title,
+    description: expense.description ?? null,
+    amount: expense.amount,
+    split_type: expense.splitType,
+    expense_date: expense.expenseDate,
+  }),
+
+  toPartialEntityPayload: (
     updates: Partial<ExpenseCreateRequest>,
-  ): Partial<ExpenseEntityPayload> {
+  ): Partial<ExpenseEntityPayload> => {
     const { payerId, title, amount, splitType, expenseDate, description } =
       updates;
     const payload: Partial<ExpenseEntityPayload> = {};
@@ -50,4 +54,23 @@ export const ExpenseMapper = {
 
     return payload;
   },
+};
+
+export const ExpenseParticipantMapper = {
+  toEntityPayload: (
+    participant: ExpenseParticipantRequest,
+    expenseId: string,
+  ): ExpenseParticipantEntityPayload => ({
+    expense_id: expenseId,
+    participant_user_id: participant.userId,
+    share_amount: participant.shareAmount,
+  }),
+
+  toEntityPayloads: (
+    participants: ExpenseParticipantRequest[],
+    expenseId: string,
+  ): ExpenseParticipantEntityPayload[] =>
+    participants.map((participant) =>
+      ExpenseParticipantMapper.toEntityPayload(participant, expenseId),
+    ),
 };
