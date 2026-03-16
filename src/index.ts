@@ -70,8 +70,11 @@ async function start(): Promise<void> {
     process.exit(1);
   }
 
+  const clientOrigin = Bun.env.CLIENT_ORIGIN;
+
   await fastifyServer.register(fastifyCors, {
-    origin: "http://localhost:3000",
+    origin: clientOrigin,
+
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   });
 

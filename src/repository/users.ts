@@ -1,4 +1,5 @@
 import { DatabaseError } from "../errors/errors";
+import { mapPostgresError } from "../errors/helpers";
 import db from "./db";
 import type { UserEntity, UserEntityPayload } from "./types/users";
 
@@ -15,10 +16,7 @@ export async function insertUser(user: UserEntityPayload): Promise<UserEntity> {
 
     return result;
   } catch (error) {
-    throw new DatabaseError({
-      message: "insertUser: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -35,10 +33,7 @@ export async function getUserById(
 
     return result ?? null;
   } catch (error) {
-    throw new DatabaseError({
-      message: "getUserById: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -55,10 +50,7 @@ export async function getUserByAuth0Sub(
 
     return result ?? null;
   } catch (error) {
-    throw new DatabaseError({
-      message: "getUserByAuth0Sub: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -66,13 +58,17 @@ export async function getUserByEmail(
   email: string,
   includeDeleted: boolean = false,
 ): Promise<UserEntity | null> {
-  const [result] = await db<UserEntity[]>`
-  SELECT * FROM users
-  WHERE email = ${email}
-  ${includeDeleted ? db`` : db`AND deleted_at IS NULL`}
-  `;
+  try {
+    const [result] = await db<UserEntity[]>`
+    SELECT * FROM users
+    WHERE email = ${email}
+    ${includeDeleted ? db`` : db`AND deleted_at IS NULL`}
+    `;
 
-  return result ?? null;
+    return result ?? null;
+  } catch (error) {
+    throw mapPostgresError(error);
+  }
 }
 
 export async function updateUser(
@@ -91,10 +87,7 @@ export async function updateUser(
 
     return result ?? null;
   } catch (error) {
-    throw new DatabaseError({
-      message: "updateUser: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -109,10 +102,7 @@ export async function softDeleteUser(id: string): Promise<boolean> {
 
     return !!result;
   } catch (error) {
-    throw new DatabaseError({
-      message: "softDeleteUser: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -126,9 +116,6 @@ export async function hardDeleteUser(id: string): Promise<boolean> {
 
     return !!result;
   } catch (error) {
-    throw new DatabaseError({
-      message: "hardDeleteUser: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }

@@ -4,13 +4,19 @@ A RESTful backend API for managing shared expenses, groups, and users. Built wit
 
 ## Table of Contents
 
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [API Endpoints](#api-endpoints)
-- [Security](#security)
-- [Project Structure](#project-structure)
-- [License](#license)
+- [Expense Share API](#expense-share-api)
+	- [Table of Contents](#table-of-contents)
+	- [Features](#features)
+	- [Installation](#installation)
+	- [Usage](#usage)
+	- [API Endpoints](#api-endpoints)
+		- [Authentication](#authentication)
+		- [Users](#users)
+		- [Groups](#groups)
+		- [Expenses](#expenses)
+	- [Security](#security)
+	- [Project Structure](#project-structure)
+	- [License](#license)
 
 ## Features
 
@@ -39,9 +45,7 @@ A RESTful backend API for managing shared expenses, groups, and users. Built wit
 	- Copy `.env.example` to `.env` and fill in your database URI, JWT secret, etc.
 
 4. **Run database migrations:**
-	```sh
-	bun run migrate
-	```
+    - To be implemented
 
 5. **Start the server:**
 	```sh
@@ -50,53 +54,54 @@ A RESTful backend API for managing shared expenses, groups, and users. Built wit
 
 ## Usage
 
-- The API runs on `http://localhost:3000` by default.
 - Use tools like Postman or curl to interact with endpoints.
-- For frontend integration, ensure your frontend origin matches the CORS configuration.
 
 ## API Endpoints
 
 ### Authentication
 
-- `POST /users/register` — Register a new user
-- `POST /users/login` — Login and receive JWT tokens
+- [x] `GET /auth/callback` — Register a new user via Auth0 Universal Login
 
 ### Users
 
-- `GET /users/:id` — Get user by ID
-- `PUT /users/:id` — Update user
-- `DELETE /users/:id` — Delete user
+- [x] `GET /users/:id` — Get user by ID
+- [x] `PATCH /users/:id` — Update user
+- [x] `DELETE /users/:id` — Delete user
 
 ### Groups
 
-- `GET /groups` — List groups
-- `POST /groups` — Create group
-- `GET /groups/:id` — Get group by ID
+- [x]`POST /groups` — Create group
+- [x] `GET /groups/:id` — Get group by ID
+- [x] `PATCH /groups/:id` - Update group
+- [x] `DELETE /groups/:id` - Delete group
 
 ### Expenses
 
-- `GET /expenses` — List expenses
-- `POST /expenses` — Create expense
-- `GET /expenses/:id` — Get expense by ID
+- [x] `POST /expenses` — Create expense
+- [x] `GET /expenses/:id` — Get expense by ID
+- [x] `PATCH /expenses/:id` - Update expense
+- [x] `DELETE /expenses/:id` - Delete expense 
 
 *See code for full endpoint details and request/response formats.*
 
 ## Security
 
-- **CORS:** Only allows requests from `http://localhost:3000` (see `src/index.ts`).
-- **HTTP Security Headers:** Uses [helmet](https://github.com/fastify/helmet) to set headers like `Content-Security-Policy`, `X-Frame-Options`, etc.
-- **Input Validation:** All incoming data is validated and sanitized using schemas and libraries like `validator.js`.
-- **Authentication:** JWT-based authentication with hashed passwords (bcrypt).
-- **Parameterized Queries:** All database access uses parameterized queries to prevent SQL injection.
+- [x] **CORS:** Only allows requests from `CLIENT_ORIGIN` (see `src/index.ts` and `.env.example`).
+- [x] **HTTP Security Headers:** Uses [helmet](https://github.com/fastify/helmet) to set headers like `Content-Security-Policy`, `X-Frame-Options`, etc.
+- [x] **Input Validation:** Incoming data is validated and sanitized using schemas and libraries like `validator.js`.
+- [ ] **Authentication:** JWT-based authentication with hashed passwords (bcrypt).
+- [x] **Parameterized Queries:** All database access uses parameterized queries to prevent SQL injection.
 
 ## Project Structure
 
 ```
 src/
-  auth.ts
   index.ts
+  auth/
   controllers/
   errors/
+  hooks/
+  mappers/
   migrations/
   repository/
   routes/

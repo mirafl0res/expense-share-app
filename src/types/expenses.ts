@@ -23,9 +23,18 @@ export type ExpenseCreateRequest = {
   description?: string;
 };
 
-export type ExpenseParticipant = {
+export type Participant = {
   expenseId: string;
-  participantUserId: string | null;
+  userId: string;
   shareAmount: number;
-  createdAt: string;
+  createdAt?: string;
+};
+
+export type ParticipantRequest = {
+  userId: string;
+  shareAmount: number;
+};
+
+export type ExpenseWithParticipantsRequest = ExpenseCreateRequest & {
+  participants: ParticipantRequest[];
 };

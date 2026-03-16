@@ -1,6 +1,12 @@
 import type { ErrorObject } from "ajv";
 import type { FastifyRequest } from "fastify";
-import type { BaseError } from "./errors";
+import {
+  BadRequestError,
+  ConflictError,
+  DatabaseError,
+  ValidationError,
+  type BaseError,
+} from "./errors";
 
 export interface FastifyValidationError {
   code: string;
@@ -33,7 +39,6 @@ export function logValidationError(
   request.log.error(
     {
       err: {
-        type: "ValidationError",
         errors: formatted,
         cause: error,
       },
@@ -64,6 +69,34 @@ export function logBaseError(request: FastifyRequest, error: BaseError) {
         stack: error.stack,
       },
     },
-    "Handled BaseError",
+    `Handled error: ${error.name}`,
   );
+}
+
+export function mapPostgresError(error: any) {
+  switch (error?.errno) {
+    case "23505": // unique_violation
+      return new ConflictError({
+        message: "Duplicate entry: This item already exists.",
+        params: { constraint: error.constraint },
+        cause: error,
+      });
+    case "23503": // foreign_key_violation
+      return new BadRequestError({
+        message: "The referenced item does not exist.",
+        params: { constraint: error.constraint },
+        cause: error,
+      });
+    case "23502": // not_null_violation
+      return new ValidationError({
+        message: "A required field is missing.",
+        params: { column: error.column },
+        cause: error,
+      });
+    default:
+      return new DatabaseError({
+        message: "Unknown database error.",
+        cause: error,
+      });
+  }
 }

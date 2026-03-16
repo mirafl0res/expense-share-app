@@ -1,12 +1,14 @@
 import axios from "axios";
 import { verifyAndDecodeJwt } from "../../auth/jwks";
 import { AuthenticationError, InternalError } from "../../errors/errors";
-import type { User, UserCreateRequest } from "../../types";
 import type {
+  User,
+  UserCreateRequest,
   Auth0TokenRequestParams,
   Auth0TokenResponse,
   AuthCodeExchangeRequest,
-} from "../../types/auth0";
+} from "../../types";
+
 import type { FastifyRequest } from "fastify";
 import * as userService from "../users";
 import { getAuth0Config, getRedirectUri } from "./helpers";
@@ -48,7 +50,7 @@ export async function exchangeAuthCodeForTokens({
   });
 
   console.log("response:", response);
-  console.log("response.data:", response.data)
+  console.log("response.data:", response.data);
   return response.data;
 }
 

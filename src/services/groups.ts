@@ -7,14 +7,14 @@ export async function createGroup(
   data: GroupCreateRequest,
   userId: string,
 ): Promise<Group> {
-  const newGroup: Group = {
+  const groupData: Group = {
     id: crypto.randomUUID(),
     title: data.title,
     createdBy: userId,
   };
 
   const result = await groupRepository.insertGroup(
-    GroupMapper.toEntityPayload(newGroup),
+    GroupMapper.toEntityPayload(groupData),
   );
 
   return GroupMapper.toDomain(result);
@@ -33,7 +33,7 @@ export async function getGroupById(id: string): Promise<Group> {
 export async function updateGroup(
   id: string,
   data: Partial<GroupCreateRequest>,
-): Promise<Group | null> {
+): Promise<Group> {
   const updates = GroupMapper.toPartialEntityPayload(data);
 
   const result = await groupRepository.updateGroup(id, updates);

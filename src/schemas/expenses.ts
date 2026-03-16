@@ -5,10 +5,12 @@ export const createExpenseSchema: FastifySchema = {
     type: "object",
     required: [
       "expenseGroupId",
+      "payerId",
       "title",
       "amount",
       "splitType",
       "expenseDate",
+      "participants",
     ],
     properties: {
       expenseGroupId: { type: "string", format: "uuid" },
@@ -17,7 +19,20 @@ export const createExpenseSchema: FastifySchema = {
       amount: { type: "number", minimum: 0 },
       splitType: { type: "string" },
       expenseDate: { type: "string", format: "date" },
-      description: { type: "string" },
+      description: { type: "string", minLength: 1, maxLength: 500 },
+      participants: {
+        type: "array",
+        items: {
+          type: "object",
+          required: ["userId", "shareAmount"],
+          properties: {
+            userId: { type: "string", format: "uuid" },
+            shareAmount: { type: "number", minimum: 0 },
+          },
+          additionalProperties: false,
+        },
+        minItems: 1,
+      },
     },
     additionalProperties: false,
   },

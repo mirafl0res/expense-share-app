@@ -1,10 +1,15 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import type { ExpenseCreateRequest } from "../types/expenses";
+import type {
+  ExpenseCreateRequest,
+  ExpenseWithParticipantsRequest,
+} from "../types/expenses";
 import * as expenseService from "../services/expenses";
 import * as authService from "../services/auth/auth0";
 
 export async function createExpense(
-  request: FastifyRequest<{ Body: ExpenseCreateRequest }>,
+  request: FastifyRequest<{
+    Body: ExpenseWithParticipantsRequest;
+  }>,
   reply: FastifyReply,
 ): Promise<void> {
   const user = await authService.getAuthenticatedUserFromRequest(request);

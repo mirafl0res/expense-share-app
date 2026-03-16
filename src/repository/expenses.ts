@@ -1,31 +1,40 @@
 import type {
   ExpenseEntity,
   ExpenseEntityPayload,
-  ExpenseParticipantEntity,
-  ExpenseParticipantEntityPayload,
+  ParticipantEntity,
+  ParticipantEntityPayload,
 } from "./types/expenses";
 import db from "./db";
 import { DatabaseError } from "../errors/errors";
+import { mapPostgresError } from "../errors/helpers";
 
-export async function insertExpense(
+export async function insertExpenseWithParticipants(
   expense: ExpenseEntityPayload,
+  participants: ParticipantEntityPayload[],
 ): Promise<ExpenseEntity> {
   try {
-    const [result] = await db<ExpenseEntity[]>`
-    INSERT INTO expenses ${db(expense)}
-    RETURNING *
-    `;
+    const result = await db.begin(async (tx): Promise<ExpenseEntity> => {
+      const [insertedExpense] = await tx`
+      INSERT INTO expenses ${tx(expense)}
+      RETURNING *
+      `;
+
+      await tx`
+      INSERT INTO expense_participants ${tx(participants)}
+      `;
+
+      return insertedExpense;
+    });
 
     if (!result) {
-      throw new DatabaseError({ message: "insertExpense: No row returned" });
+      throw new DatabaseError({
+        message: "insertExpenseWithParticipants: no row returned",
+      });
     }
 
     return result;
   } catch (error) {
-    throw new DatabaseError({
-      message: "Insert expense: database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -42,10 +51,7 @@ export async function getExpenseById(
 
     return result ?? null;
   } catch (error) {
-    throw new DatabaseError({
-      message: "getExpenseById: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -65,10 +71,7 @@ export async function updateExpense(
 
     return result ?? null;
   } catch (error) {
-    throw new DatabaseError({
-      message: "insertExpense: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -83,10 +86,7 @@ export async function softDeleteExpense(id: string): Promise<boolean> {
 
     return !!result;
   } catch (error) {
-    throw new DatabaseError({
-      message: "softDeleteExpense: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -100,10 +100,7 @@ export async function hardDeleteExpense(id: string): Promise<boolean> {
 
     return !!result;
   } catch (error) {
-    throw new DatabaseError({
-      message: "hardDeleteExpense: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
@@ -113,31 +110,28 @@ export async function hardDeleteExpense(id: string): Promise<boolean> {
 |--------------------------------------------------
 */
 
-export async function insertExpenseParticipant(
-  participant: ExpenseParticipantEntityPayload,
-): Promise<ExpenseParticipantEntity> {
+export async function insertParticipant(
+  participant: ParticipantEntityPayload,
+): Promise<ParticipantEntity> {
   try {
-    const [result] = await db<ExpenseParticipantEntity[]>`
+    const [result] = await db<ParticipantEntity[]>`
     INSERT INTO expense_participants ${db(participant)}
     RETURNING *
     `;
 
     if (!result) {
       throw new DatabaseError({
-        message: "insertExpenseParticipant: No row returned",
+        message: "insertParticipant: No row returned",
       });
     }
 
     return result;
   } catch (error) {
-    throw new DatabaseError({
-      message: "Insert expense participant: database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }
 
-export async function hardDeleteExpenseParticipant(
+export async function hardDeleteParticipant(
   userId: string,
   expenseId: string,
 ): Promise<boolean> {
@@ -150,9 +144,6 @@ export async function hardDeleteExpenseParticipant(
 
     return !!result;
   } catch (error) {
-    throw new DatabaseError({
-      message: "hardDeleteExpenseParticipant: Database error",
-      cause: error,
-    });
+    throw mapPostgresError(error);
   }
 }

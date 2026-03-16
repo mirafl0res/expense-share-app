@@ -4,17 +4,15 @@ import * as userRepository from "../repository/users";
 import type { User, UserCreateRequest } from "../types/users";
 
 export async function createOrLoginUser(
-  userData: UserCreateRequest,
+  data: UserCreateRequest,
 ): Promise<User> {
-  const existingUser = await userRepository.getUserByAuth0Sub(
-    userData.auth0Sub!,
-  );
+  const existingUser = await userRepository.getUserByAuth0Sub(data.auth0Sub!);
 
   if (existingUser) {
     return UserMapper.toDomain(existingUser);
   }
 
-  const isRegisteredEmail = await userRepository.getUserByEmail(userData.email);
+  const isRegisteredEmail = await userRepository.getUserByEmail(data.email);
 
   if (isRegisteredEmail) {
     throw new ValidationError({
@@ -22,21 +20,21 @@ export async function createOrLoginUser(
     });
   }
 
-  const newUser: User = {
+  const userData: User = {
     id: crypto.randomUUID(),
-    auth0Sub: userData.auth0Sub ?? undefined,
-    username: userData.username,
-    email: userData.email,
-    password: userData.password ?? undefined,
+    auth0Sub: data.auth0Sub ?? undefined,
+    username: data.username,
+    email: data.email,
+    password: data.password ?? undefined,
   };
 
-  // TODO[epic=errors]: handle DB errors, e.g. unique violation (Postgres: 23505)
-  const result = await userRepository.insertUser(UserMapper.toEntityPayload(newUser));
+  const userEntityPayload = UserMapper.toEntityPayload(userData);
+  const result = await userRepository.insertUser(userEntityPayload);
 
   return UserMapper.toDomain(result);
 }
 
-export async function getUserById(id: string): Promise<User | null> {
+export async function getUserById(id: string): Promise<User> {
   const result = await userRepository.getUserById(id);
 
   if (!result) {
@@ -46,9 +44,7 @@ export async function getUserById(id: string): Promise<User | null> {
   return UserMapper.toDomain(result);
 }
 
-export async function getUserByAuth0Sub(
-  auth0Sub: string,
-): Promise<User | null> {
+export async function getUserByAuth0Sub(auth0Sub: string): Promise<User> {
   const result = await userRepository.getUserByAuth0Sub(auth0Sub);
 
   if (!result) {
@@ -61,7 +57,7 @@ export async function getUserByAuth0Sub(
 export async function updateUser(
   id: string,
   updates: Partial<UserCreateRequest>,
-): Promise<User | null> {
+): Promise<User> {
   const updateFields = UserMapper.toPartialEntityPayload(updates);
 
   const result = await userRepository.updateUser(id, updateFields);
