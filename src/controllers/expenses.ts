@@ -13,6 +13,7 @@ export async function createExpense(
   reply: FastifyReply,
 ): Promise<void> {
   const user = await authService.getAuthenticatedUserFromRequest(request);
+  
   const newExpense = await expenseService.createExpense(request.body, user.id);
 
   reply.status(201).send(newExpense);

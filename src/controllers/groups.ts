@@ -8,7 +8,9 @@ export async function createGroup(
   reply: FastifyReply,
 ): Promise<void> {
   const user = await authService.getAuthenticatedUserFromRequest(request);
+
   const newGroup = await groupService.createGroup(request.body, user.id);
+  
   reply.status(201).send(newGroup);
 }
 
