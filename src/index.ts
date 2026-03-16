@@ -134,11 +134,7 @@ async function start(): Promise<void> {
     fastifyServer.log.error(error);
     process.exit(1);
   }
-  // curl http://localhost:3000/api/public
-  // curl http://localhost:3000/api/private
-
-  const clientOrigin = Bun.env.CLIENT_ORIGIN;
-
+ 
   await fastifyServer.register(fastifyCors, {
     origin: clientOrigin,
 

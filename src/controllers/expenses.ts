@@ -5,6 +5,7 @@ import type {
 } from "../types/expenses";
 import * as expenseService from "../services/expenses";
 import * as authService from "../services/auth/auth0";
+import * as userService from "../services/users";
 
 export async function createExpense(
   request: FastifyRequest<{
@@ -12,9 +13,11 @@ export async function createExpense(
   }>,
   reply: FastifyReply,
 ): Promise<void> {
-  const user = await authService.getAuthenticatedUserFromRequest(request);
-  
-  const newExpense = await expenseService.createExpense(request.body, user.id);
+  const user = await userService.getUserByAuth0Sub(request.user.sub);
+
+  const userId = user.id;
+
+  const newExpense = await expenseService.createExpense(request.body, userId);
 
   reply.status(201).send(newExpense);
 }
