@@ -13,7 +13,7 @@ export async function createExpense(
   data: ExpenseWithParticipantsRequest,
   userId: string,
 ): Promise<Expense> {
-  const newExpense: Expense = {
+  const expenseData: Expense = {
     id: crypto.randomUUID(),
     createdBy: userId,
     expenseGroupId: data.expenseGroupId,
@@ -25,11 +25,11 @@ export async function createExpense(
     description: data.description,
   };
 
-  const expenseEntityPayload = ExpenseMapper.toEntityPayload(newExpense);
+  const expenseEntityPayload = ExpenseMapper.toEntityPayload(expenseData);
 
   const participantEntityPayloads = ParticipantMapper.toEntityPayloads(
     data.participants,
-    newExpense.id,
+    expenseData.id,
   );
 
   const result = await expenseRepository.insertExpenseWithParticipants(
@@ -51,12 +51,12 @@ export async function getExpenseById(id: string): Promise<Expense> {
 }
 
 export async function updateExpense(
-  id: string,
+  expenseId: string,
   data: Partial<ExpenseCreateRequest>,
-): Promise<Expense | null> {
+): Promise<Expense> {
   const updates = ExpenseMapper.toPartialEntityPayload(data);
 
-  const result = await expenseRepository.updateExpense(id, updates);
+  const result = await expenseRepository.updateExpense(expenseId, updates);
 
   if (!result) {
     throw new NotFoundError({ message: "Expense not found" });
@@ -75,8 +75,8 @@ export async function softDeleteExpense(id: string): Promise<boolean> {
   return deleted;
 }
 
-export async function hardDeleteExpense(id: string): Promise<boolean> {
-  const deleted = await expenseRepository.hardDeleteExpense(id);
+export async function hardDeleteExpense(expenseId: string): Promise<boolean> {
+  const deleted = await expenseRepository.hardDeleteExpense(expenseId);
 
   if (!deleted) {
     throw new NotFoundError({ message: "Expense not found" });
