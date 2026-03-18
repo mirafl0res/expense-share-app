@@ -1,16 +1,16 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import type { GroupCreateRequest } from "../types/groups";
 import * as groupService from "../services/groups";
-import * as authService from "../services/auth/auth0";
+import * as userService from "../services/users";
 
 export async function createGroup(
   request: FastifyRequest<{ Body: GroupCreateRequest }>,
   reply: FastifyReply,
 ): Promise<void> {
-  const user = await authService.getAuthenticatedUserFromRequest(request);
+  const user = await userService.getUserByAuth0Sub(request.user.sub);
 
   const newGroup = await groupService.createGroup(request.body, user.id);
-  
+
   reply.status(201).send(newGroup);
 }
 

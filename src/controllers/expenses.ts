@@ -4,7 +4,6 @@ import type {
   ExpenseWithParticipantsRequest,
 } from "../types/expenses";
 import * as expenseService from "../services/expenses";
-import * as authService from "../services/auth/auth0";
 import * as userService from "../services/users";
 
 export async function createExpense(
