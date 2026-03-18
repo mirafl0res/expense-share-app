@@ -1,7 +1,6 @@
 # Expense Share API
 
-A RESTful backend API for managing shared expenses, groups, and users. Built with Fastify and Bun, using PostgreSQL for persistent storage. Includes authentication, security best practices, and clear error handling.
-
+A RESTful backend API for managing shared expenses, groups, and users. Built with Fastify and Bun, using PostgreSQL for persistent storage.
 ## Table of Contents
 
 - [Expense Share API](#expense-share-api)
@@ -9,6 +8,7 @@ A RESTful backend API for managing shared expenses, groups, and users. Built wit
 	- [Features](#features)
 	- [Installation](#installation)
 	- [Usage](#usage)
+	- [Docker Support](#docker-support)
 	- [API Endpoints](#api-endpoints)
 		- [Authentication](#authentication)
 		- [Users](#users)
@@ -20,12 +20,13 @@ A RESTful backend API for managing shared expenses, groups, and users. Built wit
 
 ## Features
 
-- User registration and authentication (JWT)
+- User registration and authentication via Auth0 (OAuth 2.0 & JWT)
 - CRUD for users, groups, and expenses
 - PostgreSQL integration with parameterized queries
 - Input validation and sanitization
-- Protected routes (JWT required)
+- Protected routes (Auth0 JWT required)
 - CORS configuration and HTTP security headers
+- Dockerfile and docker-compose for containerized setup
 - Meaningful error handling
 
 ## Installation
@@ -56,41 +57,44 @@ A RESTful backend API for managing shared expenses, groups, and users. Built wit
 
 - Use tools like Postman or curl to interact with endpoints.
 
+## Docker Support
+- Includes a Dockerfile and `docker-compose.yml for containerized setup.
+
 ## API Endpoints
 
 ### Authentication
 
-- [x] `GET /auth/callback` — Register a new user via Auth0 Universal Login
+- `GET /auth/authorize` — Register a new user via Auth0 Universal Login
 
 ### Users
 
-- [x] `GET /users/:id` — Get user by ID
-- [x] `PATCH /users/:id` — Update user
-- [x] `DELETE /users/:id` — Delete user
+- `GET /users/:id` — Get user by ID
+- `PATCH /users/:id` — Update user
+- `DELETE /users/:id` — Delete user
 
 ### Groups
 
-- [x]`POST /groups` — Create group
-- [x] `GET /groups/:id` — Get group by ID
-- [x] `PATCH /groups/:id` - Update group
-- [x] `DELETE /groups/:id` - Delete group
+- `POST /groups` — Create group
+- `GET /groups/:id` — Get group by ID
+- `PATCH /groups/:id` - Update group
+- `DELETE /groups/:id` - Delete group
 
 ### Expenses
 
-- [x] `POST /expenses` — Create expense
-- [x] `GET /expenses/:id` — Get expense by ID
-- [x] `PATCH /expenses/:id` - Update expense
-- [x] `DELETE /expenses/:id` - Delete expense 
+- `POST /expenses` — Create expense
+- `GET /expenses/:id` — Get expense by ID
+- `PATCH /expenses/:id` - Update expense
+- `DELETE /expenses/:id` - Delete expense 
 
 *See code for full endpoint details and request/response formats.*
 
 ## Security
 
-- [x] **CORS:** Only allows requests from `CLIENT_ORIGIN` (see `src/index.ts` and `.env.example`).
-- [x] **HTTP Security Headers:** Uses [helmet](https://github.com/fastify/helmet) to set headers like `Content-Security-Policy`, `X-Frame-Options`, etc.
-- [x] **Input Validation:** Incoming data is validated and sanitized using schemas and libraries like `validator.js`.
-- [ ] **Authentication:** JWT-based authentication with hashed passwords (bcrypt).
-- [x] **Parameterized Queries:** All database access uses parameterized queries to prevent SQL injection.
+- **CORS:** Only allows requests from `CLIENT_ORIGIN` (see `src/index.ts` and `.env.example`).
+- **HTTP Security Headers:** Uses [helmet](https://github.com/fastify/helmet) to set headers like `Content-Security-Policy`, `X-Frame-Options`, etc.
+- **Input Validation:** Incoming data is validated and sanitized using schemas and libraries like `validator.js`.
+- **Authentication:** Auth0-based authentication using OAuth 2.0 and JWTs. User login and registration handled via Auth0 Universal Login.
+- **Parameterized Queries:** All database access uses parameterized queries to prevent SQL injection.
 
 ## Project Structure
 
