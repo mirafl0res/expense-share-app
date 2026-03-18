@@ -5,42 +5,47 @@ import { sanitizeGroupRequest } from "../hooks/sanitizers";
 
 export async function groupRoutes(
   fastifyServer: FastifyInstance,
-  _options: FastifyPluginOptions,
+  options: FastifyPluginOptions,
 ): Promise<void> {
   fastifyServer.route({
     method: "POST",
     url: "/groups",
     schema: schemas.createGroupSchema,
     preValidation: sanitizeGroupRequest,
-    preHandler: fastifyServer.requireAuth,
+    preHandler: fastifyServer.requireAuth(),
     handler: groupController.createGroup,
   });
-  
+
   fastifyServer.route({
     method: "GET",
     url: "/groups/:id",
     schema: schemas.getGroupByIdSchema,
-    preHandler: fastifyServer.requireAuth,
+    preHandler: fastifyServer.requireAuth(),
     handler: groupController.getGroupById,
   });
-  
+
   fastifyServer.route({
     method: "PATCH",
     url: "/groups/:id",
     schema: schemas.updateGroupSchema,
     preValidation: sanitizeGroupRequest,
-    preHandler: fastifyServer.requireAuth,
+    preHandler: fastifyServer.requireAuth(),
     handler: groupController.updateGroup,
   });
-  
+
   fastifyServer.route({
     method: "DELETE",
     url: "/groups/:id",
     schema: schemas.deleteGroupSchema,
-    preHandler: fastifyServer.requireAuth,
+    preHandler: [fastifyServer.requireAuth(), fastifyServer.requireAdmin],
     handler: groupController.deleteGroup,
   });
-  
+
+  /**
+  |--------------------------------------------------
+  | To be implemented: softDelete
+  |--------------------------------------------------
+  */
   // fastifyServer.route({
   //   method: "PATCH",
   //   url: "/groups/:id",

@@ -8,7 +8,6 @@ export async function userRoutes(
   fastifyServer: FastifyInstance,
   _options: FastifyPluginOptions,
 ): Promise<void> {
-  
   /**
   |--------------------------------------------------
   | User creation/registration is handled via 
@@ -21,30 +20,30 @@ export async function userRoutes(
     method: "GET",
     url: "/users/:id",
     schema: schemas.getUserByIdSchema,
-    preHandler: fastifyServer.requireAuth,
+    preHandler: fastifyServer.requireAuth(),
     handler: userController.getUserById,
   });
-  
+
   fastifyServer.route({
     method: "PATCH",
     url: "/users/:id/",
     schema: schemas.updateUserSchema,
     preValidation: sanitizeUserRequest,
-    preHandler: fastifyServer.requireAuth,
+    preHandler: fastifyServer.requireAuth(),
     handler: userController.updateUser,
   });
-  
+
   fastifyServer.route({
     method: "DELETE",
     url: "/users/:id",
     schema: schemas.deleteUserSchema,
-    preHandler: fastifyServer.requireAdmin,
+    preHandler: [fastifyServer.requireAuth(), fastifyServer.requireAdmin],
     handler: userController.deleteUser,
   });
 
   /**
   |--------------------------------------------------
-  | Soft-delete not yet fully implemented.
+  | To be implemented: softDelete
   |--------------------------------------------------
   */
   // fastifyServer.route({
