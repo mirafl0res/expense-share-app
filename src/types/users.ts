@@ -10,7 +10,7 @@ export type User = {
 };
 
 export type UserCreateRequest = {
-  auth0Sub?: string;
+  auth0Sub: string;
   username: string;
   email: string;
   password?: string;
