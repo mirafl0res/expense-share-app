@@ -1,15 +1,11 @@
 import { SQL } from "bun";
 
-let db: SQL;
+const connectionString = Bun.env.DATABASE_URL;
 
-if (Bun.env.NODE_ENV === "development") {
-  const globalKey = Symbol.for("myapp.db");
-  if (!(globalThis as any)[globalKey]) {
-    (globalThis as any)[globalKey] = new SQL({});
-  }
-  db = (globalThis as any)[globalKey];
-} else {
-  db = new SQL({});
+if (!connectionString) {
+  throw new Error("DATABASE_URL is not set in environment variables");
 }
+
+const db = new SQL(connectionString);
 
 export default db;
