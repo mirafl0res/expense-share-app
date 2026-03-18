@@ -2,7 +2,7 @@ import { type FastifyInstance, type FastifyPluginOptions } from "fastify";
 import * as userController from "../controllers/users";
 import * as schemas from "../schemas/users";
 import { sanitizeUserRequest } from "../hooks/sanitizers";
-// import { verifyAuth0Secret } from "../hooks/auth";
+import { requireRole } from "../hooks/roles";
 
 export async function userRoutes(
   fastifyServer: FastifyInstance,
@@ -20,7 +20,7 @@ export async function userRoutes(
     method: "GET",
     url: "/users/:id",
     schema: schemas.getUserByIdSchema,
-    preHandler: fastifyServer.requireAuth(),
+    preHandler: [fastifyServer.requireAuth()],
     handler: userController.getUserById,
   });
 
@@ -29,7 +29,7 @@ export async function userRoutes(
     url: "/users/:id/",
     schema: schemas.updateUserSchema,
     preValidation: sanitizeUserRequest,
-    preHandler: fastifyServer.requireAuth(),
+    preHandler: [fastifyServer.requireAuth(), requireRole("admin")],
     handler: userController.updateUser,
   });
 
@@ -37,7 +37,7 @@ export async function userRoutes(
     method: "DELETE",
     url: "/users/:id",
     schema: schemas.deleteUserSchema,
-    preHandler: [fastifyServer.requireAuth(), fastifyServer.requireAdmin],
+    preHandler: [fastifyServer.requireAuth(), requireRole("admin")],
     handler: userController.deleteUser,
   });
 

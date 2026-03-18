@@ -14,10 +14,10 @@ export async function redirectToAuth0Authorization(
 }
 
 export async function processAuth0AuthorizationCallback(
-  request: FastifyRequest<{ Querystring: { code?: string } }>,
+  request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const { code } = request.query;
+  const { code } = request.query as { code?: string };
 
   if (!code) {
     throw new InternalError({ message: "Missing code parameter in callback" });

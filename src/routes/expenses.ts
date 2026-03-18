@@ -2,6 +2,7 @@ import { type FastifyInstance, type FastifyPluginOptions } from "fastify";
 import * as schemas from "../schemas/expenses";
 import * as expenseController from "../controllers/expenses";
 import { sanitizeExpenseRequest } from "../hooks/sanitizers";
+import { requireRole } from "../hooks/roles";
 
 export async function expenseRoutes(
   fastifyServer: FastifyInstance,
@@ -12,7 +13,7 @@ export async function expenseRoutes(
     url: "/expenses",
     schema: schemas.createExpenseSchema,
     preValidation: sanitizeExpenseRequest,
-    preHandler: fastifyServer.requireAuth(),
+    preHandler: [fastifyServer.requireAuth()],
     handler: expenseController.createExpense,
   });
 
@@ -20,7 +21,7 @@ export async function expenseRoutes(
     method: "GET",
     url: "/expenses/:id",
     schema: schemas.getExpenseByIdSchema,
-    preHandler: fastifyServer.requireAuth(),
+    preHandler: [fastifyServer.requireAuth()],
     handler: expenseController.getExpenseById,
   });
 
@@ -29,7 +30,7 @@ export async function expenseRoutes(
     url: "/expenses/:id",
     schema: schemas.updateExpenseSchema,
     preValidation: sanitizeExpenseRequest,
-    preHandler: fastifyServer.requireAuth(),
+    preHandler: [fastifyServer.requireAuth()],
     handler: expenseController.updateExpense,
   });
 
@@ -37,7 +38,7 @@ export async function expenseRoutes(
     method: "DELETE",
     url: "/expenses/:id",
     schema: schemas.deleteExpenseSchema,
-    preHandler: fastifyServer.requireAuth(),
+    preHandler: [fastifyServer.requireAuth()],
     handler: expenseController.deleteExpense,
   });
 

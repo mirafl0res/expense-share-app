@@ -3,7 +3,6 @@ import fastifyAuth0Api from "@auth0/auth0-fastify-api";
 import fastifyCors from "@fastify/cors";
 import fastifyHelmet from "@fastify/helmet";
 import { expenseRoutes, userRoutes, groupRoutes, authRoutes } from "./routes";
-import rolesPlugin from "./auth/rolesPlugin";
 import db from "./repository/db";
 import { BaseError, InternalError, ValidationError } from "./errors/errors";
 import {
@@ -65,7 +64,6 @@ if (!domain || !audience) {
 }
 await fastifyServer.register(fastifyAuth0Api, { domain, audience });
 
-await fastifyServer.register(rolesPlugin);
 await fastifyServer.register(authRoutes);
 await fastifyServer.register(userRoutes);
 await fastifyServer.register(groupRoutes);

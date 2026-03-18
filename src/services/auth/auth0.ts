@@ -7,7 +7,7 @@ import type { UserCreateRequest } from "../../types/users";
 
 export async function processAuth0TokenExchange(code: string) {
   const tokens = await exchangeAuthCodeForTokens(code);
-
+  console.log("Tokens;", tokens)
   const accessTokenPayload = await validateAccessToken(tokens.access_token);
 
   const userInfo = await getUserInfoFromAuth0(tokens.access_token);

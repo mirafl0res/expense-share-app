@@ -2,6 +2,7 @@ import { type FastifyInstance, type FastifyPluginOptions } from "fastify";
 import * as groupController from "../controllers/groups";
 import * as schemas from "../schemas/groups";
 import { sanitizeGroupRequest } from "../hooks/sanitizers";
+import { requireRole } from "../hooks/roles";
 
 export async function groupRoutes(
   fastifyServer: FastifyInstance,
@@ -12,7 +13,7 @@ export async function groupRoutes(
     url: "/groups",
     schema: schemas.createGroupSchema,
     preValidation: sanitizeGroupRequest,
-    preHandler: fastifyServer.requireAuth(),
+    preHandler: [fastifyServer.requireAuth(), requireRole("admin")],
     handler: groupController.createGroup,
   });
 
@@ -20,7 +21,7 @@ export async function groupRoutes(
     method: "GET",
     url: "/groups/:id",
     schema: schemas.getGroupByIdSchema,
-    preHandler: fastifyServer.requireAuth(),
+    preHandler: [fastifyServer.requireAuth()],
     handler: groupController.getGroupById,
   });
 
@@ -29,7 +30,7 @@ export async function groupRoutes(
     url: "/groups/:id",
     schema: schemas.updateGroupSchema,
     preValidation: sanitizeGroupRequest,
-    preHandler: fastifyServer.requireAuth(),
+    preHandler: [fastifyServer.requireAuth(), requireRole("admin")],
     handler: groupController.updateGroup,
   });
 
@@ -37,7 +38,7 @@ export async function groupRoutes(
     method: "DELETE",
     url: "/groups/:id",
     schema: schemas.deleteGroupSchema,
-    preHandler: [fastifyServer.requireAuth(), fastifyServer.requireAdmin],
+    preHandler: [fastifyServer.requireAuth(), requireRole("admin")],
     handler: groupController.deleteGroup,
   });
 
