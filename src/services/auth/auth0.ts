@@ -1,117 +1,71 @@
+import type { JWTPayload } from "jose";
+import { getAuth0Config, postToTokenEndpoint } from "./helpers";
+import { ApiClient } from "@auth0/auth0-api-js";
 import axios from "axios";
-import { verifyAndDecodeJwt } from "../../auth/jwks";
-import { AuthenticationError, InternalError } from "../../errors/errors";
-import type {
-  User,
-  UserCreateRequest,
-  Auth0TokenRequestParams,
-  Auth0TokenResponse,
-  AuthCodeExchangeRequest,
-} from "../../types";
+import type { Auth0TokenResponse } from "../../types/auth0";
+import type { UserCreateRequest } from "../../types/users";
 
-import type { FastifyRequest } from "fastify";
-import * as userService from "../users";
-import { getAuth0Config, getRedirectUri } from "./helpers";
+export async function processAuth0TokenExchange(code: string) {
+  const tokens = await exchangeAuthCodeForTokens(code);
 
-export async function handleAuthCallback(code: string) {
-  const tokens = await getTokensFromAuth0Callback(code);
-  const auth0UserProfile = await getUserProfileFromIdToken(tokens.id_token);
+  const accessTokenPayload = await validateAccessToken(tokens.access_token);
 
-  await userService.createOrLoginUser(auth0UserProfile);
+  const userInfo = await getUserInfoFromAuth0(tokens.access_token);
 
-  return auth0UserProfile;
+  return { tokens, accessTokenPayload, userInfo };
 }
 
-// TODO[auth]: refactor - simplify functions!
-export async function getTokensFromAuth0Callback(
+export async function exchangeAuthCodeForTokens(
   code: string,
 ): Promise<Auth0TokenResponse> {
-  const redirectUri = getRedirectUri();
+  const { redirectUri } = getAuth0Config();
 
-  return exchangeAuthCodeForTokens({ code, redirectUri });
-}
-
-export async function exchangeAuthCodeForTokens({
-  code,
-  redirectUri,
-}: AuthCodeExchangeRequest) {
-  const { tokenUrl, clientId, clientSecret } = getAuth0Config();
-
-  if (!redirectUri) {
-    throw new InternalError({ message: "Missing redirectUri" });
-  }
-
-  const response = await postToAuth0TokenEndpoint({
-    tokenUrl,
-    clientId,
-    clientSecret,
+  const response = await postToTokenEndpoint({
+    grant_type: "authorization_code",
     code,
-    redirectUri,
+    redirect_uri: redirectUri,
   });
 
-  console.log("response:", response);
-  console.log("response.data:", response.data);
   return response.data;
 }
 
-async function postToAuth0TokenEndpoint(params: Auth0TokenRequestParams) {
-  const { tokenUrl, clientId, clientSecret, code, redirectUri } = params;
+export async function exchangeRefreshTokenForTokens(refreshToken: string) {
+  const response = await postToTokenEndpoint({
+    grant_type: "refresh_token",
+    refresh_token: refreshToken,
+  });
 
-  return axios.post(
-    tokenUrl,
-    {
-      grant_type: "authorization_code",
-      client_id: clientId,
-      client_secret: clientSecret,
-      code,
-      redirect_uri: redirectUri,
-    },
-    { headers: { "content-type": "application/json" } },
-  );
+  return response.data;
 }
 
-export async function getUserProfileFromIdToken(
-  idToken: string,
+async function validateAccessToken(accessToken: string): Promise<JWTPayload> {
+  const { domain, audience } = getAuth0Config();
+
+  const apiClient = new ApiClient({ domain, audience });
+
+  const accessTokenPayload = await apiClient.verifyAccessToken({ accessToken });
+
+  return accessTokenPayload;
+}
+
+async function getUserInfoFromAuth0(
+  accessToken: string,
 ): Promise<UserCreateRequest> {
-  const { payload } = await verifyAndDecodeJwt(idToken);
-  const { email, nickname, sub } = payload;
+  const { domain } = getAuth0Config();
+
+  const url = `https://${domain}/userinfo`;
+
+  const response = await axios.get(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  const { sub, nickname, email } = response.data;
 
   return {
-    email: email as string,
-    username: (nickname as string) ?? email,
-    auth0Sub: sub as string,
+    auth0Sub: sub,
+    username: nickname ?? email,
+    email,
   };
-}
-
-/**
-|--------------------------------------------------
-| Get from request
-|--------------------------------------------------
-*/
-export async function getAuth0SubFromRequest(request: FastifyRequest) {
-  const auth0Sub = request.jwtTokenPayload?.sub as string | undefined;
-  console.log(request.jwtTokenPayload);
-  if (!auth0Sub) {
-    throw new AuthenticationError({
-      message: "Missing user auth0Sub in JWT payload",
-    });
-  }
-
-  return auth0Sub;
-}
-
-// TODO[epic=auth-separation] Refactor – make auth-agnostic (not tied to Auth0)
-export async function getAuthenticatedUserFromRequest(
-  request: FastifyRequest,
-): Promise<User> {
-  const auth0Sub = await getAuth0SubFromRequest(request);
-  const user = await userService.getUserByAuth0Sub(auth0Sub);
-
-  if (!user) {
-    throw new AuthenticationError({
-      message: "Authenticated user not found in database",
-    });
-  }
-
-  return user;
 }

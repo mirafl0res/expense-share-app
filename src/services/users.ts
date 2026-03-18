@@ -5,18 +5,18 @@ import type { User, UserCreateRequest } from "../types/users";
 
 export async function createOrLoginUser(
   data: UserCreateRequest,
-): Promise<User> {
-  const existingUser = await userRepository.getUserByAuth0Sub(data.auth0Sub!);
+): Promise<{ user: User; isNew: boolean }> {
+  const existingUser = await userRepository.getUserByAuth0Sub(data.auth0Sub);
 
   if (existingUser) {
-    return UserMapper.toDomain(existingUser);
+    return { user: UserMapper.toDomain(existingUser), isNew: false };
   }
 
   const isRegisteredEmail = await userRepository.getUserByEmail(data.email);
 
   if (isRegisteredEmail) {
     throw new ValidationError({
-      message: "User with this email already exists",
+      message: "Unable to process request",
     });
   }
 
@@ -29,9 +29,10 @@ export async function createOrLoginUser(
   };
 
   const userEntityPayload = UserMapper.toEntityPayload(userData);
+  
   const result = await userRepository.insertUser(userEntityPayload);
 
-  return UserMapper.toDomain(result);
+  return { user: UserMapper.toDomain(result), isNew: true };
 }
 
 export async function getUserById(id: string): Promise<User> {
