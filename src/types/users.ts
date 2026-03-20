@@ -9,6 +9,8 @@ export type User = {
   deletedAt?: string;
 };
 
+export type UserPublic = Pick<User, "id" | "username">;
+
 export type UserCreateRequest = {
   auth0Sub: string;
   username: string;

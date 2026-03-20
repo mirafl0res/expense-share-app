@@ -1,15 +1,15 @@
 import { NotFoundError, ValidationError } from "../errors/errors";
 import { UserMapper } from "../mappers/users";
 import * as userRepository from "../repository/users";
-import type { User, UserCreateRequest } from "../types/users";
+import type { User, UserCreateRequest, UserPublic } from "../types/users";
 
 export async function createOrLoginUser(
   data: UserCreateRequest,
-): Promise<{ user: User; isNew: boolean }> {
+): Promise<{ user: UserPublic; isNew: boolean }> {
   const existingUser = await userRepository.getUserByAuth0Sub(data.auth0Sub);
 
   if (existingUser) {
-    return { user: UserMapper.toDomain(existingUser), isNew: false };
+    return { user: UserMapper.toPublic(existingUser), isNew: false };
   }
 
   const isRegisteredEmail = await userRepository.getUserByEmail(data.email);
@@ -29,36 +29,36 @@ export async function createOrLoginUser(
   };
 
   const userEntityPayload = UserMapper.toEntityPayload(userData);
-  
+
   const result = await userRepository.insertUser(userEntityPayload);
 
-  return { user: UserMapper.toDomain(result), isNew: true };
+  return { user: UserMapper.toPublic(result), isNew: true };
 }
 
-export async function getUserById(id: string): Promise<User> {
+export async function getUserById(id: string): Promise<UserPublic> {
   const result = await userRepository.getUserById(id);
 
   if (!result) {
     throw new NotFoundError({ message: "User not found" });
   }
 
-  return UserMapper.toDomain(result);
+  return UserMapper.toPublic(result);
 }
 
-export async function getUserByAuth0Sub(auth0Sub: string): Promise<User> {
+export async function getUserByAuth0Sub(auth0Sub: string): Promise<UserPublic> {
   const result = await userRepository.getUserByAuth0Sub(auth0Sub);
 
   if (!result) {
     throw new NotFoundError({ message: "User not found" });
   }
 
-  return UserMapper.toDomain(result);
+  return UserMapper.toPublic(result);
 }
 
 export async function updateUser(
   id: string,
   updates: Partial<UserCreateRequest>,
-): Promise<User> {
+): Promise<UserPublic> {
   const updateFields = UserMapper.toPartialEntityPayload(updates);
 
   const result = await userRepository.updateUser(id, updateFields);
@@ -67,7 +67,7 @@ export async function updateUser(
     throw new NotFoundError({ message: "User not found" });
   }
 
-  return UserMapper.toDomain(result);
+  return UserMapper.toPublic(result);
 }
 
 export async function softDeleteUser(id: string): Promise<boolean> {

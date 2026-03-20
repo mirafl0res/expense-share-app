@@ -1,8 +1,14 @@
 import type { UserEntity, UserEntityPayload } from "../repository/types";
 
-import type { User, UserCreateRequest } from "../types/users";
+import type { User, UserCreateRequest, UserPublic } from "../types/users";
 
 export const UserMapper = {
+  toPublic(input: User | UserEntity): UserPublic {
+    return {
+      id: input.id,
+      username: input.username,
+    };
+  },
   toDomain(entity: UserEntity): User {
     return {
       id: entity.id,
