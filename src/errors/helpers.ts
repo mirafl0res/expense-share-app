@@ -81,18 +81,21 @@ export function mapPostgresError(error: any) {
         params: { constraint: error.constraint },
         cause: error,
       });
+
     case "23503": // foreign_key_violation
       return new BadRequestError({
         message: "The referenced item does not exist.",
         params: { constraint: error.constraint },
         cause: error,
       });
+
     case "23502": // not_null_violation
       return new ValidationError({
         message: "A required field is missing.",
         params: { column: error.column },
         cause: error,
       });
+
     default:
       return new DatabaseError({
         message: "Unknown database error.",

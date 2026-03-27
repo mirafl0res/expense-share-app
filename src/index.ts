@@ -4,46 +4,12 @@ import fastifyCors from "@fastify/cors";
 import fastifyHelmet from "@fastify/helmet";
 import { expenseRoutes, userRoutes, groupRoutes, authRoutes } from "./routes";
 import db from "./repository/db";
-import { BaseError, InternalError, ValidationError } from "./errors/errors";
-import {
-  formatValidationErrors,
-  isFastifyValidationError,
-  logBaseError,
-  logUnknownError,
-  logValidationError,
-} from "./errors/helpers";
+import { InternalError } from "./errors/errors";
+import { fastifyErrorHandler } from "./errors/fastifyErrorHandler";
 
 const fastifyServer: FastifyInstance = fastify({ logger: true });
 
-fastifyServer.setErrorHandler((error: unknown, request, reply) => {
-  if (isFastifyValidationError(error)) {
-    const formatted = formatValidationErrors(error.validation);
-    logValidationError(request, formatted, error);
-    const validationError = new ValidationError({
-      message: "Validation failed",
-      params: { errors: formatted },
-      cause: error,
-    });
-    return reply
-      .status(validationError.statusCode)
-      .send(validationError.toPublicError());
-  }
-
-  if (!(error instanceof BaseError)) {
-    logUnknownError(request, error);
-    const unknownError = new InternalError({
-      message: "An unknown error occurred",
-      params: {},
-      cause: error,
-    });
-    return reply
-      .status(unknownError.statusCode)
-      .send(unknownError.toPublicError());
-  }
-
-  logBaseError(request, error);
-  return reply.status(error.statusCode).send(error.toPublicError());
-});
+fastifyServer.setErrorHandler(fastifyErrorHandler);
 
 fastifyServer.setNotFoundHandler((_request, reply) => {
   return reply.status(404).send({
@@ -57,13 +23,13 @@ fastifyServer.setNotFoundHandler((_request, reply) => {
 // Auth0/Fastify API config
 const domain = Bun.env.AUTH0_DOMAIN;
 const audience = Bun.env.AUTH0_AUDIENCE;
+
 if (!domain || !audience) {
   throw new InternalError({
     message: "Missing AUTH0_DOMAIN or AUTH0_AUDIENCE in environment variables",
   });
 }
 await fastifyServer.register(fastifyAuth0Api, { domain, audience });
-
 await fastifyServer.register(authRoutes);
 await fastifyServer.register(userRoutes);
 await fastifyServer.register(groupRoutes);
@@ -95,6 +61,7 @@ async function start(): Promise<void> {
     fastifyServer.log.error(error);
     process.exit(1);
   }
+
   fastifyServer.log.info(`API server running at ${clientOrigin}`);
 }
 
